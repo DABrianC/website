@@ -88,7 +88,7 @@ In your R script, you will use the `install.packages()` and `library()` function
 
 Tidyverse provides a suite of compatible data wrangling and visualization tools. Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.
 
-```{r}
+```{r warning=F, message=F}
 #| class-output: pre
 
 #Installs the package on your system.
