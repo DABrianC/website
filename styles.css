@@ -76,10 +76,11 @@ body {
 }
 
 .quarto-title-block .quarto-title-banner {
- background-image: url(../prep/encompass-logo-blue.png); 
+ background-image: url(humanslearning.png); 
   background-size: 120px;
   background-position: left;
   background-repeat: no-repeat;
+  background-color: #1e3a8a;
   padding-left: 25px;
   background-origin: content-box; 
   /*font-family: Corbel;
@@ -87,6 +88,14 @@ body {
   font-weight: bold;
   font-size: 32px; */
 } 
+
+/* Target navbar/header area where social icons typically sit */
+.navbar,
+.navbar-brand-container,
+.navbar-nav,
+.quarto-navigation-tool {
+  background-color: #1e3a8a !important; /* Deep blue for navigation area */
+}
 
 subtitle {
   font-family: Corbel, sans-serif;
