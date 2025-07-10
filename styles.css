@@ -1,0 +1,103 @@
+/* CSS for heading styles */
+
+h1 {
+  font-family: Corbel, sans-serif;
+  color: #00457C; 
+  font-size: 26px;
+}
+
+
+h2 {
+  font-family: Corbel, sans-serif;
+  color: #89C266;
+  font-size: 20px;
+}
+
+h3 {
+  font-family: Corbel, sans-serif;
+  color: #FF7C48;
+  font-size: 18px;
+}
+
+h4 {
+  font-family: Corbel, sans-serif;
+  color: #674C7E
+  font-size: 14
+}  
+
+/* body font, size, and color */
+/* CSS code */
+body {
+    background-color: #fafafa; /* Light grey background */
+    font-family: Corbel, sans-serif; /* Sets the font to Corbel */
+    font-size: 14px; /* Sets the font size to 12 pixels */
+    color: #333; /* Optional: sets a dark grey font color */
+}
+
+.pre {
+  color: #FF7C48 ;
+  background-color: #00457C  ;
+  font-family: Corbel;
+  font-size: 14px;
+}
+
+</style>
+
+.box {
+  margin: 1em ;
+  border: 2px solid #47A1E7;
+  border-left: 10px solid #47A1E7; 
+  border-radius: 10px;
+  }
+
+.box-header {
+  margin-left: 0em;
+  padding-left:  30px;
+  padding-top:  5px;
+  padding-bottom: 5px;
+  color: white;
+  text-indent: 0em;
+  background-color: #47A1E7;
+  /*border-top-right-radius: 10px; */
+  font-size: 1em;
+  font-weight: bold;
+  background-size: 30px;
+  min-height: 175px;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+      }
+
+.box-container {
+  padding-top: 5px;
+  padding-left: 10px;
+  color: white ;
+  background-color: #47A1E7;
+  border-bottom-right-radius: 10px;
+}
+
+.quarto-title-block .quarto-title-banner {
+ background-image: url(../prep/encompass-logo-blue.png); 
+  background-size: 120px;
+  background-position: left;
+  background-repeat: no-repeat;
+  padding-left: 25px;
+  background-origin: content-box; 
+  /*font-family: Corbel;
+  color: #FF7C48;
+  font-weight: bold;
+  font-size: 32px; */
+} 
+
+subtitle {
+  font-family: Corbel, sans-serif;
+  /* font-weight: bold; */
+  color: white;
+  font-size: 48px;
+}
+
+title {
+  font-family: Corbel, sans-serif;
+  /*font-weight: bold;*/
+  color: white;
+  font-size: 56px;
+}
