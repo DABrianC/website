@@ -157,6 +157,7 @@ plot +
   
   #add a smoothing line
   geom_smooth(aes(x = gdpPercap, y = lifeExp))
+
 ```
 
 ## Have fun!
@@ -173,5 +174,6 @@ df <- gapminder
 ggplot(df) +
   geom_point(aes(x = pop, y = lifeExp, color = continent)
              , alpha = .6)
+
 
 ```
