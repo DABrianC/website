@@ -10,7 +10,7 @@ format:
     code-fold: false
     code-summary: "Show the code"
     toc: true
-    css: prep/styles.css
+    
 editor: visual
 filters: 
   - webr
