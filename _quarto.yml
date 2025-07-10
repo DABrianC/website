@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "test"
+  title: "Humans Learning"
   navbar:
     right:
       - about.qmd
