@@ -75,18 +75,37 @@ body {
   border-bottom-right-radius: 10px;
 }
 
-.quarto-title-block .quarto-title-banner {
- background-image: url(../prep/encompass-logo-blue.png); 
+.quarto-title-banner {
+ background-image: url(humanslearning.png); 
   background-size: 120px;
   background-position: left;
   background-repeat: no-repeat;
+  background-color: #1e3a8a;
   padding-left: 25px;
-  background-origin: content-box; 
-  /*font-family: Corbel;
-  color: #FF7C48;
-  font-weight: bold;
-  font-size: 32px; */
+  color: white;
 } 
+
+.quarto-title-block {
+  background-color: #1e3a8a; /* Deep blue background for entire block */
+  color: white; /* White text color */
+}
+/* Target navbar/header area where social icons typically sit */
+.navbar,
+.navbar-brand-container,
+.navbar-nav,
+.quarto-navigation-tool {
+  background-color: #1e3a8a !important; /* Deep blue for navigation area */
+  color: white !important;
+  
+}
+
+/* Target any remaining header elements */
+header,
+.header,
+.quarto-header {
+  background-color: #1e3a8a !important; /* Deep blue for header */
+  color: white !important; /* White text color */
+}
 
 subtitle {
   font-family: Corbel, sans-serif;
