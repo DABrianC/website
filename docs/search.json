@@ -1,10 +1,10 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Humans Learning",
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJul 9, 2025\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJul 6, 2025\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   },
   {
     "objectID": "posts/first plot/lesson1_gapminder.html",
@@ -42,13 +42,6 @@
     "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Try changing the variables or changing the type of chart from a scatter plot (geom_point()) to a line graph (geom_line()) or a bar graph (geom_col() or geom_bar()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
   },
   {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
-    "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
-  },
-  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
@@ -56,10 +49,17 @@
     "text": "Humans Learning was originally founded as an internal tool for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful as I learned R. I’ve decided to resurrect it and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many others."
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Humans Learning",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJul 9, 2025\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJul 6, 2025\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
   }
 ]

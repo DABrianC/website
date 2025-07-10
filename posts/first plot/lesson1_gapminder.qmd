@@ -4,6 +4,7 @@ subtitle: "Getting started in R with Gapminder"
 date: "November 1, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
+image: "gapminder.png"
 format: 
   html:
     code-fold: false
