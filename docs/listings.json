@@ -2,8 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/post-with-code/index.html",
-      "/posts/welcome/index.html",
+      "/posts/lineplot/lesson2_lineplot.html",
       "/posts/first plot/lesson1_gapminder.html"
     ]
   }

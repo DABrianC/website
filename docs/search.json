@@ -44,16 +44,16 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "Humans Learning",
     "section": "",
-    "text": "Humans Learning was originally founded as an internal tool for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful as I learned R. I’ve decided to resurrect it and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many others."
+    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Humans Learning",
+    "title": "Brian Calhoon",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJul 9, 2025\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJul 6, 2025\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
+    "text": "Some text here"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -61,5 +61,54 @@
     "title": "Post With Code",
     "section": "",
     "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "index.html#bio",
+    "href": "index.html#bio",
+    "title": "Brian Calhoon",
+    "section": "",
+    "text": "Some text here"
+  },
+  {
+    "objectID": "index.html#work-with-me",
+    "href": "index.html#work-with-me",
+    "title": "Brian Calhoon",
+    "section": "Work with me",
+    "text": "Work with me\nSome more text here"
+  },
+  {
+    "objectID": "posts/lineplot/lesson2_lineplot.html",
+    "href": "posts/lineplot/lesson2_lineplot.html",
+    "title": "Humans Learning",
+    "section": "",
+    "text": "Welcome to the second iteration of the Humans Learning lessons. As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. Each lesson is then captured in an html file for online access. This is all in the service of humans learning. Enjoy!"
+  },
+  {
+    "objectID": "posts/lineplot/lesson2_lineplot.html#install-and-load-packages",
+    "href": "posts/lineplot/lesson2_lineplot.html#install-and-load-packages",
+    "title": "Humans Learning",
+    "section": "Install and load packages",
+    "text": "Install and load packages\nIn your R script, you will use the install.packages() and library() functions to install and load the two packages Tidyverse and Gapminder.\nTidyverse provides a suite of compatible data wrangling and visualization tools. The workhorse of data visualization is the ggplot2 package. With ggplot2 the sky is the limit! From basic bar plots to animated graphics to interactive charts and tables connected by a common data source, ggplot2 and its extension packages can do it all. And once again, Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.\n\n#Installs the package on your system.\ninstall.packages(c(\"tidyverse\", \"gapminder\"), repos = \"https://cloud.r-project.org/\")\n\nInstalling packages into 'C:/Users/brian/AppData/Local/R/win-library/4.4'\n(as 'lib' is unspecified)\n\n\npackage 'tidyverse' successfully unpacked and MD5 sums checked\npackage 'gapminder' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n    C:\\Users\\brian\\AppData\\Local\\Temp\\Rtmpy67NwJ\\downloaded_packages\n\n#load the libraries so you can use them\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n\n\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(gapminder)"
+  },
+  {
+    "objectID": "posts/lineplot/lesson2_lineplot.html#view-the-data",
+    "href": "posts/lineplot/lesson2_lineplot.html#view-the-data",
+    "title": "Humans Learning",
+    "section": "View the data",
+    "text": "View the data\nJust as in the first session, the first step is to view the data. To look at just the first six rows so you can see the variable names and structure of the data pass gapminder to head() as in the code below.\n\n# assign gapminder to df \n# this is required, but it makes life easier\n# don't we all want life to be easier\n\ndf &lt;- gapminder\n\n# look at the gapminder dataset\nhead(df)\n\n# A tibble: 6 × 6\n  country     continent  year lifeExp      pop gdpPercap\n  &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;\n1 Afghanistan Asia       1952    28.8  8425333      779.\n2 Afghanistan Asia       1957    30.3  9240934      821.\n3 Afghanistan Asia       1962    32.0 10267083      853.\n4 Afghanistan Asia       1967    34.0 11537966      836.\n5 Afghanistan Asia       1972    36.1 13079460      740.\n6 Afghanistan Asia       1977    38.4 14880372      786.\n\ntail(df)\n\n# A tibble: 6 × 6\n  country  continent  year lifeExp      pop gdpPercap\n  &lt;fct&gt;    &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;\n1 Zimbabwe Africa     1982    60.4  7636524      789.\n2 Zimbabwe Africa     1987    62.4  9216418      706.\n3 Zimbabwe Africa     1992    60.4 10704340      693.\n4 Zimbabwe Africa     1997    46.8 11404948      792.\n5 Zimbabwe Africa     2002    40.0 11926563      672.\n6 Zimbabwe Africa     2007    43.5 12311143      470."
+  },
+  {
+    "objectID": "posts/lineplot/lesson2_lineplot.html#make-a-line-plot",
+    "href": "posts/lineplot/lesson2_lineplot.html#make-a-line-plot",
+    "title": "Humans Learning",
+    "section": "Make a line plot",
+    "text": "Make a line plot\nAs fun as looking at data is, we probably want to do more. Since our objective is to make a line plot, we should do that next. The structure of ggplot requires that we pass it an object (df), the type of geom_* we want to make (in this case a line plot), and the aesthetics or the variables we want to plot.\n\n#make a plot\nggplot(data = df) +\n  geom_line(aes(x = year, y = gdpPercap, color = continent))\n\n\n\n\n\n\n\n\nYeeeeesh!! That did not work at all. Looks like we forgot to group_by() and summarize() to create summary statistics that would provide us a single datapoint to follow across the years.\nLet’s us df to create a new object, df1. df1 will group the data by continent and year and create a variable for the mean GDP per capita. This will provide a single data point for each continent, for each year so that we can make useful lines for the mean GDP per capita over time.\n\n#| class-output: pre\n\n\ndf1 &lt;- df |&gt; \n  group_by(continent, year) |&gt; \n  summarize(avg_gdpPercap = mean(gdpPercap))\n\n`summarise()` has grouped output by 'continent'. You can override using the\n`.groups` argument.\n\n\nNow we just have to remember the how ggplot works and make our line plot. It takes three components.\n\nThe data object, df1\nThe geom, geom_line()\nThe aesthetics, year (x-axis), avg_gdpPercap (y-axis), and continent (color).\n\n\n#| class-output: pre\n\n\nggplot(df1) +\n  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))"
+  },
+  {
+    "objectID": "posts/lineplot/lesson2_lineplot.html#have-fun",
+    "href": "posts/lineplot/lesson2_lineplot.html#have-fun",
+    "title": "Humans Learning",
+    "section": "Have fun!",
+    "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the group_by() call or to adjust the summary statistic in summarize(). Then, have fun with the plot!\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
   }
 ]

@@ -27,12 +27,12 @@ h4 {
 
 /* body font, size, and color */
 /* CSS code */
-body {
+/*body {
     background-color: #fafafa; /* Light grey background */
-    font-family: Corbel, sans-serif; /* Sets the font to Corbel */
-    font-size: 14px; /* Sets the font size to 12 pixels */
-    color: #333; /* Optional: sets a dark grey font color */
-}
+    /*font-family: Corbel, sans-serif; /* Sets the font to Corbel */
+    /*font-size: 14px; /* Sets the font size to 12 pixels */
+    /*color: #333; /* Optional: sets a dark grey font color */
+/*} */
 
 .pre {
   color: #FF7C48 ;
@@ -75,7 +75,7 @@ body {
   border-bottom-right-radius: 10px;
 }
 
-.quarto-title-banner {
+/*.quarto-title-banner {
  background-image: url(humanslearning.png); 
   background-size: 120px;
   background-position: left;
@@ -83,40 +83,40 @@ body {
   background-color: #1e3a8a;
   padding-left: 25px;
   color: white;
-} 
+} */
 
-.quarto-title-block {
+/*.quarto-title-block {
   background-color: #1e3a8a; /* Deep blue background for entire block */
-  color: white; /* White text color */
-}
+  /*color: white; /* White text color */
+/*} */
 /* Target navbar/header area where social icons typically sit */
-.navbar,
+/*.navbar,
 .navbar-brand-container,
 .navbar-nav,
 .quarto-navigation-tool {
   background-color: #1e3a8a !important; /* Deep blue for navigation area */
-  color: white !important;
+/*  color: white !important;
   
 }
 
 /* Target any remaining header elements */
-header,
+/*header,
 .header,
 .quarto-header {
   background-color: #1e3a8a !important; /* Deep blue for header */
-  color: white !important; /* White text color */
-}
+/*  color: white !important; /* White text color */
+/*}
 
 subtitle {
   font-family: Corbel, sans-serif;
   /* font-weight: bold; */
-  color: white;
+ /* color: white;
   font-size: 48px;
 }
 
-title {
+/*title {
   font-family: Corbel, sans-serif;
   /*font-weight: bold;*/
-  color: white;
+/*  color: white;
   font-size: 56px;
 }

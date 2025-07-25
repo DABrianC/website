@@ -18,6 +18,8 @@ filters:
 
 ```{r global_options, include=F, warning=F, message=F, error=F}
 
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
 ## custom colors
 my_pal <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288",
             "#AA4499", "#44AA99", "#999933", "#882255", "#661100",

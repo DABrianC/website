@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brian Calhoon">
-<meta name="dcterms.date" content="2024-11-01">
+<meta name="dcterms.date" content="2024-11-11">
 
 <title>Humans Learning – Brian Calhoon</title>
 <style>
@@ -408,7 +408,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"library(tidyverse)\nlibrary(gapminder)\n\ndf <- gapminder\n\nggplot(df) +\n  geom_point(aes(x = pop, y = lifeExp, color = continent)\n             , alpha = .6)\n","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"library(tidyverse)\nlibrary(gapminder)\n\ndf <- gapminder\n\ndf1 <- df |> \n  group_by(continent, year) |> \n  summarize(avg_gdpPercap = mean(gdpPercap))\n\nggplot(df1) +\n  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script>
 <script type="module">
@@ -1664,6 +1664,7 @@ globalThis.qwebrExecuteCode = async function (
 
 
 <link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="prep/styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -1709,7 +1710,7 @@ globalThis.qwebrExecuteCode = async function (
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Humans Learning</h1>
-            <p class="subtitle lead">Getting started in R with Gapminder</p>
+            <p class="subtitle lead">Lesson 2: Making a line plot with ggplot</p>
                       </div>
   </div>
     
@@ -1726,7 +1727,7 @@ globalThis.qwebrExecuteCode = async function (
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 1, 2024</p>
+        <p class="date">November 11, 2024</p>
       </div>
     </div>
     
@@ -1747,7 +1748,7 @@ globalThis.qwebrExecuteCode = async function (
   <ul class="collapse">
   <li><a href="#install-and-load-packages" id="toc-install-and-load-packages" class="nav-link" data-scroll-target="#install-and-load-packages">Install and load packages</a></li>
   <li><a href="#view-the-data" id="toc-view-the-data" class="nav-link" data-scroll-target="#view-the-data">View the data</a></li>
-  <li><a href="#make-a-plot" id="toc-make-a-plot" class="nav-link" data-scroll-target="#make-a-plot">Make a plot</a></li>
+  <li><a href="#make-a-line-plot" id="toc-make-a-line-plot" class="nav-link" data-scroll-target="#make-a-line-plot">Make a line plot</a></li>
   <li><a href="#have-fun" id="toc-have-fun" class="nav-link" data-scroll-target="#have-fun">Have fun!</a></li>
   </ul></li>
   </ul>
@@ -2054,7 +2055,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </div><div class="column" style="width:80%;">
 <div class="box">
 <div class="box-header">
-<p>Welcome to the first iteration of the Humans Learning lessons. If you are here then you are interested in learning something about data analysis through code. Each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. Each lesson is captured in an html file for online access. This is all in the service of humans learning. Enjoy!</p>
+<p>Welcome to the second iteration of the Humans Learning lessons. As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. Each lesson is then captured in an html file for online access. This is all in the service of humans learning. Enjoy!</p>
 </div>
 </div>
 </div>
@@ -2062,30 +2063,60 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </section>
 <section id="learning-objectives" class="level1">
 <h1>Learning objectives</h1>
-<p>For this first course, the learning objectives are to:</p>
+<p>For this session, the learning objectives are to:</p>
 <ul>
-<li><p>Install and load the <code>tidyverse</code> and <code>gapminder</code> packages in your RStudio console</p></li>
-<li><p>Make your first plot</p></li>
+<li><p>Group data to calculate summary statistics</p></li>
+<li><p>Make your first line plot</p></li>
 </ul>
 <section id="install-and-load-packages" class="level2">
 <h2 class="anchored" data-anchor-id="install-and-load-packages">Install and load packages</h2>
 <p>In your R script, you will use the <code>install.packages()</code> and <code>library()</code> functions to install and load the two packages Tidyverse and Gapminder.</p>
-<p>Tidyverse provides a suite of compatible data wrangling and visualization tools. Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.</p>
+<p>Tidyverse provides a suite of compatible data wrangling and visualization tools. The workhorse of data visualization is the <code>ggplot2</code> package. With <code>ggplot2</code> the sky is the limit! From basic bar plots to animated graphics to interactive charts and tables connected by a common data source, <code>ggplot2</code> and its extension packages can do it all. And once again, Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Installs the package on your system.</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(c("tidyverse", "gapminder"))</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#load the libraries so you can use them</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"gapminder"</span>), <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Installing packages into 'C:/Users/brian/AppData/Local/R/win-library/4.4'
+(as 'lib' is unspecified)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre class="pre"><code>package 'tidyverse' successfully unpacked and MD5 sums checked
+package 'gapminder' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+    C:\Users\brian\AppData\Local\Temp\Rtmpy67NwJ\downloaded_packages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load the libraries so you can use them</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="view-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="view-the-data">View the data</h2>
-<p>Now that you have completed the first step it is time to view the data. To look at just the first six rows so you can see the variable names and structure of the data pass <code>gapminder</code> to <code>head()</code> as in the code below.</p>
+<p>Just as in the first session, the first step is to view the data. To look at just the first six rows so you can see the variable names and structure of the data pass <code>gapminder</code> to <code>head()</code> as in the code below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#look at the gapminder dataset</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># assign gapminder to df </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this is required, but it makes life easier</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># don't we all want life to be easier</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> gapminder</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># look at the gapminder dataset</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="pre"><code># A tibble: 6 × 6
   country     continent  year lifeExp      pop gdpPercap
@@ -2097,57 +2128,65 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 5 Afghanistan Asia       1972    36.1 13079460      740.
 6 Afghanistan Asia       1977    38.4 14880372      786.</code></pre>
 </div>
-</div>
-<p>To make it even easier to work with, you can assign <code>gapminder</code> to the object <code>df</code>. Now you only have to type <code>df</code> to see it. You can view only the variable names by passing <code>df</code> to <code>names()</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make gapminder an object</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> gapminder</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#read variable names</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="pre"><code>[1] "country"   "continent" "year"      "lifeExp"   "pop"       "gdpPercap"</code></pre>
+<pre class="pre"><code># A tibble: 6 × 6
+  country  continent  year lifeExp      pop gdpPercap
+  &lt;fct&gt;    &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+1 Zimbabwe Africa     1982    60.4  7636524      789.
+2 Zimbabwe Africa     1987    62.4  9216418      706.
+3 Zimbabwe Africa     1992    60.4 10704340      693.
+4 Zimbabwe Africa     1997    46.8 11404948      792.
+5 Zimbabwe Africa     2002    40.0 11926563      672.
+6 Zimbabwe Africa     2007    43.5 12311143      470.</code></pre>
 </div>
 </div>
 </section>
-<section id="make-a-plot" class="level2">
-<h2 class="anchored" data-anchor-id="make-a-plot">Make a plot</h2>
-<p>As fun as looking at data is, we probably want to do more. So, we should make our first plot using <code>ggplot()</code>. The structure of ggplot requires that we pass it an object (df), the type of <code>geom_*</code> we want to make (in this case a scatterplot), and the aesthetics or the variables we want to plot. The code below provides a first plot.</p>
-<p>Then we make the plot an object.</p>
+<section id="make-a-line-plot" class="level2">
+<h2 class="anchored" data-anchor-id="make-a-line-plot">Make a line plot</h2>
+<p>As fun as looking at data is, we probably want to do more. Since our objective is to make a line plot, we should do that next. The structure of ggplot requires that we pass it an object (df), the type of <code>geom_*</code> we want to make (in this case a line plot), and the aesthetics or the variables we want to plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make a plot</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> gdpPercap, <span class="at">y =</span> lifeExp, <span class="at">color =</span> continent)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>             , <span class="at">alpha =</span> .<span class="dv">4</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make a plot</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> gdpPercap, <span class="at">color =</span> continent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lesson1_gapminder_files/figure-html/plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="lesson2_lineplot_files/figure-html/plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make the plot an object</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> df) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> gdpPercap, <span class="at">y =</span> lifeExp, <span class="at">color =</span>  continent)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>             , <span class="at">alpha =</span> .<span class="dv">4</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This next plot does a little more by adding to the <code>plot</code> object. We rescaled the data to correct for some outliers and we added a smoothing line to help readers interpret the trend easily.</p>
+<p>Yeeeeesh!! That did not work at all. Looks like we forgot to <code>group_by()</code> and <code>summarize()</code> to create summary statistics that would provide us a single datapoint to follow across the years.</p>
+<p>Let’s us df to create a new object, <code>df1</code>. <code>df1</code> will group the data by continent and year and create a variable for the mean GDP per capita. This will provide a single data point for each continent, for each year so that we can make useful lines for the mean GDP per capita over time.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use the object to add more things to the plot</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plot <span class="sc">+</span>  </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#rescale data</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#add a smoothing line</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> gdpPercap, <span class="at">y =</span> lifeExp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| class-output: pre</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(continent, year) <span class="sc">|&gt;</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_gdpPercap =</span> <span class="fu">mean</span>(gdpPercap))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
+<pre><code>`summarise()` has grouped output by 'continent'. You can override using the
+`.groups` argument.</code></pre>
 </div>
+</div>
+<p>Now we just have to remember the how ggplot works and make our line plot. It takes three components.</p>
+<ul>
+<li>The data object, <code>df1</code></li>
+<li>The geom, <code>geom_line()</code></li>
+<li>The aesthetics, <code>year</code> (x-axis), <code>avg_gdpPercap</code> (y-axis), and <code>continent</code> (color).</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| class-output: pre</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df1) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_gdpPercap, <span class="at">color =</span> continent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lesson1_gapminder_files/figure-html/plot more-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="lesson2_lineplot_files/figure-html/plot more-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2155,7 +2194,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </section>
 <section id="have-fun" class="level2">
 <h2 class="anchored" data-anchor-id="have-fun">Have fun!</h2>
-<p>Now it’s your turn practice! Below is a fully functioning code editor with starting code in place. Try changing the variables or changing the type of chart from a scatter plot (<code>geom_point()</code>) to a line graph (<code>geom_line()</code>) or a bar graph (<code>geom_col()</code> or <code>geom_bar()</code>).</p>
+<p>Now it’s your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the <code>group_by()</code> call or to adjust the summary statistic in <code>summarize()</code>. Then, have fun with the plot!</p>
 <div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 
