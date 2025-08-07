@@ -1,82 +1,5 @@
 [
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
-  },
-  {
-    "objectID": "posts/first plot/lesson1_gapminder.html",
-    "href": "posts/first plot/lesson1_gapminder.html",
-    "title": "Humans Learning",
-    "section": "",
-    "text": "Welcome to the first iteration of the Humans Learning lessons. If you are here then you are interested in learning something about data analysis through code. Each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. Each lesson is captured in an html file for online access. This is all in the service of humans learning. Enjoy!"
-  },
-  {
-    "objectID": "posts/first plot/lesson1_gapminder.html#install-and-load-packages",
-    "href": "posts/first plot/lesson1_gapminder.html#install-and-load-packages",
-    "title": "Humans Learning",
-    "section": "Install and load packages",
-    "text": "Install and load packages\nIn your R script, you will use the install.packages() and library() functions to install and load the two packages Tidyverse and Gapminder.\nTidyverse provides a suite of compatible data wrangling and visualization tools. Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.\n\n#Installs the package on your system.\n#install.packages(c(\"tidyverse\", \"gapminder\"))\n\n#load the libraries so you can use them\nlibrary(tidyverse)\nlibrary(gapminder)"
-  },
-  {
-    "objectID": "posts/first plot/lesson1_gapminder.html#view-the-data",
-    "href": "posts/first plot/lesson1_gapminder.html#view-the-data",
-    "title": "Humans Learning",
-    "section": "View the data",
-    "text": "View the data\nNow that you have completed the first step it is time to view the data. To look at just the first six rows so you can see the variable names and structure of the data pass gapminder to head() as in the code below.\n\n#look at the gapminder dataset\nhead(gapminder)\n\n# A tibble: 6 × 6\n  country     continent  year lifeExp      pop gdpPercap\n  &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;\n1 Afghanistan Asia       1952    28.8  8425333      779.\n2 Afghanistan Asia       1957    30.3  9240934      821.\n3 Afghanistan Asia       1962    32.0 10267083      853.\n4 Afghanistan Asia       1967    34.0 11537966      836.\n5 Afghanistan Asia       1972    36.1 13079460      740.\n6 Afghanistan Asia       1977    38.4 14880372      786.\n\n\nTo make it even easier to work with, you can assign gapminder to the object df. Now you only have to type df to see it. You can view only the variable names by passing df to names().\n\n#make gapminder an object\ndf &lt;- gapminder\n\n#read variable names\nnames(df)\n\n[1] \"country\"   \"continent\" \"year\"      \"lifeExp\"   \"pop\"       \"gdpPercap\""
-  },
-  {
-    "objectID": "posts/first plot/lesson1_gapminder.html#make-a-plot",
-    "href": "posts/first plot/lesson1_gapminder.html#make-a-plot",
-    "title": "Humans Learning",
-    "section": "Make a plot",
-    "text": "Make a plot\nAs fun as looking at data is, we probably want to do more. So, we should make our first plot using ggplot(). The structure of ggplot requires that we pass it an object (df), the type of geom_* we want to make (in this case a scatterplot), and the aesthetics or the variables we want to plot. The code below provides a first plot.\nThen we make the plot an object.\n\n#make a plot\nggplot(data = df) +\n  geom_point(aes(x = gdpPercap, y = lifeExp, color = continent)\n             , alpha = .4) \n\n\n\n\n\n\n\n#make the plot an object\nplot &lt;- ggplot(data = df) +\n  geom_point(aes(x = gdpPercap, y = lifeExp, color =  continent)\n             , alpha = .4) \n\nThis next plot does a little more by adding to the plot object. We rescaled the data to correct for some outliers and we added a smoothing line to help readers interpret the trend easily.\n\n#use the object to add more things to the plot\nplot +  \n  \n  #rescale data\n  scale_x_log10() + \n  \n  #add a smoothing line\n  geom_smooth(aes(x = gdpPercap, y = lifeExp))\n\n`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = \"cs\")'"
-  },
-  {
-    "objectID": "posts/first plot/lesson1_gapminder.html#have-fun",
-    "href": "posts/first plot/lesson1_gapminder.html#have-fun",
-    "title": "Humans Learning",
-    "section": "Have fun!",
-    "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Try changing the variables or changing the type of chart from a scatter plot (geom_point()) to a line graph (geom_line()) or a bar graph (geom_col() or geom_bar()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Humans Learning",
-    "section": "",
-    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics.\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nLesson 2: Making a line plot with ggplot\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Brian Calhoon",
-    "section": "",
-    "text": "Some text here"
-  },
-  {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
-    "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "index.html#bio",
-    "href": "index.html#bio",
-    "title": "Brian Calhoon",
-    "section": "",
-    "text": "Some text here"
-  },
-  {
-    "objectID": "index.html#work-with-me",
-    "href": "index.html#work-with-me",
-    "title": "Brian Calhoon",
-    "section": "Work with me",
-    "text": "Work with me\nSome more text here"
-  },
-  {
     "objectID": "posts/lineplot/lesson2_lineplot.html",
     "href": "posts/lineplot/lesson2_lineplot.html",
     "title": "Humans Learning",
@@ -112,10 +35,66 @@
     "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the group_by() call or to adjust the summary statistic in summarize(). Then, have fun with the plot!\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Brian Calhoon",
+    "section": "",
+    "text": "Some text here"
+  },
+  {
+    "objectID": "index.html#bio",
+    "href": "index.html#bio",
+    "title": "Brian Calhoon",
+    "section": "",
+    "text": "Some text here"
+  },
+  {
+    "objectID": "index.html#work-with-me",
+    "href": "index.html#work-with-me",
+    "title": "Brian Calhoon",
+    "section": "Work with me",
+    "text": "Work with me\nSome more text here"
+  },
+  {
     "objectID": "blog.html",
     "href": "blog.html",
     "title": "Humans Learning",
     "section": "",
     "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics.\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nLesson 2: Making a line plot with ggplot\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/first plot/lesson1_gapminder.html",
+    "href": "posts/first plot/lesson1_gapminder.html",
+    "title": "Humans Learning",
+    "section": "",
+    "text": "Welcome to the first iteration of the Humans Learning lessons. If you are here then you are interested in learning something about data analysis through code. Each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. Each lesson is captured in an html file for online access. This is all in the service of humans learning. Enjoy!"
+  },
+  {
+    "objectID": "posts/first plot/lesson1_gapminder.html#install-and-load-packages",
+    "href": "posts/first plot/lesson1_gapminder.html#install-and-load-packages",
+    "title": "Humans Learning",
+    "section": "Install and load packages",
+    "text": "Install and load packages\nIn your R script, you will use the install.packages() and library() functions to install and load the two packages Tidyverse and Gapminder.\nTidyverse provides a suite of compatible data wrangling and visualization tools. Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.\n\n#Installs the package on your system.\n#install.packages(c(\"tidyverse\", \"gapminder\"))\n\n#load the libraries so you can use them\nlibrary(tidyverse)\nlibrary(gapminder)"
+  },
+  {
+    "objectID": "posts/first plot/lesson1_gapminder.html#view-the-data",
+    "href": "posts/first plot/lesson1_gapminder.html#view-the-data",
+    "title": "Humans Learning",
+    "section": "View the data",
+    "text": "View the data\nNow that you have completed the first step it is time to view the data. To look at just the first six rows so you can see the variable names and structure of the data pass gapminder to head() as in the code below.\n\n#look at the gapminder dataset\nhead(gapminder)\n\n# A tibble: 6 × 6\n  country     continent  year lifeExp      pop gdpPercap\n  &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;\n1 Afghanistan Asia       1952    28.8  8425333      779.\n2 Afghanistan Asia       1957    30.3  9240934      821.\n3 Afghanistan Asia       1962    32.0 10267083      853.\n4 Afghanistan Asia       1967    34.0 11537966      836.\n5 Afghanistan Asia       1972    36.1 13079460      740.\n6 Afghanistan Asia       1977    38.4 14880372      786.\n\n\nTo make it even easier to work with, you can assign gapminder to the object df. Now you only have to type df to see it. You can view only the variable names by passing df to names().\n\n#make gapminder an object\ndf &lt;- gapminder\n\n#read variable names\nnames(df)\n\n[1] \"country\"   \"continent\" \"year\"      \"lifeExp\"   \"pop\"       \"gdpPercap\""
+  },
+  {
+    "objectID": "posts/first plot/lesson1_gapminder.html#make-a-plot",
+    "href": "posts/first plot/lesson1_gapminder.html#make-a-plot",
+    "title": "Humans Learning",
+    "section": "Make a plot",
+    "text": "Make a plot\nAs fun as looking at data is, we probably want to do more. So, we should make our first plot using ggplot(). The structure of ggplot requires that we pass it an object (df), the type of geom_* we want to make (in this case a scatterplot), and the aesthetics or the variables we want to plot. The code below provides a first plot.\nThen we make the plot an object.\n\n#make a plot\nggplot(data = df) +\n  geom_point(aes(x = gdpPercap, y = lifeExp, color = continent)\n             , alpha = .4) \n\n\n\n\n\n\n\n#make the plot an object\nplot &lt;- ggplot(data = df) +\n  geom_point(aes(x = gdpPercap, y = lifeExp, color =  continent)\n             , alpha = .4) \n\nThis next plot does a little more by adding to the plot object. We rescaled the data to correct for some outliers and we added a smoothing line to help readers interpret the trend easily.\n\n#use the object to add more things to the plot\nplot +  \n  \n  #rescale data\n  scale_x_log10() + \n  \n  #add a smoothing line\n  geom_smooth(aes(x = gdpPercap, y = lifeExp))\n\n`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = \"cs\")'"
+  },
+  {
+    "objectID": "posts/first plot/lesson1_gapminder.html#have-fun",
+    "href": "posts/first plot/lesson1_gapminder.html#have-fun",
+    "title": "Humans Learning",
+    "section": "Have fun!",
+    "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Try changing the variables or changing the type of chart from a scatter plot (geom_point()) to a line graph (geom_line()) or a bar graph (geom_col() or geom_bar()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
   }
 ]
