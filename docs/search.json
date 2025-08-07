@@ -46,7 +46,7 @@
     "href": "about.html",
     "title": "Humans Learning",
     "section": "",
-    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics."
+    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics.\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nLesson 2: Making a line plot with ggplot\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -110,5 +110,12 @@
     "title": "Humans Learning",
     "section": "Have fun!",
     "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the group_by() call or to adjust the summary statistic in summarize(). Then, have fun with the plot!\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Humans Learning",
+    "section": "",
+    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics.\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nLesson 2: Making a line plot with ggplot\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
   }
 ]

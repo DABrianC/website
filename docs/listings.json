@@ -5,5 +5,19 @@
       "/posts/lineplot/lesson2_lineplot.html",
       "/posts/first plot/lesson1_gapminder.html"
     ]
+  },
+  {
+    "listing": "/about.html",
+    "items": [
+      "/posts/lineplot/lesson2_lineplot.html",
+      "/posts/first plot/lesson1_gapminder.html"
+    ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/lineplot/lesson2_lineplot.html",
+      "/posts/first plot/lesson1_gapminder.html"
+    ]
   }
 ]

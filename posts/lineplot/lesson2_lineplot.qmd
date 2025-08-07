@@ -4,6 +4,7 @@ subtitle: "Lesson 2: Making a line plot with ggplot"
 date: "November 11, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
+image: "lineplot.png"
 format: 
   html:
     code-fold: false
@@ -158,6 +159,7 @@ Now we just have to remember the how ggplot works and make our line plot. It tak
 
 ggplot(df1) +
   geom_line(aes(x = year, y = avg_gdpPercap, color = continent))
+
 
 
 ```
