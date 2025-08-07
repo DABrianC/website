@@ -1,6 +1,7 @@
 ---
 title: "Brian Calhoon"
-
+about:
+  template: jolla
 
 ---
 
