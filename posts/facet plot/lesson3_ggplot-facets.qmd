@@ -1,0 +1,194 @@
+---
+title: "Humans Learning"
+subtitle: "Lesson 3: Faceting plots using ggplot"
+date: "November 22, 2024"
+author: "Brian Calhoon"
+title-block-banner: "#C9C9C9"
+format: 
+  html:
+    code-fold: false
+    code-summary: "Show the code"
+    toc: true
+    css: prep/styles.css
+editor: visual
+filters: 
+  - webr
+---
+
+
+```{r global_options, include=F, warning=F, message=F, error=F}
+source(here::here("prep/prep.R"))
+```
+
+# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::::::: columns
+:::: {.column width="20%"}
+::: box-header
+![](prep/humanslearning.png)
+:::
+::::
+
+::::: {.column width="80%"}
+:::: box
+::: box-header
+Greetings and welcome to the third iteration of Humans Learning. As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. This is all in the service of humans learning. Enjoy!
+:::
+::::
+:::::
+::::::::
+
+# Learning objectives
+
+For this session, the learning objectives are to:
+
+-   Understand `ggplot`'s facetting function to make multiple plots at once
+
+-   Make a facetted plot
+
+## Install and load packages
+
+In your R script, you will use the `install.packages()` and `library()` functions to install and load the two packages Tidyverse and Gapminder.
+
+Tidyverse provides a suite of compatible data wrangling and visualization tools. The workhorse of data visualization is the `ggplot2` package. With `ggplot2` the sky is the limit! From basic bar plots to animated graphics to interactive charts and tables connected by a common data source, `ggplot2` and its extension packages can do it all. And once again, Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.
+
+```{r}
+#| class-output: pre
+
+#Installs the package on your system.
+install.packages(c("tidyverse", "gapminder"))
+
+#load the libraries so you can use them
+library(tidyverse)
+library(gapminder)
+
+```
+
+## Set up the data
+
+Similar to before, we need to ensure we have the data and that it's in a format that we can use. To look at just the first six rows so you can see the variable names and structure of the data pass `gapminder` to `head()` as in the code below. 
+
+```{r data}
+#| class-output: pre
+
+# assign gapminder to df 
+# this is required, but it makes life easier
+# don't we all want life to be easier
+
+df <- gapminder
+
+# look at the gapminder dataset
+head(df)
+
+tail(df)
+
+```
+
+It look pretty clean and tidy. We'll explore some additional options for looking at data sets in the coming weeks.
+
+## Make a facetted plot
+
+We've used `ggplot2` in the previous lessons so this will seem quite familiar. The structure of ggplot requires that we pass it an object (df), the type of `geom_*` we want to make (in this case a line plot), and the aesthetics (the variables we want to plot).
+
+We can start with the plot from lesson two and assign it to the object, `plot`.
+
+```{r plot}
+
+#set up the data like last time
+df1 <- df |> 
+  group_by(continent, year) |> 
+  summarize(avg_gdpPercap = mean(gdpPercap))
+
+#make a plot
+plot <- ggplot(df1) +
+  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))
+
+
+```
+
+That gives us the same line plot as last session.
+
+Facetting will separate each of this lines into their own plot panel. You can imagine that if you have lots of data on a single plot, it is easier to see if you can separate visualizations by one of the discrete variables.
+
+Below, the data is separated by continent. Note that the axes across each plot panel are the same which allows for comparison. This is a default of the `facet_wrap()` function. There are cases where you would want to set this feature to false, but in most cases it allows for obvious comparisons across the data.
+
+```{r plot more}
+
+#| class-output: pre
+
+
+plot +
+  facet_wrap(facets = df1$continent)
+
+
+```
+
+Here's another example that takes the data for one continent and facets it by country. 
+
+First, we do a little data wrangling. Then, we plot.
+
+```{r}
+
+#| class-output: pre
+
+#Filter
+df2 <- df |> 
+  filter(continent == "Americas") |>
+  group_by(country, year) |> 
+  summarize(avg_gdpPercap = mean(gdpPercap))
+
+
+```
+
+::: {.panel-tabset}
+
+## Standard Plot
+```{r plot more years}
+
+#| class-output: pre
+
+plot_amer <- ggplot(df2) +
+  geom_line(aes(x = year, y = avg_gdpPercap, color = country)) +
+  labs(title = "Standard Plot") +
+  theme(legend.position = "none")
+
+plot_amer
+```
+
+## Facetted Plot
+
+```{r}
+
+plot_amer + 
+  facet_wrap(facets = df2$country) +
+  labs(title = "Facetted Plot") +
+  theme(legend.position = "none"
+        , axis.text.x = element_text(angle = 45, vjust = .5, hjust = 1))
+
+
+
+```
+
+:::
+
+## Have fun!
+
+Now it's your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the `group_by()` call or to adjust the summary statistic in `summarize()`. Then, have fun with the plot!
+
+```{webr-r}
+
+library(tidyverse)
+library(gapminder)
+
+df <- gapminder
+
+df1 <- df |> 
+  group_by(continent, year) |> 
+  summarize(avg_gdpPercap = mean(gdpPercap))
+
+ggplot(df1) +
+  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))
+
+#now facet this into multiple plots
+
+```
