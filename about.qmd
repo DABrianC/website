@@ -1,6 +1,6 @@
 ---
 title: "About"
-image: humanslearning.png
+image: images/humanslearning.png
 about:
   template: jolla
   links:

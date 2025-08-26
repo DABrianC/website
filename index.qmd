@@ -1,7 +1,11 @@
 ---
-title: "Brian Calhoon"
+title: "Welcome"
+image: images/headshot.jpg
 about:
   template: jolla
+format:
+  html:
+    page-layout: full
 
 ---
 
