@@ -5,7 +5,6 @@ website:
   title: "Brian Calhoon"
   navbar:
     right:
-      - about.qmd
       - blog.qmd
       - icon: github
         href: https://github.com/DABrianC

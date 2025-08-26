@@ -2,7 +2,7 @@
 title: "About"
 image: images/humanslearning.png
 about:
-  template: jolla
+  template: solana
   links:
     - icon: twitter
       text: Twitter

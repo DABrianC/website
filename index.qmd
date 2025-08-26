@@ -2,19 +2,29 @@
 title: "Welcome"
 image: images/headshot.jpg
 about:
-  template: jolla
+  template: solana
+  image-shape: round
+  image-width: 20em
 format:
   html:
-    page-layout: full
+    page-layout: article
 
 ---
 
 ## Bio
 
-Some text here
+Hi, I'm Brian Calhoon. I am a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working in or on projects in Haiti, Niger, Burkina Faso, Senegal, Ukraine, and shorter research assignments about many countries in Latin America, Africa, Eastern Europe, and Asia.
 
 ## Work with me
 
-Some more text here
+I'm available for consulting on short- or long-term assignments. My areas of expertise are:
+
+* Data analysis
+* Data visualization
+* Monitoring
+* Third-party monitoring
+* Program Evaluation
+* GIS
+  
 
 
