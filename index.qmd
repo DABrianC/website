@@ -13,10 +13,10 @@ format:
 
 ## Bio
 
-Hi, I'm Brian Calhoon. I am a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working in or on projects in Haiti, Niger, Burkina Faso, Senegal, Ukraine, and shorter research assignments about many countries in Latin America, Africa, Eastern Europe, and Asia.
+Hi, I'm Brian Calhoon. I am a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, Ukraine, and shorter research assignments on many countries in Latin America, Africa, Eastern Europe, and Asia. 
 
 ## Work with me
 
-I'm available for consulting on short- or long-term assignments. You can contact me to talk about any potential work via [email](briancalhoon.consulting@gmail.com), and we can set up a time to talk.
+I'm available for consulting on short- or long-term assignments. You can [contact me](mailto:briancalhoon.consulting@gmail.com) to set up a time to discuss your project. 
 
 
