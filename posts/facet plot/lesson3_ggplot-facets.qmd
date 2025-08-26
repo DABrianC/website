@@ -1,6 +1,6 @@
 ---
 title: "Humans Learning"
-subtitle: "Lesson 3: Faceting plots using ggplot"
+subtitle: "Faceting plots using ggplot"
 date: "November 22, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
