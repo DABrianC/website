@@ -7,7 +7,7 @@ about:
   image-width: 20em
 format:
   html:
-    page-layout: article
+    page-layout: full
 
 ---
 
