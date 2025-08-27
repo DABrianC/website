@@ -2,7 +2,7 @@
 title: "Humans Learning"
 image: images/humanslearning.png
 about: 
-  template: solana
+  template: jolla
   links:
     - icon: twitter
       text: Twitter
