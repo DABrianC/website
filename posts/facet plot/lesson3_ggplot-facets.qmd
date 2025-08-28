@@ -1,5 +1,5 @@
 ---
-title: "Humans Learning"
+title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Faceting plots using ggplot"
 categories: [ggplot]
 date: "November 22, 2024"
@@ -11,9 +11,9 @@ format:
     code-fold: false
     code-summary: "Show the code"
     toc: true
-    css: styles.css
     body-attrs:
-      class: "humans-learning-post"
+     - class: "humans-learning-post"
+    css: styles.css
 editor: visual
 filters: 
   - webr

@@ -10,7 +10,9 @@ format:
     code-fold: false
     code-summary: "Show the code"
     toc: true
-    css: prep/styles.css
+    body-attrs:
+     - class: "humans-learning-post"
+    css: styles.css
 editor: visual
 filters: 
   - webr
