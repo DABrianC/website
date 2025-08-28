@@ -121,7 +121,7 @@ tail(df)
 
 ```
 
-It look pretty clean and tidy. We'll explore some additional options for looking at data sets in the coming weeks.
+It looks pretty clean and tidy. We'll explore some additional options for looking at data sets in the coming weeks.
 
 ## Make a facetted plot
 
@@ -138,7 +138,7 @@ df1 <- df |>
 
 #make a plot
 plot <- ggplot(df1) +
-  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))
+  geom_line(aes(x = year, y = avg_gdpPercap, color = continent)) + labs(title = "Avg. GDP per Capita, by Continent", x = "Year", y = "$ (USD)")
 
 
 ```
@@ -186,7 +186,7 @@ df2 <- df |>
 
 plot_amer <- ggplot(df2) +
   geom_line(aes(x = year, y = avg_gdpPercap, color = country)) +
-  labs(title = "Standard Plot") +
+  labs(title = "Standard Plot", y = "$ (USD)", x = "Year") +
   theme(legend.position = "none")
 
 plot_amer
@@ -198,7 +198,7 @@ plot_amer
 
 plot_amer + 
   facet_wrap(facets = df2$country) +
-  labs(title = "Facetted Plot") +
+  labs(title = "Facetted Plot", y = "$ (USD)", x = "Year") +
   theme(legend.position = "none"
         , axis.text.x = element_text(angle = 45, vjust = .5, hjust = 1))
 
