@@ -11,14 +11,15 @@ format:
 
 ---
 
+Hi, I'm Brian Calhoon. Welcome to my website. I enjoy playing with data in R and Python. I have an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. I generally enjoy learning about the nitty gritty of how inputs from real life work their way through a data pipeline and end up in a database, report, or presentation. 
+
+If you are new to code-based data analysis and looking from some short examples to test out I encourage you to check out the [Humans Learning](https://dabrianc.github.io/website/blog.html) section of this website where I share code with explanations targeting a general audience.
+
 ## Bio
 
-Hi, I'm Brian Calhoon. I am a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, Ukraine, and shorter research assignments on many countries in Latin America, Africa, Eastern Europe, and Asia. I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts. 
-
-I am an avid R user with an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. If you are interested in learning R check out the [Humans Learning](https://dabrianc.github.io/website/blog.html) section of this website where I share code with explanations.
+I'm a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, and Ukraine. My work has focused on anti-corruption, capacity building, conflict, and generally helping others be more efficient. When I'm not working, I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts. 
 
 ## Work with me
 
-If you have a need for a data analyst/scientist, I'm available for consulting on short- or long-term assignments. You can [contact me](mailto:briancalhoon.consulting@gmail.com) to set up a time to discuss your project.  
-
+If you have a need for a data analyst/scientist, I'm available for short- or long-term consulting assignments. You can [contact me](mailto:briancalhoon.consulting@gmail.com) to set up a time to discuss your project or talk about sourdough.  
 
