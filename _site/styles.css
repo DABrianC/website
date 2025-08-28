@@ -74,11 +74,7 @@ hr {
   background-color: #f9f8f6;
 }
 
-/* Optional: Add background color to distinguish the listing section */
-.quarto-listing {
-  background-color: #f8f9fa;
-  padding: 2rem;
-}
+
 
 /* body font, size, and color */
 /* CSS code */
@@ -131,15 +127,17 @@ hr {
   border-bottom-right-radius: 10px;
 }
 
-/*.quarto-title-banner {
- background-image: url(humanslearning.png); 
-  background-size: 120px;
-  background-position: left;
+.humans-learning-post .quarto-title-block .quarto-title h1.title::before {
+  content: "";
+  background-image: url("images/humanslearning.png");
+  background-size: contain;
   background-repeat: no-repeat;
-  background-color: #1e3a8a;
-  padding-left: 25px;
-  color: white;
-} */
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  margin-right: 15px;
+  vertical-align: middle;
+}
 
 /*.quarto-title-block {
   background-color: #1e3a8a; /* Deep blue background for entire block */

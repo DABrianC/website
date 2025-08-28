@@ -1,6 +1,7 @@
 ---
 title: "Humans Learning"
 subtitle: "Faceting plots using ggplot"
+categories: [ggplot]
 date: "November 22, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
@@ -10,7 +11,9 @@ format:
     code-fold: false
     code-summary: "Show the code"
     toc: true
-    css: prep/styles.css
+    css: styles.css
+    body-attrs:
+      class: "humans-learning-post"
 editor: visual
 filters: 
   - webr
