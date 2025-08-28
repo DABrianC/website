@@ -2084,7 +2084,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 package 'gapminder' successfully unpacked and MD5 sums checked
 
 The downloaded binary packages are in
-    C:\Users\brian\AppData\Local\Temp\RtmpUT2Ge4\downloaded_packages</code></pre>
+    C:\Users\brian\AppData\Local\Temp\RtmpaaSrrt\downloaded_packages</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load the libraries so you can use them</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2141,7 +2141,7 @@ The downloaded binary packages are in
 6 Zimbabwe Africa     2007    43.5 12311143      470.</code></pre>
 </div>
 </div>
-<p>It look pretty clean and tidy. We’ll explore some additional options for looking at data sets in the coming weeks.</p>
+<p>It looks pretty clean and tidy. We’ll explore some additional options for looking at data sets in the coming weeks.</p>
 </section>
 <section id="make-a-facetted-plot" class="level2">
 <h2 class="anchored" data-anchor-id="make-a-facetted-plot">Make a facetted plot</h2>
@@ -2158,7 +2158,7 @@ The downloaded binary packages are in
 </div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make a plot</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df1) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_gdpPercap, <span class="at">color =</span> continent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_gdpPercap, <span class="at">color =</span> continent)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Avg. GDP per Capita, by Continent"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"$ (USD)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That gives us the same line plot as last session.</p>
 <p>Facetting will separate each of this lines into their own plot panel. You can imagine that if you have lots of data on a single plot, it is easier to see if you can separate visualizations by one of the discrete variables.</p>
@@ -2201,7 +2201,7 @@ The downloaded binary packages are in
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>plot_amer <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df2) <span class="sc">+</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_gdpPercap, <span class="at">color =</span> country)) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Standard Plot"</span>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Standard Plot"</span>, <span class="at">y =</span> <span class="st">"$ (USD)"</span>, <span class="at">x =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>plot_amer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2218,7 +2218,7 @@ The downloaded binary packages are in
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plot_amer <span class="sc">+</span> </span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> df2<span class="sc">$</span>country) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Facetted Plot"</span>) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Facetted Plot"</span>, <span class="at">y =</span> <span class="st">"$ (USD)"</span>, <span class="at">x =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        , <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> .<span class="dv">5</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
