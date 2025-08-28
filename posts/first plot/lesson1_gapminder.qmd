@@ -1,6 +1,7 @@
 ---
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Getting started in R with Gapminder"
+categories: [ggplot] [start]
 date: "November 1, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
