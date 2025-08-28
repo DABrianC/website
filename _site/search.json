@@ -74,28 +74,28 @@
     "href": "blog.html",
     "title": "Humans Learning",
     "section": "",
-    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to learn the basics of data analysis with the R programming language. As such, it is made up primarily of short, 5 minute, lessons that focus on a single skill that I found useful to learn in my R journey. I would talk through the lesson on Fridays and then try to post it shortly after on Github.\nI decided to resurrect Humans Learning and make it public to benefit anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python. In addition to this, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, leveraging Quarto, and many other topics.\n\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nFaceting plots using ggplot\n\n\n\n\n\n\n\n\nNov 22, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nMaking a line plot with ggplot\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
+    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to strengthen the basics of data analysis with the R programming language. These were initially in-person or remote live sessions that I then put on a Github page. They are made up primarily of short – 5 minute-ish – lessons that focus on a single skill that I found useful to learn in my R journey. EnCompass closed in early 2025, but I didn’t want Humans Learning to end as there is still much to learn so I created this public site where it will live on. Now it is for anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python (or Julia) in the future. In addition, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, Quarto, and many other topics.\n\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nFaceting plots using ggplot\n\n\n\n\n\n\n\n\nNov 22, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nMaking a line plot with ggplot\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Welcome",
     "section": "",
-    "text": "Hi, I’m Brian Calhoon. I am a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, Ukraine, and shorter research assignments on many countries in Latin America, Africa, Eastern Europe, and Asia. I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts.\nI am an avid R user with an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. If you are interested in learning R check out the Humans Learning section of this website where I share code with explanations."
+    "text": "Hi, I’m Brian Calhoon. Welcome to my website. I enjoy playing with data in R and Python. I have an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. I generally enjoy learning about the nitty gritty of how inputs from real life work their way through a data pipeline and end up in a database, report, or presentation.\nIf you are new to code-based data analysis and looking from some short examples to test out I encourage you to check out the Humans Learning section of this website where I share code with explanations targeting a general audience."
   },
   {
     "objectID": "index.html#bio",
     "href": "index.html#bio",
     "title": "Welcome",
-    "section": "",
-    "text": "Hi, I’m Brian Calhoon. I am a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, Ukraine, and shorter research assignments on many countries in Latin America, Africa, Eastern Europe, and Asia. I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts.\nI am an avid R user with an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. If you are interested in learning R check out the Humans Learning section of this website where I share code with explanations."
+    "section": "Bio",
+    "text": "Bio\nI’m a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, and Ukraine. My work has focused on anti-corruption, capacity building, conflict, and generally helping others be more efficient. When I’m not working, I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts."
   },
   {
     "objectID": "index.html#work-with-me",
     "href": "index.html#work-with-me",
     "title": "Welcome",
     "section": "Work with me",
-    "text": "Work with me\nIf you have a need for a data analyst/scientist, I’m available for consulting on short- or long-term assignments. You can contact me to set up a time to discuss your project."
+    "text": "Work with me\nIf you have a need for a data analyst/scientist, I’m available for short- or long-term consulting assignments. You can contact me to set up a time to discuss your project or talk about sourdough."
   },
   {
     "objectID": "posts/first plot/lesson1_gapminder.html",
