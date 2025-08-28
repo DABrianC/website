@@ -11,7 +11,7 @@ format:
 
 ---
 
-Hi, I'm Brian Calhoon. Welcome to my website. I enjoy playing with data in R and Python. I have an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. I generally enjoy learning about the nitty gritty of how inputs from real life work their way through a data pipeline and end up in front of key stakeholders whether that's in a report, blog, website, or presentation. 
+Hi, I'm Brian Calhoon. Welcome to my website. I enjoy playing with data in R and increasingly in Python too. I have an interest in data visualization, GIS, analyzing big data, Bayesian statistics, and natural language processing. I generally enjoy learning about the nitty gritty of how inputs from real life work their way through a data pipeline and end up in front of key stakeholders whether that's in a report, blog, website, or presentation. 
 
 If you are new to code-based data analysis and looking from some short examples to play with I encourage you to check out the [Humans Learning](https://dabrianc.github.io/website/blog.html) section of this website where I share code with explanations targeting a general audience.
 
