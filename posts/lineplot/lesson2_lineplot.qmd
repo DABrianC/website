@@ -1,7 +1,7 @@
 ---
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Making a line plot with ggplot"
-categories: [ggplot] [lines]
+categories: [ggplot, lines]
 date: "November 11, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
