@@ -1,5 +1,5 @@
 ---
-title: "Humans Learning"
+title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Getting started in R with Gapminder"
 date: "November 1, 2024"
 author: "Brian Calhoon"
@@ -10,8 +10,6 @@ format:
     code-fold: false
     code-summary: "Show the code"
     toc: true
-    body-attrs:
-     - class: "humans-learning-post"
     css: styles.css
     
 editor: visual
