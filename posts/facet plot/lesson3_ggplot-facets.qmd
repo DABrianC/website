@@ -60,21 +60,11 @@ theme.plot <- function(){
 
 # Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
 
-:::::::: columns
-:::: {.column width="20%"}
-::: box-header
-![](prep/humanslearning.png)
-:::
-::::
-
-::::: {.column width="80%"}
 :::: box
 ::: box-header
 Greetings and welcome to the third iteration of Humans Learning. As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. This is all in the service of humans learning. Enjoy!
 :::
 ::::
-:::::
-::::::::
 
 # Learning objectives
 

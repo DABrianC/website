@@ -107,9 +107,10 @@ hr {
 
 .box-header {
   margin-left: 0em;
-  padding-left:  30px;
+  padding-left:  15px;
   padding-top:  5px;
   padding-bottom: 5px;
+  padding-right: 15px;
   color: white;
   text-indent: 0em;
   background-color: #47A1E7;
