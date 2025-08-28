@@ -146,6 +146,16 @@ hr {
   border-bottom: 3px solid #999;
 }
 
+/* Make the about image smaller on solana template */
+.about-image img {
+  max-width: 200px;  /* Adjust as needed */
+  width: 200px;
+}
+
+/* Add some margin to prevent overlap */
+.about-entity {
+  margin-right: 2rem;
+}
 /*.quarto-title-block {
   background-color: #1e3a8a; /* Deep blue background for entire block */
   /*color: white; /* White text color */

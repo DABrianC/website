@@ -3,6 +3,7 @@ title: "Humans Learning"
 image: images/humanslearning.png
 about: 
   template: solana
+  image-width: 10em
   
 listing:
   contents: posts
