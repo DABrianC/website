@@ -1,0 +1,21 @@
+﻿respondentid,location,type_visit,gender,v1,v2,text_response,lat,long
+1,Lubelskie,in person,M,yes,1,I liked the service.,51.01707216,23.12067798
+2,Lubelskie,in person,F,no,5,I did not like the service.,51.27283429,23.53004659
+3,Lubelskie,in person,M,yes,6,The service was bad.,50.92470727,23.57208839
+4,Lubelskie,in person,F,no,2,Amazing,50.35257039,23.03679008
+5,Lubelskie,in person,F,yes,7,Poor,51.50020378,23.24230187
+6,Lubelskie,remote,F,no,1,Some great things happened while others did not.,51.74556067,21.98143713
+7,Lubelskie,remote,M,yes,3,The team was very nice and responded to all of my questions,51.05933401,22.30355142
+8,Lubelskie,remote,M,yes,3,I wish there had been more offered.,50.90754306,21.86952548
+9,Lubelskie,in person,M,no,5,I was treated badly,51.14307074,22.34383456
+10,Lubelskie,in person,F,yes,7,"Where should I begin. It was challenging to figure out the process, and I didn't like the person leading the team.",50.65813831,23.5059112
+11,Opolskie,in person,F,yes,8,I received what I expected on time.,50.88083488,18.42217664
+12,Opolskie,in person,F,yes,9,People were rude.,50.50781844,17.57140726
+13,Opolskie,remote,M,yes,4,There were too many people making it a very crowded place.,50.98066829,18.09530761
+14,Opolskie,remote,M,yes,2,The lighting was suboptimal.,50.7179489,17.91638463
+15,Opolskie,remote,M,no,3,I would have appreciated greater followup.,50.48882558,17.58218453
+16,Opolskie,remote,F,no,1,"Yes, the team delivered what they said they would.",50.83643545,18.40709753
+17,Opolskie,remote,F,no,6,I didn't appreciate the location of the delivery.,50.50987715,17.71591072
+18,Opolskie,telephone,F,yes,4,More support is needed for the future.,50.76296538,17.28541403
+19,Opolskie,telephone,M,no,2,I was told that I didn't get anything.,51.00715833,18.45217482
+20,Opolskie,telephone,M,yes,2,"I forgot my ID card, but I was able to sort it out with a friendly staff member.",50.74397163,17.33210725
