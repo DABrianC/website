@@ -5,7 +5,7 @@ categories: [data, reading]
 date: "December 6, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: "tbd"
+image: "Excel_logo"
 format: 
   html:
     code-fold: false
