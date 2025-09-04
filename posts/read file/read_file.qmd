@@ -183,7 +183,7 @@ library(readxl)
 library(writexl)
 library(here)
 
-df <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
+df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/read%20file/testdata2.xlsx"))
 
 
 ```
