@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/read file/read_file.html",
       "/posts/facet plot/lesson3_ggplot-facets.html",
       "/posts/lineplot/lesson2_lineplot.html",
       "/posts/first plot/lesson1_gapminder.html"

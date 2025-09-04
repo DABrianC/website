@@ -60,7 +60,7 @@ theme.plot <- function(){
 
 :::: box
 ::: box-header
-Welcome to December! 2024 is coming to an end, and I cannot wait to see what 2025 has in store for us! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. Each lesson will have learning objectives, some example code and explanation to demonstrate a technique or skill, and an open code chunk at the end for you to have some fun. Each lesson is then captured in an html file for online access. This is all in the service of humans learning. Enjoy!
+Welcome to December! 2024 is coming to an end, and I cannot wait to see what 2025 has in store for us! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. When I started learning R, I dove into Datacamp and played with the Gapminder dataset a lot. Then, one day I was asked to look at a dataset that I received over email. No problem, I thought. . Hmmmm...This data is not magically already here...How do I put this in my RStudio environment? I couldn't print it and feed it to it...I couldn't scan it....Could I drop the file in?....I was lost. I didn't understand how to import a file. I walked down the hall and asked a friend and 30 seconds later life was good. I don't want you to go through this so consider this post your friend down the hall. Enjoy!
 :::
 ::::
 
@@ -68,7 +68,9 @@ Welcome to December! 2024 is coming to an end, and I cannot wait to see what 202
 
 For this session, the learning objective is to:
 
--   Import data from a .csv file and a .xlsx file
+- Import data from a .csv file and a .xlsx file
+
+- Write data to a .xlsx file
 
 # Wait, how does the data get into the Rstudio thingy?
 
@@ -80,16 +82,18 @@ If you already have the packages below installed, then you don't need to install
 
 Then, activate the packages with the `library()` so they are active in your session.
 
-```r
+```{r}
+#| class-output: pre
 
 # installing packages
-install.packages("tidyverse")
-install.packages("readxl")
-install.packages("writexl")
-install.packages("here")
+#install.packages("tidyverse")
+#install.packages("readxl")
+#install.packages("writexl")
+#install.packages("here")
+#install.packages("writexl")
 
 # another option for installing packages
-install.packages(c("tidyverse", "readxl", "writexl", "here"))
+#install.packages(c("tidyverse", "readxl", "writexl", "here", "writexl"))
 
 
 library(tidyverse)
@@ -105,104 +109,68 @@ Previously our data was included in the gapminder package. You can find lots of 
 
 ### CSV file
 
-```r
-read_csv(here::here("))
+```{r}
+#| class-output: pre
+
+# read the data in and assign it to a variable
+df_csv <- read_csv(here::here("posts/read file/testdata2.csv"))
+
+#check the data
+
+dplyr::glimpse(df_csv)
 ```
+Success!
 
-```r
-df <- read_xlsx(here::here("C:/Users/Brian Calhoon/Documents/Humans Learning/data/testdata2.xlsx"))
-
-#create a new column that takes data from 
-# the column v2, and based on whether or not it
-# is greater than or equal to 3, inserts a 1 or a 0
-
-df1 <- df |> 
-  mutate(new_col = ifelse(v2 >= 3, 1, 0)) 
-
-#write this new file to Excel
-write_xlsx(df1, path = "./data/testdata2.xlsx")
-
-
-In your R script, you will use the `install.packages()` and `library()` functions to install and load the two packages Tidyverse and Gapminder.
-
-Tidyverse provides a suite of compatible data wrangling and visualization tools. The workhorse of data visualization is the `ggplot2` package. With `ggplot2` the sky is the limit! From basic bar plots to animated graphics to interactive charts and tables connected by a common data source, `ggplot2` and its extension packages can do it all. And once again, Gapminder provides a dataset extracted from the global trend data maintained by, https://www.gapminder.org/.
+### Excel file
 
 ```{r}
 #| class-output: pre
 
-#Installs the package on your system.
-install.packages(c("tidyverse", "gapminder"), repos = "https://cloud.r-project.org/")
+# read the data in and assign it to a variable
+df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
 
-#load the libraries so you can use them
-library(tidyverse)
-library(gapminder)
+#check the data
 
+dplyr::glimpse(df_xlsx)
 ```
+Success!
 
-## View the data
+## Mutate the dataset
 
-Just as in the first session, the first step is to view the data. To look at just the first six rows so you can see the variable names and structure of the data pass `gapminder` to `head()` as in the code below.
-
-```{r data}
-#| class-output: pre
-
-# assign gapminder to df 
-# this is required, but it makes life easier
-# don't we all want life to be easier
-
-df <- gapminder
-
-# look at the gapminder dataset
-head(df)
-
-tail(df)
-
-```
-
-## Make a line plot
-
-As fun as looking at data is, we probably want to do more. Since our objective is to make a line plot, we should do that next. The structure of ggplot requires that we pass it an object (df), the type of `geom_*` we want to make (in this case a line plot), and the aesthetics or the variables we want to plot.
-
-```{r plot}
-#make a plot
-ggplot(data = df) +
-  geom_line(aes(x = year, y = gdpPercap, color = continent))
-
-```
-
-Yeeeeesh!! That did not work at all. Looks like we forgot to `group_by()` and `summarize()` to create summary statistics that would provide us a single datapoint to follow across the years.
-
-Let's us df to create a new object, `df1`. `df1` will group the data by continent and year and create a variable for the mean GDP per capita. This will provide a single data point for each continent, for each year so that we can make useful lines for the mean GDP per capita over time.
+We can see that both datasets are identical with 20 rows (observations) across 9 columns. So, pick either one and we'll add a variable called income using the `mutate()` function. This will add a column, and we will save it under as a new object that we will write back to an Excel file so we can email to our colleague.
 
 ```{r}
-
 #| class-output: pre
 
+# add a new variable to the dataset
+df_add <- df_xlsx |> #pipe df to the mutate function
+  dplyr::mutate(income = sample(1000:7500, 20))
 
-df1 <- df |> 
-  group_by(continent, year) |> 
-  summarize(avg_gdpPercap = mean(gdpPercap))
+#view first 6 rows
 
+head(df_add)
+
+#view last 6 rows
+tail(df_add)
+```
+
+We're using the basic manipulation skills that we saw with the Gapminder dataset in the previous lessons. 
+
+## Write it to Excel or CSV
+
+Here all we need to do is specify the object and provide it a path where we want the file to be saved. You should write it to somewhere in your documents folder to avoid any issues with One Drive or Google Drive. N.B. with `write_csv()` path becomes file.
+
+```{r}
+#| class-output: pre
+
+write_xlsx(x = df_add, path = here::here("posts/read file/test_out.xlsx"))
+
+write_csv(x = df_add, file = here::here("posts/read file/test_out.csv"))
 
 ```
 
-Now we just have to remember the how ggplot works and make our line plot. It takes three components.
+Now you can email this updated .xlsx/.csv file to your colleague. :)
 
--   The data object, `df1`
--   The geom, `geom_line()`
--   The aesthetics, `year` (x-axis), `avg_gdpPercap` (y-axis), and `continent` (color).
-
-```{r plot more}
-
-#| class-output: pre
-
-
-ggplot(df1) +
-  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))
-
-
-
-```
 
 ## Have fun!
 
@@ -211,15 +179,11 @@ Now it's your turn practice! Below is a fully functioning code editor with start
 ```{webr-r}
 
 library(tidyverse)
-library(gapminder)
+library(readxl)
+library(writexl)
+library(here)
 
-df <- gapminder
+df <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
 
-df1 <- df |> 
-  group_by(continent, year) |> 
-  summarize(avg_gdpPercap = mean(gdpPercap))
-
-ggplot(df1) +
-  geom_line(aes(x = year, y = avg_gdpPercap, color = continent))
 
 ```
