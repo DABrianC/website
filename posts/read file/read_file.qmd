@@ -5,7 +5,7 @@ categories: [data, reading]
 date: "December 6, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: "Excel_logo.png"
+image: "excel_small.png"
 format: 
   html:
     code-fold: false
@@ -68,9 +68,9 @@ Welcome to December! 2024 is coming to an end, and I cannot wait to see what 202
 
 For this session, the learning objective is to:
 
-- Import data from a .csv file and a .xlsx file
+-   Import data from a .csv file and a .xlsx file
 
-- Write data to a .xlsx file
+-   Write data to a .xlsx file
 
 # Wait, how does the data get into the Rstudio thingy?
 
@@ -78,7 +78,7 @@ Most data that is used in the workplace comes in the form of a .csv file or a Ex
 
 ## Install and load packages
 
-If you already have the packages below installed, then you don't need to install them again. I #'d the `install.packages()` lines so that the code doesn't run for me. You can delete the #'s if you need to install the packages.
+If you already have the packages below installed, then you don't need to install them again. I \#'d the `install.packages()` lines so that the code doesn't run for me. You can delete the \#'s if you need to install the packages.
 
 Then, activate the packages with the `library()` so they are active in your session.
 
@@ -119,6 +119,7 @@ df_csv <- read_csv(here::here("posts/read file/testdata2.csv"))
 
 dplyr::glimpse(df_csv)
 ```
+
 Success!
 
 ### Excel file
@@ -133,6 +134,7 @@ df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
 
 dplyr::glimpse(df_xlsx)
 ```
+
 Success!
 
 ## Mutate the dataset
@@ -154,7 +156,7 @@ head(df_add)
 tail(df_add)
 ```
 
-We're using the basic manipulation skills that we saw with the Gapminder dataset in the previous lessons. 
+We're using the basic manipulation skills that we saw with the Gapminder dataset in the previous lessons.
 
 ## Write it to Excel or CSV
 
@@ -170,7 +172,6 @@ write_csv(x = df_add, file = here::here("posts/read file/test_out.csv"))
 ```
 
 Now you can email this updated .xlsx/.csv file to your colleague. :)
-
 
 ## Have fun!
 
