@@ -130,11 +130,11 @@ Success!
 #| class-output: pre
 
 # read the data in and assign it to a variable
-df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
+#df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
 
 #check the data
 
-dplyr::glimpse(df_xlsx)
+#dplyr::glimpse(df_xlsx)
 ```
 
 Success!
@@ -147,37 +147,18 @@ We can see that both datasets are identical with 20 rows (observations) across 9
 #| class-output: pre
 
 # add a new variable to the dataset
-df_add <- df_xlsx |> #pipe df to the mutate function
-  dplyr::mutate(income = sample(1000:7500, 20))
+#df_add <- df_xlsx |> #pipe df to the mutate function
+ # dplyr::mutate(income = sample(1000:7500, 20))
 
 #view first 6 rows
 
-head(df_add)
+#head(df_add)
 
 #view last 6 rows
-tail(df_add)
+#tail(df_add)
 ```
 
-We're using the basic manipulation skills that we saw with the Gapminder dataset in the previous lessons.
 
-## Write it to Excel or CSV
-
-Here all we need to do is specify the object and provide it a path where we want the file to be saved. You should write it to somewhere in your documents folder to avoid any issues with One Drive or Google Drive. N.B. with `write_csv()` path becomes file.
-
-```{r}
-#| class-output: pre
-
-write_xlsx(x = df_add, path = here::here("posts/read file/test_out.xlsx"))
-
-write_csv(x = df_add, file = here::here("posts/read file/test_out.csv"))
-
-```
-
-Now you can email this updated .xlsx/.csv file to your colleague. :)
-
-## Have fun!
-
-Now it's your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the `group_by()` call or to adjust the summary statistic in `summarize()`. Then, have fun with the plot!
 
 ```{webr-r}
 
@@ -186,7 +167,7 @@ library(readxl)
 library(writexl)
 library(here)
 
-df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/read%20file/testdata2.xlsx"))
+df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/read%20file/testdata2.xlsx")
 
 
 ```
