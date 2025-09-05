@@ -1,6 +1,6 @@
 ---
 title: '<span class="humans-learning-post">Humans Learning</span>'
-subtitle: "Pivoting data longer"
+subtitle: ": UNDER CONSTRUCTION: Pivoting data longer"
 categories: [data, reading]
 date: "December 12, 2024"
 author: "Brian Calhoon"
