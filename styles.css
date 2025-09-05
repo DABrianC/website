@@ -68,7 +68,7 @@ hr {
 /* Make the listing section full width */
 .quarto-listing {
   width: 100vw;
-  margin-left: calc(40% - 50vw);
+  margin-left: calc(55% - 55vw);
   padding: 2rem;
   box-sizing: border-box;
   background-color: #f9f8f6;
