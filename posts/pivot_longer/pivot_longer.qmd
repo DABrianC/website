@@ -70,19 +70,13 @@ Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual 
 
 For this session, the learning objective is to:
 
--   Import data from a .csv file and a .xlsx file
+-   Reshape data from wide to long
 
--   Write data to a .xlsx file
+# What is the point of this?
 
-# Wait, how does the data get into the Rstudio thingy?
+Good question. When we collect data in the real and virtual worlds it often comes in a wide format with a question in a column followed by a few columns with options for responses. Here's an simple example to illustrate the point.
 
-Most data that is used in the workplace comes in the form of a .csv file or a Excel file. If you're lucky, maybe you can import data directly from your company's database or you download reliable data from the internet using an API. The reality is that you'll probably get emails with Excel files attached so it's important to know how to access these.
-
-## Install and load packages
-
-If you already have the packages below installed, then you don't need to install them again. I \#'d the `install.packages()` lines so that the code doesn't run for me. You can delete the \#'s if you need to install the packages.
-
-Then, activate the packages with the `library()` so they are active in your session.
+As always, make sure the correct packages are active in the session.
 
 ```{r}
 #| class-output: pre
@@ -105,59 +99,37 @@ library(here)
 
 ```
 
-## Read in files
+```{r}
 
-Previously our data was included in the gapminder package. You can find lots of training data sets in packages, and this is really useful, but it's not how you will get most of your data in the workplace. So, let's get to it.
+df <- read_xlsx(here::here("posts/pivot_longer/colors.xlsx")) 
 
-### CSV file
+df
+
+```
+
+
+## Indeed, this data is Wide 
+
+We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. The variable here is 
+
+It's easier to work with a single variable in a single column so let's do that.
+
+## Let's reshape it
+
 
 ```{r}
 #| class-output: pre
 
-# read the data in and assign it to a variable
-df_csv <- read_csv(here::here("posts/read file/testdata2.csv"))
+df1 <- df |> 
+  select(-2) |> 
+  pivot_longer(cols = 2:5,
+               names_to = "fav_color",
+               values_drop_na = TRUE)
 
-#check the data
-
-dplyr::glimpse(df_csv)
+df1
 ```
 
 Success!
-
-### Excel file
-
-```{r}
-#| class-output: pre
-
-# read the data in and assign it to a variable
-#df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
-
-#check the data
-
-#dplyr::glimpse(df_xlsx)
-```
-
-Success!
-
-## Mutate the dataset
-
-We can see that both datasets are identical with 20 rows (observations) across 9 columns. So, pick either one and we'll add a variable called income using the `mutate()` function. This will add a column, and we will save it under as a new object that we will write back to an Excel file so we can email to our colleague.
-
-```{r}
-#| class-output: pre
-
-# add a new variable to the dataset
-#df_add <- df_xlsx |> #pipe df to the mutate function
- # dplyr::mutate(income = sample(1000:7500, 20))
-
-#view first 6 rows
-
-#head(df_add)
-
-#view last 6 rows
-#tail(df_add)
-```
-
 
 
 ```{webr-r}
@@ -167,7 +139,7 @@ library(readxl)
 library(writexl)
 library(here)
 
-df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/read%20file/testdata2.xlsx")
+df <- read_xlsx("")
 
 
 ```
