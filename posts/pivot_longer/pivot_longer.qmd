@@ -136,10 +136,8 @@ Success!
 
 library(tidyverse)
 library(readxl)
-library(writexl)
-library(here)
 
-df <- read_xlsx("")
+df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/pivot_longer/colors.xlsx")
 
 
 ```
