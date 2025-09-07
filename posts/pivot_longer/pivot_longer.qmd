@@ -17,7 +17,7 @@ filters:
   - webr
 ---
 
-```{r global_options, include=F, warning=F, messages=F, error=F}
+```{r global_options, include=F, warnings=F, messages=F, error=F}
 
 ## custom colors
 my_pal <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288",
