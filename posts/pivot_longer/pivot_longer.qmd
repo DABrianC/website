@@ -110,18 +110,17 @@ df
 
 ## Indeed, this data is Wide 
 
-We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. The variable here is 
+We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. The column with the question just holds the question variable and is blank. The majority of rows in these columns are also blank. We've got a single variable spread out over a bunch of columns. To simplify this, let's put these all in a single column.
 
-It's easier to work with a single variable in a single column so let's do that.
+## Reshaping
 
-## Let's reshape it
-
+We'll create a new object called df1. This maintains our original df object. Then, let's eliminate the 2nd column that is all blanks. The final step is to pivot the columns with the 1s into a single column, and to change the 1s to the name of each color. Here's the code. 
 
 ```{r}
 #| class-output: pre
 
 df1 <- df |> 
-  select(-2) |> 
+  select(-2) |>  #eliminate 2nd column
   pivot_longer(cols = 2:5,
                names_to = "fav_color",
                values_drop_na = TRUE)
