@@ -3,6 +3,7 @@ project:
   
 website:
   title: "Brian Calhoon"
+  site-url: "https://dabrianc.github.io/website/"
   navbar:
     right:
       - blog.qmd
