@@ -2,7 +2,7 @@
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Faceting plots using ggplot"
 categories: [R, ggplot, facets]
-date: "November 22, 2024"
+date: "2024-11-22"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
 image: "facet_plot.png"

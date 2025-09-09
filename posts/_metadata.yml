@@ -4,5 +4,9 @@
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
 freeze: true
 
+# Enable categories for all posts
+categories: true
+
 # Enable banner style title blocks
 title-block-banner: true
+

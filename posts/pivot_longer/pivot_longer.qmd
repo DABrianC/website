@@ -2,7 +2,7 @@
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Reshaping data from wide to longer"
 categories: [R, data, tidyr, pivot]
-date: "December 12, 2024"
+date: "2024-12-12"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
 image: "eyes.jpg"

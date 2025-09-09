@@ -2,7 +2,7 @@
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Making a line plot with ggplot"
 categories: [R, ggplot, lines]
-date: "November 11, 2024"
+date: "2014-11-11"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
 image: "lineplot.png"
