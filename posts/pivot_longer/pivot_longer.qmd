@@ -1,7 +1,7 @@
 ---
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Reshaping data from wide to longer"
-categories: [data, tidyr, pivot]
+categories: [R, data, tidyr, pivot]
 date: "December 12, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
@@ -60,9 +60,9 @@ theme.plot <- function(){
 
 :::: box
 ::: box-header
-Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. 
+Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language.
 
-- Usefulness of pivoting data
+-   Usefulness of pivoting data
 :::
 ::::
 
@@ -107,21 +107,21 @@ knitr::kable(df)
 
 ```
 
-## Indeed, this data is Wide 
+## Indeed, this data is Wide
 
-We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. Here are a few more observations. 
+We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. Here are a few more observations.
 
-- The column with the question just holds the question variable and is blank. 
+-   The column with the question just holds the question variable and is blank.
 
-- The majority of rows in these columns are also blank. 
+-   The majority of rows in these columns are also blank.
 
-- A single variable - favorite color - is spread out over a bunch of columns. 
+-   A single variable - favorite color - is spread out over a bunch of columns.
 
 To simplify this, let's put these all in a single column.
 
 ## Reshaping
 
-We'll create a new object called df1. This maintains our original df object in case we still have a need for the original object. Then, let's eliminate the 2nd column that is all blanks. Next, pivot the columns with the 1s in a single column, and change the 1s to the name of each color. Finally, we should put pivotted data in a column with a name that is clear and useful for coding -- fav_color. Here's the code to do this. 
+We'll create a new object called df1. This maintains our original df object in case we still have a need for the original object. Then, let's eliminate the 2nd column that is all blanks. Next, pivot the columns with the 1s in a single column, and change the 1s to the name of each color. Finally, we should put pivotted data in a column with a name that is clear and useful for coding -- fav_color. Here's the code to do this.
 
 ```{r}
 #| class-output: pre

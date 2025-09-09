@@ -1,7 +1,7 @@
 ---
 title: '<span class="humans-learning-post">Humans Learning</span>'
 subtitle: "Reading data from other sources"
-categories: [data, readr, readxl]
+categories: [R, data, readr, readxl]
 date: "December 6, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
