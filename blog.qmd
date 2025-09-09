@@ -4,6 +4,10 @@ image: images/humanslearning.png
 about: 
   template: solana
   image-width: 10em
+
+format:
+  html:
+    feed: true
   
 listing:
   contents: posts
