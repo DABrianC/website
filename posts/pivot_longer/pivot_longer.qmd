@@ -1,7 +1,7 @@
 ---
 title: '<span class="humans-learning-post">Humans Learning</span>'
-subtitle: ": UNDER CONSTRUCTION: Pivoting data longer"
-categories: [data, reading]
+subtitle: "Reshaping data from wide to longer"
+categories: [data, tidyr, pivot]
 date: "December 12, 2024"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
@@ -62,7 +62,7 @@ theme.plot <- function(){
 ::: box-header
 Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language. 
 
-- Usefullness of pivoting data
+- Usefulness of pivoting data
 :::
 ::::
 
@@ -70,11 +70,7 @@ Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual 
 
 For this session, the learning objective is to:
 
--   Reshape data from wide to long
-
-# What is the point of this?
-
-Good question. When we collect data in the real and virtual worlds it often comes in a wide format with a question in a column followed by a few columns with options for responses. Here's an simple example to illustrate the point.
+-   Reshape data from wide to long data
 
 As always, make sure the correct packages are active in the session.
 
@@ -99,37 +95,51 @@ library(here)
 
 ```
 
+# What is the point of this?
+
+Good question. When we collect data in the real and virtual worlds it is rarely structured for analysis. A common need is that we have to pivot a dataset from a wide to a long format. A dataset often comes in a wide format with a question in a column followed by a few columns with options for responses where each option is its own column. Here's an simple example to illustrate the point.
+
 ```{r}
 
 df <- read_xlsx(here::here("posts/pivot_longer/colors.xlsx")) 
 
-df
+knitr::kable(df)
 
 ```
 
-
 ## Indeed, this data is Wide 
 
-We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. The column with the question just holds the question variable and is blank. The majority of rows in these columns are also blank. We've got a single variable spread out over a bunch of columns. To simplify this, let's put these all in a single column.
+We've got five columns of data for a respondent's favorite color, and for some reason person F selected 3 colors. Here are a few more observations. 
+
+- The column with the question just holds the question variable and is blank. 
+
+- The majority of rows in these columns are also blank. 
+
+- A single variable - favorite color - is spread out over a bunch of columns. 
+
+To simplify this, let's put these all in a single column.
 
 ## Reshaping
 
-We'll create a new object called df1. This maintains our original df object. Then, let's eliminate the 2nd column that is all blanks. The final step is to pivot the columns with the 1s into a single column, and to change the 1s to the name of each color. Here's the code. 
+We'll create a new object called df1. This maintains our original df object in case we still have a need for the original object. Then, let's eliminate the 2nd column that is all blanks. Next, pivot the columns with the 1s in a single column, and change the 1s to the name of each color. Finally, we should put pivotted data in a column with a name that is clear and useful for coding -- fav_color. Here's the code to do this. 
 
 ```{r}
 #| class-output: pre
 
 df1 <- df |> 
-  select(-2) |>  #eliminate 2nd column
-  pivot_longer(cols = 2:5,
-               names_to = "fav_color",
-               values_drop_na = TRUE)
+  select(-2) |>  #eliminates the 2nd column
+  pivot_longer(cols = 2:5, #use these columns for the transformation
+               names_to = "fav_color", #Name the column where the the color names are stored
+               values_drop_na = TRUE) #remove the rows with missing data
 
 df1
 ```
 
-Success!
+Success! Within the `pivot_longer()` call, we told it to use columns 2 through 5 since we want to keep the Resp(ondents) column unchanged. We maintained the first column and added additional rows to account for the multiple colors selected by Resp F.
 
+## Have fun!
+
+Now it's your turn practice! Below is a fully functioning code editor with starting code in place. Try pivoting data, and then feel free to make a bar chart using ggplot + geom_bar() (or geom_col()).
 
 ```{webr-r}
 
