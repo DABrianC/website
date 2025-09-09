@@ -13,7 +13,13 @@ website:
     search: true
 format:
   html:
-    feed: true
+    feed: 
+      type: xml
+      file: index.xml
+      title: "Humans Learning"
+      description: "Data analysis with R programming language and more"
+      language: en
+      categories: [R]
     theme:
       - sandstone
       - brand
