@@ -4,6 +4,7 @@ project:
 website:
   title: "Brian Calhoon"
   site-url: "https://dabrianc.github.io/website/"
+  description: "Data analysis with R programming language and more"
   navbar:
     right:
       - blog.qmd
