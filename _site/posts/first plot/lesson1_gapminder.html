@@ -1712,6 +1712,8 @@ globalThis.qwebrExecuteCode = async function (
       <h1 class="title">Humans Learning</h1>
             <p class="subtitle lead">Getting started in R with Gapminder</p>
                                 <div class="quarto-categories">
+                <div class="quarto-category">true</div>
+                <div class="quarto-category">R</div>
                 <div class="quarto-category">ggplot</div>
                 <div class="quarto-category">start</div>
               </div>
@@ -2251,7 +2253,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/dabrianc\.github\.io\/website\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

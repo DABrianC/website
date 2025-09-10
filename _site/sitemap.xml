@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dabrianc.github.io/website/blog.html</loc>
+    <lastmod>2025-09-10T15:21:25.442Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dabrianc.github.io/website/posts/pivot_longer/pivot_longer.html</loc>
+    <lastmod>2025-09-10T15:33:02.432Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dabrianc.github.io/website/posts/lineplot/lesson2_lineplot.html</loc>
+    <lastmod>2025-09-09T19:21:12.366Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dabrianc.github.io/website/posts/facet plot/lesson3_ggplot-facets.html</loc>
+    <lastmod>2025-09-09T19:21:29.367Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dabrianc.github.io/website/posts/first plot/lesson1_gapminder.html</loc>
+    <lastmod>2025-09-09T19:20:03.183Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dabrianc.github.io/website/posts/read file/read_file.html</loc>
+    <lastmod>2025-09-09T19:20:26.585Z</lastmod>
+  </url>
+</urlset>

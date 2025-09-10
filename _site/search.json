@@ -74,7 +74,7 @@
     "href": "blog.html",
     "title": "Humans Learning",
     "section": "",
-    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to strengthen the basics of data analysis with the R programming language. These were initially in-person or remote live sessions that I then put on a Github page. They are made up primarily of short – 5 minute-ish – lessons that focus on a single skill that I found useful to learn in my R journey. EnCompass closed in early 2025, but I didn’t want Humans Learning to end as there is still much to learn so I created this public site where it will live on. Now it is for anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python (or Julia) in the future. In addition, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, Quarto, and many other topics.\nI hope you enjoy the posts below.\n\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nPivoting data longer\n\n\n\ndata\n\n\nreading\n\n\n\n\n\n\n\n\n\nDec 12, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nReading data from other sources\n\n\n\ndata\n\n\nreading\n\n\n\n\n\n\n\n\n\nDec 6, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nFaceting plots using ggplot\n\n\n\nggplot\n\n\nfacets\n\n\n\n\n\n\n\n\n\nNov 22, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nMaking a line plot with ggplot\n\n\n\nggplot\n\n\nlines\n\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\nggplot\n\n\nstart\n\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
+    "text": "Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to strengthen the basics of data analysis with the R programming language. These were initially in-person or remote live sessions that I then put on a Github page. They are made up primarily of short – 5 minute-ish – lessons that focus on a single skill that I found useful to learn in my R journey. EnCompass closed in early 2025, but I didn’t want Humans Learning to end as there is still much to learn so I created this public site where it will live on. Now it is for anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python (or Julia) in the future. In addition, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, Quarto, and many other topics. To stay up to date on happenings in R, check out R-bloggers.\nI hope you enjoy the posts below.\n\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nReshaping data from wide to longer\n\n\n\ntrue\n\n\nR\n\n\ndata\n\n\ntidyr\n\n\npivot\n\n\n\n\n\n\n\n\n\nDec 12, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nReading data from other sources\n\n\n\ntrue\n\n\nR\n\n\ndata\n\n\nreadr\n\n\nreadxl\n\n\n\n\n\n\n\n\n\nDec 6, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nFaceting plots using ggplot\n\n\n\ntrue\n\n\nR\n\n\nggplot\n\n\nfacets\n\n\n\n\n\n\n\n\n\nNov 22, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nGetting started in R with Gapminder\n\n\n\ntrue\n\n\nR\n\n\nggplot\n\n\nstart\n\n\n\n\n\n\n\n\n\nNov 1, 2024\n\n\nBrian Calhoon\n\n\n\n\n\n\n\n\n\n\n\n\nHumans Learning\n\n\nMaking a line plot with ggplot\n\n\n\ntrue\n\n\nR\n\n\nggplot\n\n\nlines\n\n\n\n\n\n\n\n\n\nNov 11, 2014\n\n\nBrian Calhoon\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -193,7 +193,7 @@
     "href": "posts/pivot_longer/pivot_longer.html",
     "title": "Humans Learning",
     "section": "",
-    "text": "Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language.\n\nUsefullness of pivoting data"
+    "text": "Welcome back! As a reminder, each lesson is designed as a 5 - 10 minute virtual session conducted for EnCompass staff to expand their skills with data, and the means of learning is the R programming language.\n\nUsefulness of pivoting data"
   },
   {
     "objectID": "posts/pivot_longer/pivot_longer.html#install-and-load-packages",
@@ -215,5 +215,26 @@
     "title": "Humans Learning",
     "section": "Mutate the dataset",
     "text": "Mutate the dataset\nWe can see that both datasets are identical with 20 rows (observations) across 9 columns. So, pick either one and we’ll add a variable called income using the mutate() function. This will add a column, and we will save it under as a new object that we will write back to an Excel file so we can email to our colleague.\n\n# add a new variable to the dataset\n#df_add &lt;- df_xlsx |&gt; #pipe df to the mutate function\n # dplyr::mutate(income = sample(1000:7500, 20))\n\n#view first 6 rows\n\n#head(df_add)\n\n#view last 6 rows\n#tail(df_add)\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
+  },
+  {
+    "objectID": "posts/pivot_longer/pivot_longer.html#indeed-this-data-is-wide",
+    "href": "posts/pivot_longer/pivot_longer.html#indeed-this-data-is-wide",
+    "title": "Humans Learning",
+    "section": "Indeed, this data is Wide",
+    "text": "Indeed, this data is Wide\nWe’ve got five columns of data for a respondent’s favorite color, and for some reason person F selected 3 colors. Here are a few more observations.\n\nThe column with the question just holds the question variable and is blank.\nThe majority of rows in these columns are also blank.\nA single variable - favorite color - is spread out over a bunch of columns.\n\nTo simplify this, let’s put these all in a single column."
+  },
+  {
+    "objectID": "posts/pivot_longer/pivot_longer.html#reshaping",
+    "href": "posts/pivot_longer/pivot_longer.html#reshaping",
+    "title": "Humans Learning",
+    "section": "Reshaping",
+    "text": "Reshaping\nWe’ll create a new object called df1. This maintains our original df object in case we still have a need for the original object. Then, let’s eliminate the 2nd column that is all blanks. Next, pivot the columns with the 1s in a single column, and change the 1s to the name of each color. Finally, we should put pivotted data in a column with a name that is clear and useful for coding – fav_color. Here’s the code to do this.\n\ndf1 &lt;- df |&gt; \n  select(-2) |&gt;  #eliminates the 2nd column\n  pivot_longer(cols = 2:5, #use these columns for the transformation\n               names_to = \"fav_color\", #Name the column where the the color names are stored\n               values_drop_na = TRUE) #remove the rows with missing data\n\ndf1\n\n# A tibble: 9 × 3\n  Resp  fav_color value\n  &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;\n1 A     blue          1\n2 B     red           1\n3 C     green         1\n4 D     purple        1\n5 E     green         1\n6 F     blue          1\n7 F     red           1\n8 F     purple        1\n9 G     blue          1\n\n\nSuccess! Within the pivot_longer() call, we told it to use columns 2 through 5 since we want to keep the Resp(ondents) column unchanged. We maintained the first column and added additional rows to account for the multiple colors selected by Resp F."
+  },
+  {
+    "objectID": "posts/pivot_longer/pivot_longer.html#have-fun",
+    "href": "posts/pivot_longer/pivot_longer.html#have-fun",
+    "title": "Humans Learning",
+    "section": "Have fun!",
+    "text": "Have fun!\nNow it’s your turn practice! Below is a fully functioning code editor with starting code in place. Try pivoting data, and then feel free to make a bar chart using ggplot + geom_bar() (or geom_col()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page."
   }
 ]
