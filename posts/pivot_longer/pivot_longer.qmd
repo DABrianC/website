@@ -97,7 +97,7 @@ library(here)
 
 # What is the point of this?
 
-Good question. When we collect data in the real and virtual worlds it is rarely structured for analysis. A common need is that we have to pivot a dataset from a wide to a long format. A dataset often comes in a wide format with a question in a column followed by a few columns with options for responses where each option is its own column.  Here's an simple example to illustrate the point. 
+Good question. When we collect data in the real and virtual worlds it is rarely structured for analysis. A common need is that we have to pivot a dataset from a wide to a long format. A dataset often comes in a wide format with a question in a column followed by a few columns with options for responses where each option is its own column.   Here's an simple example to illustrate the point. 
 
 ```{r}
 
