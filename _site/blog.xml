@@ -537,20 +537,68 @@ font-style: inherit;">TRUE</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#remove the rows with missing data</span></span>
 <span id="cb6-6"></span>
-<span id="cb6-7">df1</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre class="pre"><code># A tibble: 9 × 3
-  Resp  fav_color value
-  &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
-1 A     blue          1
-2 B     red           1
-3 C     green         1
-4 D     purple        1
-5 E     green         1
-6 F     blue          1
-7 F     red           1
-8 F     purple        1
-9 G     blue          1</code></pre>
+<span id="cb6-7">knitr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">kable</span>(df1) </span></code></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Resp</th>
+<th style="text-align: left;">fav_color</th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">blue</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">red</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">green</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">purple</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E</td>
+<td style="text-align: left;">green</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">blue</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">red</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">purple</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">blue</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>Success! Within the <code>pivot_longer()</code> call, we told it to use columns 2 through 5 since we want to keep the Resp(ondents) column unchanged. We maintained the first column and added additional rows to account for the multiple colors selected by Resp F.</p>
