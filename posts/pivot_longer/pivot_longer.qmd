@@ -132,7 +132,7 @@ df1 <- df |>
                names_to = "fav_color", #Name the column where the the color names are stored
                values_drop_na = TRUE) #remove the rows with missing data
 
-knitr::kable(df1)
+knitr::kable(df1) 
 ```
 
 Success! Within the `pivot_longer()` call, we told it to use columns 2 through 5 since we want to keep the Resp(ondents) column unchanged. We maintained the first column and added additional rows to account for the multiple colors selected by Resp F.
