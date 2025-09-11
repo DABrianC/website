@@ -1,21 +1,21 @@
 respondentid,location,type_visit,gender,v1,v2,text_response,lat,long,income
-1,Lubelskie,in person,M,yes,1,I liked the service.,51.01707216387231,23.12067798153089,5718
-2,Lubelskie,in person,F,no,5,I did not like the service.,51.27283428508104,23.53004658590756,4093
-3,Lubelskie,in person,M,yes,6,The service was bad.,50.92470727463447,23.57208838696484,5657
-4,Lubelskie,in person,F,no,2,Amazing,50.35257038675513,23.0367900782588,1552
-5,Lubelskie,in person,F,yes,7,Poor,51.5002037847334,23.24230187361175,4182
-6,Lubelskie,remote,F,no,1,Some great things happened while others did not.,51.74556066822303,21.98143712818229,3168
-7,Lubelskie,remote,M,yes,3,The team was very nice and responded to all of my questions,51.0593340078442,22.30355142391368,2456
-8,Lubelskie,remote,M,yes,3,I wish there had been more offered.,50.90754305882275,21.86952547998447,5603
-9,Lubelskie,in person,M,no,5,I was treated badly,51.14307074211343,22.34383455637112,4982
-10,Lubelskie,in person,F,yes,7,"Where should I begin. It was challenging to figure out the process, and I didn't like the person leading the team.",50.65813831215068,23.50591120301548,5262
-11,Opolskie,in person,F,yes,8,I received what I expected on time.,50.88083488347006,18.42217663668927,6805
-12,Opolskie,in person,F,yes,9,People were rude.,50.50781844348278,17.5714072566878,6290
-13,Opolskie,remote,M,yes,4,There were too many people making it a very crowded place.,50.98066828959592,18.09530761263975,4325
-14,Opolskie,remote,M,yes,2,The lighting was suboptimal.,50.71794890254948,17.91638462640553,6196
-15,Opolskie,remote,M,no,3,I would have appreciated greater followup.,50.48882558116784,17.58218452512038,7218
-16,Opolskie,remote,F,no,1,"Yes, the team delivered what they said they would.",50.83643544786182,18.40709753072679,4516
-17,Opolskie,remote,F,no,6,I didn't appreciate the location of the delivery.,50.50987714941466,17.71591072261964,6054
-18,Opolskie,telephone,F,yes,4,More support is needed for the future.,50.76296538396341,17.28541403136527,1642
-19,Opolskie,telephone,M,no,2,I was told that I didn't get anything.,51.00715832685727,18.45217481885318,6812
-20,Opolskie,telephone,M,yes,2,"I forgot my ID card, but I was able to sort it out with a friendly staff member.",50.74397162951204,17.33210724849099,3101
+1,Lubelskie,in person,M,yes,1,I liked the service.,51.01707216387231,23.12067798153089,3367
+2,Lubelskie,in person,F,no,5,I did not like the service.,51.27283428508104,23.53004658590756,3185
+3,Lubelskie,in person,M,yes,6,The service was bad.,50.92470727463447,23.57208838696484,6171
+4,Lubelskie,in person,F,no,2,Amazing,50.35257038675513,23.0367900782588,6602
+5,Lubelskie,in person,F,yes,7,Poor,51.5002037847334,23.24230187361175,3320
+6,Lubelskie,remote,F,no,1,Some great things happened while others did not.,51.74556066822303,21.98143712818229,2071
+7,Lubelskie,remote,M,yes,3,The team was very nice and responded to all of my questions,51.0593340078442,22.30355142391368,4956
+8,Lubelskie,remote,M,yes,3,I wish there had been more offered.,50.90754305882275,21.86952547998447,6263
+9,Lubelskie,in person,M,no,5,I was treated badly,51.14307074211343,22.34383455637112,3472
+10,Lubelskie,in person,F,yes,7,"Where should I begin. It was challenging to figure out the process, and I didn't like the person leading the team.",50.65813831215068,23.50591120301548,3765
+11,Opolskie,in person,F,yes,8,I received what I expected on time.,50.88083488347006,18.42217663668927,3363
+12,Opolskie,in person,F,yes,9,People were rude.,50.50781844348278,17.5714072566878,4509
+13,Opolskie,remote,M,yes,4,There were too many people making it a very crowded place.,50.98066828959592,18.09530761263975,1486
+14,Opolskie,remote,M,yes,2,The lighting was suboptimal.,50.71794890254948,17.91638462640553,5394
+15,Opolskie,remote,M,no,3,I would have appreciated greater followup.,50.48882558116784,17.58218452512038,6535
+16,Opolskie,remote,F,no,1,"Yes, the team delivered what they said they would.",50.83643544786182,18.40709753072679,4143
+17,Opolskie,remote,F,no,6,I didn't appreciate the location of the delivery.,50.50987714941466,17.71591072261964,1577
+18,Opolskie,telephone,F,yes,4,More support is needed for the future.,50.76296538396341,17.28541403136527,3015
+19,Opolskie,telephone,M,no,2,I was told that I didn't get anything.,51.00715832685727,18.45217481885318,4196
+20,Opolskie,telephone,M,yes,2,"I forgot my ID card, but I was able to sort it out with a friendly staff member.",50.74397162951204,17.33210724849099,5851

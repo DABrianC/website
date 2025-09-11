@@ -5,7 +5,7 @@ categories: [R, data, readr, readxl]
 date: "2024-12-06"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-
+image: "books.png"
 format: 
   html:
     code-fold: false
