@@ -12,8 +12,8 @@ listing:
   categories: true
   sort-ui: false
   filter-ui: false
-  feed: true
 page-layout: full
+feed: true
 ---
 
 Humans Learning was founded in late 2024 as an internal learning initiative for staff at EnCompass to strengthen the basics of data analysis with the R programming language. These were initially in-person or remote live sessions that I then put on a Github page. They are made up primarily of short -- 5 minute-ish -- lessons that focus on a single skill that I found useful to learn in my R journey. EnCompass closed in early 2025, but I didn't want Humans Learning to end as there is still much to learn so I created this public site where it will live on. Now it is for anyone who is curious about data analytics and coding. There is no reason that it should only exist in R so I will add similar content in Python (or Julia) in the future. In addition, there will be more in depth dives into topics of interest to me. These will include Bayesian statistics, machine learning, LLMs, Quarto, and many other topics. To stay up to date on happenings in R, check out [R-bloggers](https://www.r-bloggers.com/).
