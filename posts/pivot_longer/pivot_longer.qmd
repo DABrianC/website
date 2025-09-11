@@ -15,6 +15,7 @@ format:
 editor: visual
 execute:
   message: false
+  warning: false
 filters: 
   - webr
 ---
