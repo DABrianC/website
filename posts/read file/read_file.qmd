@@ -13,6 +13,9 @@ format:
     toc: true
     css: styles.css
 editor: visual
+execute:
+  message: false
+  warning: false
 filters: 
   - webr
 ---
