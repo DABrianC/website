@@ -223,7 +223,7 @@ tmap_mode("plot") +
   tm_polygons() +
   tm_shape(cities_sf) +
   tm_dots(size = .25, col = "red", fill = "red") +
-  tm_text(text = "Name", auto.placement = T, size = .5) +
+  tm_text(text = "Name", auto.placement = T, size = .6) +
   tm_layout(title = "Main Cities of\nMadagascar")
 
 ```
@@ -303,7 +303,7 @@ tmap::tmap_mode("plot") +
   tmap::tm_dots(size = "Population", col = "red", fill = "red"
           , legend.size.is.portrait = TRUE) +
   tmap::tm_text(text = "Name", auto.placement = T
-          , along.lines = T) +
+          , along.lines = T, size = .6) +
   #tmap::tm_scale_bar(position = c("left", "bottom"), width = 0.15) +
   tmap::tm_compass(type = "4star"
              , position = c("right", "bottom")
