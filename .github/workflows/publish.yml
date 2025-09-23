@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+      
+      - uses: r-lib/actions/setp-r@v2
+        with:
+          r-version: '4.4.3'
           
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
