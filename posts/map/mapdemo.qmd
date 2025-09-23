@@ -31,7 +31,7 @@ my_pal <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288",
 #theme for ggplot2 objects
 theme.plot <- function(){
   require(showtext)
-  #require(extrafontdb)
+  require(sysfonts)
   require(ggplot2)
   list(  
     ggplot2::theme(legend.position = "top"
@@ -294,19 +294,19 @@ yrange <- bbox_new$ymax - bbox_new$ymin # range of y values
 #convert the bbox to a sf collection (sfc)
 bbox_new <- bbox_new |>  # take the bounding box ...
   st_as_sfc() # ... and make it a sf polygon
-tmap_mode("plot") +
-  tm_shape(mdg, bbox = bbox_new) +
-  tm_polygons() +
-  tm_shape(cities_sf) +
-  tm_dots(size = "Population", col = "red"
+tmap::tmap_mode("plot") +
+  tmap::tm_shape(mdg, bbox = bbox_new) +
+  tmap::tm_polygons() +
+  tmap::tm_shape(cities_sf) +
+  tmap::tm_dots(size = "Population", col = "red"
           , legend.size.is.portrait = TRUE) +
-  tm_text(text = "Name", auto.placement = T
+  tmap::tm_text(text = "Name", auto.placement = T
           , along.lines = T) +
-  tm_scale_bar(position = c("left", "bottom"), width = 0.15) +
-  tm_compass(type = "4star"
+  #tmap::tm_scale_bar(position = c("left", "bottom"), width = 0.15) +
+  tmap::tm_compass(type = "4star"
              , position = c("right", "bottom")
              , size = 2) +
-  tm_layout(main.title = "Main Cities of Madagascar"                         , legend.outside = TRUE)
+  tmap::tm_layout(main.title = "Main Cities of Madagascar"                         , legend.outside = TRUE)
 
 
 ```
