@@ -16,8 +16,7 @@ editor: visual
 execute:
   message: false
   warning: false
-filters: 
-  - webr
+
 ---
 
 ```{r global_options, include=F, warning=F, message=F, error=F}
@@ -31,8 +30,8 @@ my_pal <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288",
 
 #theme for ggplot2 objects
 theme.plot <- function(){
-  require(extrafont)
-  require(extrafontdb)
+  require(showtext)
+  #require(extrafontdb)
   require(ggplot2)
   list(  
     ggplot2::theme(legend.position = "top"
@@ -65,7 +64,7 @@ theme.plot <- function(){
 
 :::: box
 ::: box-header
-Several years back, I was asked to show multiple variables on a map of the world. This is what started my R journey. I began exploring R functionality, and I stumbled through posts where authors did GIS in R. Then one day, I found the amazing resource [Geocomputation with R](https://r.geocompx.org/). With this I was able to explore all kinds of maps and some initial modeling. I was hooked! Would I have been better off starting with a more traditional stats focus and learning from [R for Data Science](https://r4ds.hadley.nz/)? Definitely, but I wouldn't have gotten lost in playing with data and making beautiful maps. The straightest path to a goal is one I rarely follow. So, here's a quick introduction to making static and interactive maps in R.
+Several years back, I was asked to show multiple variables on a map of the world. This is what started my R journey. I began exploring R functionality, and I stumbled through posts where authors did GIS in R. Then one day several years later, I found the amazing resource [Geocomputation with R](https://r.geocompx.org/). With this I was able to explore all kinds of maps and some initial modeling. I was hooked! Would I have been better off starting with a more traditional stats focus and learning from [R for Data Science](https://r4ds.hadley.nz/)? Definitely, but I wouldn't have gotten lost in playing with data and making beautiful maps. The straightest path to a goal is one I rarely follow. So, here's a quick introduction to making static and interactive maps in R.
 :::
 ::::
 
