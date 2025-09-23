@@ -180,6 +180,14 @@ ggplot2::ggplot(mdg) +
   geom_sf() +
   geom_sf(data = cities_sf, color = "red")
 
+ggsave(plot = last_plot(),
+       filename = "map.png",
+       path = here::here("posts/map/"),
+       dpi = 300,
+       height = 4,
+       width = 3,
+       units = "in")
+
 ```
 :::
 
@@ -334,13 +342,6 @@ ggplot2::ggplot() +
   theme_void()
 
 
-#ggsave(plot = last_plot(),
-   #    filename = "map.png",
-   #    path = here::here("posts/map/"),
-    #   dpi = 300,
-    #   height = 4,
-    #   width = 3,
-    #   units = "in")
 ```
 
 ## tmap interactive
