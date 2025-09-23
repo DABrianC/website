@@ -98,7 +98,7 @@ library(ggrepel) #for repeling text in ggplot
 
 ## Read in the data
 
-For this exercise, the data is already saved in the main project folder so I'll read in the csv file with city names and locations, and then I'll read in the administrative boundaries. [You can also access it here]().
+For this exercise, the data is already saved in the main project folder so I'll read in the csv file with city names and locations, and then I'll read in the administrative boundaries. [You can also access the city data here](https://github.com/DABrianC/website/blob/main/posts/map/Madagascar_Cities.csv) and [the administrative boundaries here](https://github.com/DABrianC/website/tree/main/posts/map/shapefiles).
 
 ```{r cities}
 
