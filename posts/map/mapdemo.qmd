@@ -168,7 +168,7 @@ tmap_mode("plot") +
   tm_shape(mdg) +
   tm_polygons() + #for only the borders, use tm_borders()
   tm_shape(cities_sf) +
-  tm_dots(size = .25, col = "red")
+  tm_dots(size = .25, col = "red", fill = "red")
 
 ```
 
