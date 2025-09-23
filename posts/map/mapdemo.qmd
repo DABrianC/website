@@ -346,7 +346,7 @@ tmap_mode("view") +
           , legend.size.is.portrait = TRUE) +
   tm_text(text = "Name", auto.placement = T
           , along.lines = T) +
-  tm_scale_bar(position = c("left", "bottom"), width = 0.15) +
+  #tm_scale_bar(position = c("left", "bottom"), width = 0.15) +
   tm_compass(type = "4star"
              , position = c("right", "bottom")
              , size = 2) +
