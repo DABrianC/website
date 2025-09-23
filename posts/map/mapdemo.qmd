@@ -63,7 +63,7 @@ theme.plot <- function(){
 
 :::: box
 ::: box-header
-Several years back, I was asked to show multiple variables on a map of the world. This is what started my R journey. I began exploring R functionality, and I stumbled through posts where authors did GIS in R. Then one day, I found the amazing resource [Geocomputation with R](https://r.geocompx.org/). With this I was able to explore all kinds of maps and some initial modeling. I was hooked! Would I have been better off starting with a more traditional stats focus and learning from [R for Data Science](https://r4ds.hadley.nz/)? Definitely, but I wouldn't have gotten lost in playing with data and making beautiful maps. The straightest path to a goal is one I rarely follow. So, here's a quick introduction to making static and interactive maps in R.  
+Several years back, I was asked to show multiple variables on a map of the world. This is what started my R journey. I began exploring R functionality, and I stumbled through posts where authors did GIS in R. Then one day, I found the amazing resource [Geocomputation with R](https://r.geocompx.org/). With this I was able to explore all kinds of maps and some initial modeling. I was hooked! Would I have been better off starting with a more traditional stats focus and learning from [R for Data Science](https://r4ds.hadley.nz/)? Definitely, but I wouldn't have gotten lost in playing with data and making beautiful maps. The straightest path to a goal is one I rarely follow. So, here's a quick introduction to making static and interactive maps in R.
 :::
 ::::
 
@@ -71,7 +71,7 @@ Several years back, I was asked to show multiple variables on a map of the world
 
 For this session, the learning objective is to:
 
-- Make a map in ggplot and tmap
+-   Make a map in ggplot and tmap
 
 ## Important packages in rspatial
 
@@ -83,23 +83,25 @@ To get started, we need to load our packages.
 
 ```{r libraries, echo = T, warning = FALSE, message = FALSE }
 #run this line first if you have never used these packages before
-#install.packages(c("tidyverse", "sf", "tmap", "readr", "here"))
+#install.packages(c("tidyverse", "sf", "tmap", "readr", "here", "ggspatial", "ggrepel"))
 
 library(tidyverse) #install the core tidyverse packages including ggplot2
 library(sf) #provides tools to work with vector data 
 library(tmap) #for visualizing spatial data
 library(readr) #functions for reading external datasets 
 library(here) #to better locate files not in working directory
+library(ggspatial) #for finishing touches on a map
+library(ggrepel) #for repeling text in ggplot
 ```
 
 ## Read in the data
 
-For this exercise, the data is already saved in my directory so I'll read in the csv file with city names and locations, and then I'll read in the administrative boundaries.
+For this exercise, the data is already saved in the main project folder so I'll read in the csv file with city names and locations, and then I'll read in the administrative boundaries. [You can also access it here]().
 
 ```{r cities}
 
 #It is a csv file so I use the read_csv function and provide the file path
-cities <- read_csv(here::here("/Map demo/data/Madagascar_Cities.csv")
+cities <- read_csv(here::here("posts/map/Madagascar_Cities.csv")
                    , show_col_types = FALSE)
 
 #Observe the first few rows of data
@@ -114,7 +116,7 @@ Now, for the administrative boundaries. Each of these are being read in using `s
 ```{r admin boundaries}
 
 #This is only the country boundary
-mdg <- st_read(here::here("./Map demo/data/shapefiles/mdg_admbnda_adm0_BNGRC_OCHA_20181031.shp"))
+mdg <- st_read(here::here("posts/map/shapefiles/mdg_admbnda_adm0_BNGRC_OCHA_20181031.shp"))
 
 ```
 
@@ -122,7 +124,7 @@ mdg <- st_read(here::here("./Map demo/data/shapefiles/mdg_admbnda_adm0_BNGRC_OCH
 
 ```{r regional boundaries}
 #This is the administrative level below the whole country 
-mdg1 <- st_read(here::here("./Map demo/data/shapefiles/mdg_admbnda_adm1_BNGRC_OCHA_20181031.shp"))
+mdg1 <- st_read(here::here("posts/map/shapefiles/mdg_admbnda_adm1_BNGRC_OCHA_20181031.shp"))
 
 ```
 
@@ -131,14 +133,14 @@ mdg1 <- st_read(here::here("./Map demo/data/shapefiles/mdg_admbnda_adm1_BNGRC_OC
 ```{r district boundaries}
 #This is the administrative level below the previous one
 # maybe these are districts
-mdg2 <- st_read(here::here("./Map demo/data/shapefiles/mdg_admbnda_adm2_BNGRC_OCHA_20181031.shp"))
+mdg2 <- st_read(here::here("posts/map/shapefiles/mdg_admbnda_adm2_BNGRC_OCHA_20181031.shp"))
 
 ```
 :::
 
 ## Convert the cities to an sf object
 
-Remember that the cities object is a standard .csv with longitude and latitude columns, but it is not yet recognized as an sf object. Here is how to convert it to an sf object with a single geometry column and a crs.
+Remember that the cities object is a standard .csv with longitude and latitude columns, but it is not yet recognized as a spatial object. Let's convert it to an sf object with a single geometry column and a crs.
 
 ```{r convert}
 
@@ -150,7 +152,11 @@ cities_sf <- cities |>
 DT::datatable(head(cities_sf))
 ```
 
-## Make the map
+# Make the map
+
+Now the fun begins! To initiate tmap, we need to specify whether we want a static map ("plot") or an interactive map ("view"). Then, we pass in the shape object and tell it what kind of shape we want. Then, we place the cities_sf on top of the Madagascar shape and give the dots a reasonable size and a color that stands out. Notice that just like ggplot the map is built in layers.
+
+The second tab below shows a similar, though shorter, process for ggplot. In this case, and we can see some differences in the default settings between the two packages. 
 
 ::: panel-tabset
 ## tmap
@@ -177,6 +183,12 @@ ggplot2::ggplot(mdg) +
 :::
 
 ## Make the map better
+
+The map could use a title and the cities could use labels. Since we chose Madagascar the cities have long names and require us to create a bigger viewing window by adjusting the bounding box (bbox). Luckily it is not that hard. We can extract the current bbox using  `st_bbox()` and then calculate the ranges of x and y values. We don't need to completely max out viewing window so multiplying the bbox values by a percentage of each range does the trick. This may take some experimenting to see what works. 
+
+The x values are stored in slots 1 and 3 of the bbox and the y values in slots 2 and 4. Then, just make sure that the bbox_new object is an sf polygon and set the bbox to use it. From here, the layering process is the same, but there's a new layer for the city labels and a title.
+
+Notice that tmap naturally avoids text overlapping, but with ggplot we have to use ggrepel to explicitly repel the label names from each other.
 
 ::: panel-tabset
 ## tmap
@@ -342,6 +354,6 @@ tmap_mode("view") +
 ```
 :::
 
-## Additional Resources
+# Additional Resources
 
-For those interested in mapping in R (or QGIS) there are many free resources available online. A great starting point for R is the online text book, [Geocomputation with R](https://r.geocompx.org/). If you would rather learn more in Python, [Geocomputation with Python](https://py.geocompx.org/) is a great resource.
+This is just an initial primer. For those interested in mapping in R there are many free resources available online. A great starting point for R is the online text book, [Geocomputation with R](https://r.geocompx.org/). If you would rather learn more in Python, [Geocomputation with Python](https://py.geocompx.org/) is a great resource.
