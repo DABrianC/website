@@ -181,13 +181,6 @@ ggplot2::ggplot(mdg) +
   geom_sf(data = cities_sf, color = "red") +
   theme_void()
 
-ggsave(plot = last_plot(),
-       filename = "map.png",
-       path = here::here("posts/map/"),
-       dpi = 300,
-       height = 3,
-       width = 2,
-       units = "in")
 
 ```
 :::
@@ -229,8 +222,8 @@ tmap_mode("plot") +
   tm_shape(mdg, bbox = bbox_new) +
   tm_polygons() +
   tm_shape(cities_sf) +
-  tm_dots(size = .25, col = "red") +
-  tm_text(text = "Name", auto.placement = T) +
+  tm_dots(size = .25, col = "red", fill = "red") +
+  tm_text(text = "Name", auto.placement = T, size = .5) +
   tm_layout(title = "Main Cities of\nMadagascar")
 
 ```
@@ -307,7 +300,7 @@ tmap::tmap_mode("plot") +
   tmap::tm_shape(mdg, bbox = bbox_new) +
   tmap::tm_polygons() +
   tmap::tm_shape(cities_sf) +
-  tmap::tm_dots(size = "Population", col = "red"
+  tmap::tm_dots(size = "Population", col = "red", fill = "red"
           , legend.size.is.portrait = TRUE) +
   tmap::tm_text(text = "Name", auto.placement = T
           , along.lines = T) +
