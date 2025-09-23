@@ -31,8 +31,8 @@ my_pal <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288",
 
 #theme for ggplot2 objects
 theme.plot <- function(){
-  require(extrafont)
-  require(extrafontdb)
+  require(sysfonts)
+  #require(extrafontdb)
   require(ggplot2)
   list(  
     ggplot2::theme(legend.position = "top"
