@@ -5,7 +5,7 @@ categories: [R, rspatial, map]
 date: "2025-09-23"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: "books.png"
+image: "map.png"
 format: 
   html:
     code-fold: false
@@ -333,6 +333,14 @@ ggplot2::ggplot() +
   labs(title = "Main Cities of Madagascar") +
   theme_void()
 
+
+ggsave(plot = last_plot(),
+       filename = "map.png",
+       path = here::here("posts/map/"),
+       dpi = 300,
+       height = 4,
+       width = 3,
+       units = "in")
 ```
 
 ## tmap interactive
