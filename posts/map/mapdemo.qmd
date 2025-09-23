@@ -178,14 +178,15 @@ tmap_mode("plot") +
 
 ggplot2::ggplot(mdg) +
   geom_sf() +
-  geom_sf(data = cities_sf, color = "red")
+  geom_sf(data = cities_sf, color = "red") +
+  theme_void()
 
 ggsave(plot = last_plot(),
        filename = "map.png",
        path = here::here("posts/map/"),
        dpi = 300,
-       height = 4,
-       width = 3,
+       height = 3,
+       width = 2,
        units = "in")
 
 ```
