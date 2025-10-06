@@ -63,6 +63,10 @@ DT::datatable(df, class = 'cell-border stripe', option = list(pageLength = 5), f
 
 ```{r}
 bing <- tidytext::get_sentiments(lexicon = "bing")
+
+# Set option to skip interactive prompts
+options(textdata_download_prompt = FALSE)
+
 loughran <- textdata::lexicon_loughran()
 ```
 
