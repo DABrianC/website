@@ -1,0 +1,166 @@
+---
+title: "Sentiment Analysis: Llama Llama"
+subtitle: "Comparing Llama sentiment analysis with two sentiment lexicons"
+categories: [R, llama, sentiments]
+date: "2024-11-08"
+author: "Brian Calhoon"
+title-block-banner: "#C9C9C9"
+image: ""
+format: 
+  html:
+    code-fold: false
+    code-summary: "Show the code"
+    toc: true
+    css: styles.css
+editor: visual
+execute:
+  message: false
+  warning: false
+
+---
+
+```{r global_options, include=F, warning=F, message=F, error=F}
+
+#load libraries 
+library(ollamar)
+library(mall)
+library(remotes)
+library(textdata)
+library(tidytext)
+library(tidyverse)
+
+```
+
+
+# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::: box
+::: box-header
+It might be because you are curious about sentiment analysis. This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](www.tidytextmining.com) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Thanks for learning with me today. Enjoy!
+:::
+::::
+
+# Comparing the different approaches to sentiment analysis
+
+I am curious to test this out for a few reasons. First, I find sentiments an interesting way to categorize qualitative data. Second, I like the idea of running a large language model (LLM) locally. Third, this is an open-source large language model so the costs are minimal. Fourth, I have been curious how lexicon-based sentiment analysis compares to what an LLM can do. So, let's dive in.
+
+## A dataset
+
+Here's a minimal dataset that allows us to confirm what is being done with a quick look. You can explore it in the table below. For our purposes we're mainly interested in the column `text_response`.
+
+```{r}
+df <- readxl::read_xlsx(here::here("posts/llama/testdata2.xlsx")) 
+
+df <- df |> 
+  select(-location, -type_visit, -lat, -long)
+
+DT::datatable(df, class = 'cell-border stripe', option = list(pageLength = 5), filter = "top")
+
+
+```
+
+## Sentiment analysis with bing and Loughran-McDonald
+
+```{r}
+bing <- tidytext::get_sentiments(lexicon = "bing")
+loughran <- textdata::lexicon_loughran()
+```
+
+Sentiment lexicons are basically lists of words that have been coded with a sentiment value (positive, negative, or a number score). The bing lexicon has `r nrow(bing)` words and the Loughran-McDonald has `r nrow(loughran)` words. We can tokenize and identify the sentiment words and then quantify all positive words as 1 and negative words as -1 before computing an average sentiment score for each respondent. This table shows you which words bing identified and which words Loughran-McDonald identified. You can see how they identify different words and are not great lexicons for this particular task.
+
+```{r message = F, warning = F}
+
+
+df_bing <- df |>
+  #dplyr::select(text_response) |> 
+  dplyr::mutate(respondent = row_number()) |> 
+  tidytext::unnest_tokens(word, text_response) |> 
+  dplyr::inner_join(bing) 
+
+df_loughran <- df |> 
+  dplyr::mutate(respondent = row_number()) |> 
+  tidytext::unnest_tokens(word, text_response) |> 
+  dplyr::inner_join(loughran)
+
+df_bing_loughran <- df_bing |> 
+  dplyr::full_join(df_loughran, by = "respondentid") |> 
+  select(respondentid, bing_words = word.x, bing_sentiments = sentiment.x, loughran_words = word.y, loughran_sentiments = sentiment.y)
+
+DT::datatable(df_bing_loughran, class = 'cell-border stripe', option = list(pageLength = 5))
+
+```
+
+```{r}
+
+# data wrangling to get the bing sentiments object
+bing_sents <- df |>
+  dplyr::select(text_response) |> 
+  dplyr::mutate(respondent = row_number()) |> 
+  tidytext::unnest_tokens(word, text_response) |> 
+  dplyr::inner_join(bing) |> 
+  dplyr::mutate(value = case_when(sentiment == "positive" ~ 1
+                               , sentiment == "negative" ~ -1)) |> 
+      dplyr::group_by(respondent) |> 
+      dplyr::summarize(score = mean(value))
+
+# data wrangling to get the Loughran-McDonald sentiments object
+loughran_sents <- df |>
+  dplyr::select(text_response) |> 
+  dplyr::mutate(respondent = row_number()) |> 
+  tidytext::unnest_tokens(word, text_response) |> 
+  dplyr::inner_join(loughran) |> 
+  dplyr::mutate(value = case_when(sentiment == "positive" ~ 1
+                               , sentiment == "negative" ~ -1)) |> 
+      dplyr::group_by(respondent) |> 
+      dplyr::summarize(score = mean(value))
+
+```
+
+Then, we do a similar process using Llama, but we don't have to take an average score because the LLM provides its own rating of positive, negative, or neutral for each respondent.
+
+```{r message = F, warning = F}
+
+
+mall::llm_use("ollama", "llama3.2", seed = 100, .cache = "_readme_cache")
+
+llama_sents <- df |>
+  dplyr::select(text_response) |> 
+  dplyr::mutate(respondent = row_number()) |> 
+  mall::llm_sentiment(col = text_response, options = c("positive",  "negative", "neutral")) |> 
+  dplyr::mutate(value = case_when(.sentiment == "positive" ~ 1
+                               , .sentiment == "negative" ~ -1
+                               , .sentiment == "neutral" ~ 0)) 
+
+```
+
+## Visualizing the outputs
+
+A simple comparison of each approach can be done with a density plot to show where the proportion of respondents fall on a negative to positive spectrum. Quickly looking at the data it is pretty clear that the Llama LLM more accurately categorizes the sentiment of each respondent. With this we could dive into the positive and negative responses to look for common topics or themes or see how they correlate with other independent variables.
+
+```{r}
+
+markdown_text <- "The <span style = 'color:#00457C'><b>bing<b></span> and <span style = 'color:#89C266;'><b>Loughran-McDonald<b></span> sentiment lexicons <br> miss the nuance of the language that the <span style = 'color:#FF7C48;'><b>Llama<b></span> <br> sentiment analysis captures."
+
+ggplot(bing_sents) +
+  geom_vline(xintercept = 0, lwd = 1.5, color = "#7F7F7F", fill = "#7F7F7F",  alpha = .2)+
+  geom_density(aes(score), color = "#00457C", lwd = 1.5) +
+  geom_density(data = loughran_sents, aes(score), color = "#89C266", fill = "#89C266", alpha = .2, lwd = 1.5) +
+  geom_density(data = llama_sents, aes(value), color = "#FF7C48", fill = "#FF7C48", alpha = .2, lwd = 1.5) +
+  geom_text(aes(x = .25, y = .5, label = "Neutral"), color = "#7F7F7F", vjust = .25, alpha = .3) +
+  geom_segment(aes(x = .03, xend = .16, y = .45, yend = .49), color = "#7F7F7F", alpha = .3)+
+  theme_minimal()+
+  labs(title = "Comparison of sentiments with different methods", 
+    subtitle = markdown_text,
+    y = "Propotion of responses",
+    x = "More negative                                     More positive") +
+  theme(plot.title = element_text(size = 20, face = "bold", family = "Corbel"), 
+    plot.subtitle = ggtext::element_markdown(size = 16, family = "Corbel"),
+    axis.title = element_text(family = "Corbel", size = 12),
+    plot.title.position = "plot"
+    , axis.text.x = element_blank())
+
+```
+
+# Conclusion
+
+The `Ollama` and `mall` packages are incredibly easy to work with in R. They are not fast, but if you had several hundred responses it is much faster than going through text by hand. If data is collected using a platform that generates a .csv or .xlsx file this is a very simple addition to the workflow
