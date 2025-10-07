@@ -16,6 +16,7 @@ editor: visual
 execute:
   message: false
   warning: false
+  freeze: true
 
 ---
 
