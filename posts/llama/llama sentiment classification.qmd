@@ -29,6 +29,7 @@ library(textdata)
 library(tidytext)
 library(tidyverse)
 library(DT)
+library(ggtext)
 
 ```
 
