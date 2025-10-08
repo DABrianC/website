@@ -19,7 +19,7 @@ execute:
 
 ---
 
-```{r global_options, include=F, warning=F, message=F, error=F}
+```{r global_options, warning=F, message=F, error=F}
 
 #load libraries 
 library(ollamar)
@@ -169,7 +169,7 @@ ggplot(bing_sents) +
 
 ```
 
-![](_site/posts/llama/density_plot.png)
+![](https://github.com/DABrianC/website/blob/main/posts/llama/density_plot.png)
 
 # Conclusion
 
