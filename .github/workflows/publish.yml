@@ -38,6 +38,17 @@ jobs:
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
 
+      - name: Debug - List all generated files  # ADD THIS
+        run: |
+          echo "=== All PNG files in _site ==="
+          find _site -type f -name "*.png"
+          echo ""
+          echo "=== Directory structure ==="
+          ls -R _site/
+          echo ""
+          echo "=== Size of _site directory ==="
+          du -sh _site/
+          
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4
         with:
