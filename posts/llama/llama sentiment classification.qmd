@@ -149,7 +149,7 @@ A simple comparison of each approach can be done with a density plot to show whe
 
 markdown_text <- "The <span style = 'color:#00457C'><b>bing<b></span> and <span style = 'color:#89C266;'><b>Loughran-McDonald<b></span> sentiment lexicons <br> miss the nuance of the language that the <span style = 'color:#FF7C48;'><b>Llama<b></span> <br> sentiment analysis captures."
 
-ggplot(bing_sents) +
+plot <- ggplot(bing_sents) +
   geom_vline(xintercept = 0, lwd = 1.5, color = "#7F7F7F", fill = "#7F7F7F",  alpha = .2)+
   geom_density(aes(score), color = "#00457C", lwd = 1.5) +
   geom_density(data = loughran_sents, aes(score), color = "#89C266", fill = "#89C266", alpha = .2, lwd = 1.5) +
@@ -166,6 +166,8 @@ ggplot(bing_sents) +
     axis.title = element_text(family = "sans", size = 12),
     plot.title.position = "plot"
     , axis.text.x = element_blank())
+
+plot
 
 ```
 
