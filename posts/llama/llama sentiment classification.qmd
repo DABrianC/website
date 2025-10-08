@@ -169,7 +169,7 @@ ggplot(bing_sents) +
 
 ```
 
-![](density_plot.png)
+![](_site/posts/llama/density_plot.png)
 
 # Conclusion
 
