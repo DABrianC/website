@@ -1,11 +1,11 @@
 ---
-title: "Sentiment Analysis: Llama Llama"
+title: '<span class="humans-learning-post">Sentiment Analysis: Llama Llama</span>'
 subtitle: "Comparing Llama sentiment analysis with two sentiment lexicons"
 categories: [R, llama, sentiments]
 date: "2024-11-08"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: ""
+image: "density_plot.png"
 format: 
   html:
     code-fold: false
@@ -29,6 +29,7 @@ library(remotes)
 library(textdata)
 library(tidytext)
 library(tidyverse)
+library(DT)
 
 ```
 
@@ -37,13 +38,13 @@ library(tidyverse)
 
 :::: box
 ::: box-header
-It might be because you are curious about sentiment analysis. This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](www.tidytextmining.com) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Thanks for learning with me today. Enjoy!
+Maybe you are curious about sentiment analysis? This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](www.tidytextmining.com) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Then we'll wrap it all up with a density plot comparing the scoring of each approach. Enjoy!
 :::
 ::::
 
 # Comparing the different approaches to sentiment analysis
 
-I am curious to test this out for a few reasons. First, I find sentiments an interesting way to categorize qualitative data. Second, I like the idea of running a large language model (LLM) locally. Third, this is an open-source large language model so the costs are minimal. Fourth, I have been curious how lexicon-based sentiment analysis compares to what an LLM can do. So, let's dive in.
+I am curious to test this out for a few reasons. First, I find sentiments an interesting way to categorize qualitative data. Second, I like the idea of running a large language model (LLM) locally. Third, this is an open-source large language model so the costs are minimal. Fourth, I have been curious how out-of-the-box lexicon-based sentiment analysis approaches compare to what an LLM can do. So, let's dive in.
 
 ## A dataset
 
@@ -115,7 +116,7 @@ loughran_sents <- df |>
   tidytext::unnest_tokens(word, text_response) |> 
   dplyr::inner_join(loughran) |> 
   dplyr::mutate(value = case_when(sentiment == "positive" ~ 1
-                               , sentiment == "negative" ~ -1)) |> 
+        , sentiment == "negative" ~ -1)) |> 
       dplyr::group_by(respondent) |> 
       dplyr::summarize(score = mean(value))
 
@@ -136,6 +137,8 @@ llama_sents <- df |>
                                , .sentiment == "negative" ~ -1
                                , .sentiment == "neutral" ~ 0)) 
 
+
+DT::datatable(llama_sents, class = 'cell-border stripe', option = list(pageLength = 5))
 ```
 
 ## Visualizing the outputs
@@ -165,6 +168,13 @@ ggplot(bing_sents) +
     , axis.text.x = element_blank())
 
 ```
+## Wordclouds
+
+Using the `llama_sents` object we can create wordcloud with words from positive-coded responses in blue and negative coded responses in red.
+
+```{r}
+
+
 
 # Conclusion
 
