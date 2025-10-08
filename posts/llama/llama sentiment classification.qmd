@@ -168,14 +168,7 @@ ggplot(bing_sents) +
     , axis.text.x = element_blank())
 
 ```
-## Wordclouds
-
-Using the `llama_sents` object we can create wordcloud with words from positive-coded responses in blue and negative coded responses in red.
-
-```{r}
-
-
 
 # Conclusion
 
-The `Ollama` and `mall` packages are incredibly easy to work with in R. They are not fast, but if you had several hundred responses it is much faster than going through text by hand. If data is collected using a platform that generates a .csv or .xlsx file this is a very simple addition to the workflow
+The `Ollama` and `mall` packages are incredibly easy to work with in R. They are not fast, but if you had several hundred responses it is much faster than going through text by hand. This is a simple addition to a scripted workfolow if you wanted to build this into an analysis.
