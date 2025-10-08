@@ -161,9 +161,9 @@ ggplot(bing_sents) +
     subtitle = markdown_text,
     y = "Propotion of responses",
     x = "More negative                                     More positive") +
-  theme(plot.title = element_text(size = 20, face = "bold", family = "Corbel"), 
-    plot.subtitle = ggtext::element_markdown(size = 16, family = "Corbel"),
-    axis.title = element_text(family = "Corbel", size = 12),
+  theme(plot.title = element_text(size = 20, face = "bold", family = "sans"), 
+    plot.subtitle = ggtext::element_markdown(size = 16, family = "sans"),
+    axis.title = element_text(family = "sans", size = 12),
     plot.title.position = "plot"
     , axis.text.x = element_blank())
 
