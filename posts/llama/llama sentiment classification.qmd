@@ -19,7 +19,23 @@ execute:
 
 ---
 
-```{r global_options, warning=F, message=F, error=F}
+# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::: box
+::: box-header
+Maybe you are curious about sentiment analysis? This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](www.tidytextmining.com) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Then we'll wrap it all up with a density plot comparing the scoring of each approach. Enjoy!
+:::
+::::
+
+# Comparing the different approaches to sentiment analysis
+
+I am curious to test this out for a few reasons. First, I find sentiments an interesting way to categorize qualitative data. Second, I like the idea of running a large language model (LLM) locally. Third, this is an open-source large language model so the costs are minimal. Fourth, I have been curious how out-of-the-box lexicon-based sentiment analysis approaches compare to what an LLM can do. So, let's dive in.
+
+First, load your libraries.
+
+```{r global_options, include = F, warning=F, message=F, error=F}
+
+#Rembember to install.packages("package name") on any packages you haven't installed before.
 
 #load libraries 
 library(ollamar)
@@ -32,19 +48,6 @@ library(DT)
 library(ggtext)
 
 ```
-
-
-# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
-
-:::: box
-::: box-header
-Maybe you are curious about sentiment analysis? This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](www.tidytextmining.com) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Then we'll wrap it all up with a density plot comparing the scoring of each approach. Enjoy!
-:::
-::::
-
-# Comparing the different approaches to sentiment analysis
-
-I am curious to test this out for a few reasons. First, I find sentiments an interesting way to categorize qualitative data. Second, I like the idea of running a large language model (LLM) locally. Third, this is an open-source large language model so the costs are minimal. Fourth, I have been curious how out-of-the-box lexicon-based sentiment analysis approaches compare to what an LLM can do. So, let's dive in.
 
 ## A dataset
 
