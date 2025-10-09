@@ -33,7 +33,7 @@ I am curious to test this out for a few reasons. First, I find sentiments an int
 
 First, load your libraries.
 
-```{r global_options, include = F, warning=F, message=F, error=F}
+```{r global_options, warning=F, message=F, error=F}
 
 #Rembember to install.packages("package name") on any packages you haven't installed before.
 
