@@ -169,7 +169,7 @@ ggplot(bing_sents) +
 
 ```
 
-![](https://github.com/DABrianC/website/blob/main/posts/llama/density_plot.png)
+![](https://dabrianc.github.io/website/posts/llama/density_plot.png)
 
 # Conclusion
 
