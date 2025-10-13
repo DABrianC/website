@@ -23,7 +23,7 @@ execute:
 
 :::: box
 ::: box-header
-Maybe you are curious about sentiment analysis? This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](www.tidytextmining.com) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Then we'll wrap it all up with a density plot comparing the scoring of each approach. Enjoy!
+Maybe you are curious about sentiment analysis? This demonstration will take an example dataframe that has a text field and compare the ability of Meta's LLama 3.2, bing's lexicon, and Loughran-McDonald's lexicon at identifying positive and negative sentiments from short responses. This draws on the great work of Julia Silge and David Robinson [Text Mining with R](https://www.tidytextmining.com/) for the lexicon-based sentiment analysis. For the Llama part of the analysis, the `ollama` and `mall` R packages do the heavy lifting with `mall` providing the tidy functions that are used to interact with the data. Then we'll wrap it all up with a density plot comparing the scoring of each approach. Enjoy!
 :::
 ::::
 
