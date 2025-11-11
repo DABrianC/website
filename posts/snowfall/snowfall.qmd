@@ -1,0 +1,195 @@
+---
+title: '<span class="humans-learning-post">Snowfall at Alta, UT</span>'
+subtitle: "Visualizing snowfall data using Plotly"
+categories: [R, plotly]
+date: "2025-11-11"
+author: "Brian Calhoon"
+title-block-banner: "#C9C9C9"
+image: "snow.png"
+format: 
+  html:
+    code-fold: false
+    code-summary: "Show the code"
+    toc: true
+    css: styles.css
+editor: visual
+execute:
+  message: false
+  warning: false
+filters: 
+  - webr
+---
+
+```{r global_options, include=F, warning=F, message=F, error=F}
+
+
+```
+
+# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::: box
+::: box-header
+I was talking with a friend recently about when I should visit Utah for skiing this year. He sent me a link to the [Utah Avalanche Center](https://utahavalanchecenter.org/alta-monthly-snowfall) to look at monthly precipitation from the [Alta Guard Station](https://utahavalanchecenter.org/alta-monthly-snowfall). This post will demonstrate downloading the data and then visualize it using Plotly to create an interactive plot.  Enjoy!
+:::
+::::
+
+# Learning objectives
+
+For this session, the learning objective is to:
+
+-   download a file from a website
+
+-   shape the data for visualization
+
+-   visualize the data using [Plotly](https://plotly.com/r/)
+
+As is the case, let's make sure that our libraries are loaded and if any need to be installed that you do this first.
+
+```{r}
+
+#install.packages(c("plotly", "tidyverse"))
+
+library(plotly)
+library(tidyverse)
+library(readxl)
+```
+
+# Download the data?
+
+Monthly snowfall data for the Alta Guard Station is available at the bottom of the this page, https://utahavalanchecenter.org/alta-monthly-snowfall. 
+
+Copy the link to the .xlsx file.
+
+```{r}
+#| class-output: pre
+
+
+# Download and read the data
+data_url <- "https://utahavalanchecenter.org/sites/default/files/attached_files/2025.05.01%20Alta%20Guard%20Snow%3AWater.xlsx"
+
+# Download the file
+download.file(data_url, destfile = here::here("posts/snowfall/alta_data.xlsx"), mode = "wb")
+
+#assign it to an object
+df <- readxl::read_xlsx("alta_data.xlsx")
+
+#view the data
+glimpse(df)
+
+cat("Data dimensions:", nrow(df),
+    "rows,", ncol(df), "columns\n")
+
+ames(df)
+
+head(df)
+
+
+```
+
+
+```{r}
+#| class-output: pre
+
+# installing packages
+#install.packages("tidyverse")
+#install.packages("readxl")
+#install.packages("writexl")
+#install.packages("here")
+#install.packages("writexl")
+
+# another option for installing packages
+#install.packages(c("tidyverse", "readxl", "writexl", "here", "writexl"))
+
+
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(here)
+
+```
+
+## Read in files
+
+Previously our data was included in the gapminder package. You can find lots of training data sets in packages, and this is really useful, but it's not how you will get most of your data in the workplace. So, let's get to it.
+
+### CSV file
+
+```{r}
+#| class-output: pre
+
+# read the data in and assign it to a variable
+df_csv <- read_csv(here::here("posts/read file/testdata2.csv"))
+
+#check the data
+
+dplyr::glimpse(df_csv)
+```
+
+Success!
+
+### Excel file
+
+```{r}
+#| class-output: pre
+
+# read the data in and assign it to a variable
+df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
+
+#check the data
+
+dplyr::glimpse(df_xlsx)
+```
+
+Success!
+
+## Mutate the dataset
+
+We can see that both datasets are identical with 20 rows (observations) across 9 columns. So, pick either one and we'll add a variable called income using the `mutate()` function. This will add a column, and we will save it under as a new object that we will write back to an Excel file so we can email to our colleague.
+
+```{r}
+#| class-output: pre
+
+# add a new variable to the dataset
+df_add <- df_xlsx |> #pipe df to the mutate function
+  dplyr::mutate(income = sample(1000:7500, 20))
+
+#view first 6 rows
+
+head(df_add)
+
+#view last 6 rows
+tail(df_add)
+```
+
+We're using the basic manipulation skills that we saw with the Gapminder dataset in the previous lessons.
+
+## Write it to Excel or CSV
+
+Here all we need to do is specify the object and provide it a path where we want the file to be saved. You should write it to somewhere in your documents folder to avoid any issues with One Drive or Google Drive. N.B. with `write_csv()` path becomes file.
+
+```{r}
+#| class-output: pre
+
+write_xlsx(x = df_add, path = here::here("posts/read file/test_out.xlsx"))
+
+write_csv(x = df_add, file = here::here("posts/read file/test_out.csv"))
+
+```
+
+Now you can email this updated .xlsx/.csv file to your colleague. :)
+
+## Have fun!
+
+Now it's your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the `group_by()` call or to adjust the summary statistic in `summarize()`. Then, have fun with the plot!
+
+```{webr-r}
+
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(here)
+
+df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/read%20file/testdata2.xlsx"))
+
+
+```
