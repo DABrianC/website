@@ -58,7 +58,7 @@ library(readxl)
 
 Monthly snowfall data for the Alta Guard Station is available at the bottom of the this page, https://utahavalanchecenter.org/alta-monthly-snowfall. 
 
-Copy the link to the .xlsx file.
+Copy the link to the .xlsx file and follow the script below.
 
 ```{r}
 #| class-output: pre
@@ -76,37 +76,20 @@ df <- readxl::read_xlsx("alta_data.xlsx")
 #view the data
 glimpse(df)
 
-cat("Data dimensions:", nrow(df),
-    "rows,", ncol(df), "columns\n")
-
-ames(df)
-
-head(df)
-
-
 ```
+The data has `{r} cat(nrow(df), "rows and" ncol(df), "columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
 
+We'll use a basic subsetting approach. Within the brackets, the codes before the , are for rows, and after the comma come the columns. We want to take everything starting from row 7, and we select all the columns by leaving that part blank.
 
 ```{r}
-#| class-output: pre
 
-# installing packages
-#install.packages("tidyverse")
-#install.packages("readxl")
-#install.packages("writexl")
-#install.packages("here")
-#install.packages("writexl")
+#assign it a new object name 
 
-# another option for installing packages
-#install.packages(c("tidyverse", "readxl", "writexl", "here", "writexl"))
-
-
-library(tidyverse)
-library(readxl)
-library(writexl)
-library(here)
-
+df1 <- df[7:nrow(df),]
 ```
+
+
+
 
 ## Read in files
 
