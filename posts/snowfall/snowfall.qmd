@@ -1,5 +1,6 @@
 ---
-title: <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+title: |
+  <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
     <img src="Alta_logo_dropshadow.jpg" alt="Alta Logo" style="height: 60px;">
     <span class="humans-learning-post">Snowfall at Alta, UT</span>
     <img src="uac_logo.svg" alt="Utah Avalanche Center Logo" style="height: 60px;">
