@@ -308,7 +308,7 @@ plot <- ggplot(df3_snow) +
   labs(x = "Months",
        y = "Amount of \nSnowfall (in.)",
        title = "Monthly Snowfall at Alta",
-       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       subtitle = "Alta gets a lot of snow, particularly from November through March",
        caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
   theme_minimal()
 
@@ -319,7 +319,7 @@ plot_ly_cap <- plot_ly |>
     #subtitle
     list(x = 0,
         y = 1.08,
-        text = "Alta gets a lot of snow, particularly from December to January",
+        text = "Alta gets a lot of snow, particularly from November through March",
         xref = "paper",
         yref = "paper",
         xanchor = "left",
