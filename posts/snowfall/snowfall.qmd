@@ -5,7 +5,7 @@ categories: [R, plotly]
 date: "2025-11-11"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: "snow.png"
+image: "snow_monthly.png"
 format: 
   html:
     code-fold: false
@@ -245,7 +245,7 @@ Example: `geom_smooth(method = "lm", se = TRUE)` adds a linear regression line w
 
 ```{r}
 plot <- ggplot(df3_snow) +
-  geom_jitter(aes(x = month,
+  geom_jitter(aes(x = month_num,
                  y = amount),
               fill = "blue",
               shape = 21,
@@ -253,7 +253,7 @@ plot <- ggplot(df3_snow) +
               alpha = .8,
               width = .25,
               size = 4) +
-  geom_smooth(aes(x = month, y = amount)) +
+  geom_smooth(aes(x = month_num, y = amount)) +
   scale_x_continuous(breaks = 1:8, 
                      labels = levels(df3_snow$month)) +
   labs(x = "Months",
@@ -265,9 +265,10 @@ plot <- ggplot(df3_snow) +
 
 plot
 
+
 ```
 
-Using Plotly from R is pretty easy with an existing ggplot object. We've already defined our ggplot object as `plot` above. We can simply pass this to plotly and we get an interactive data visualiztion. Pretty cool! 
+Using Plotly from R is pretty easy with an existing ggplot object. We've already defined our ggplot object as `plot` above. We can simply pass this to plotly and we get an interactive data visualization. Pretty cool! 
 
 ```{r}
 
