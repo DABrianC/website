@@ -31,13 +31,22 @@ jobs:
         with:
           r-version: '4.4.3'
           
-      - name: Install R packages
-        uses: r-lib/actions/setup-r-dependencies@v2
-
+          
+      - name: Install remotes package
+        run: |
+          install.packages("remotes")
+        shell: Rscript {0}
+      
       - name: Install GitHub packages
         run: |
           remotes::install_github("mtoto/ufc.stats")
         shell: Rscript {0}
+      
+      - name: Install R packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::remotes
+      
         
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
