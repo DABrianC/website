@@ -1,10 +1,5 @@
 ---
-title: |
-  <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
-    <img src="Alta_logo_dropshadow.jpg" alt="Alta Logo" style="height: 60px;">
-    <span class="humans-learning-post">Snowfall at Alta, UT</span>
-    <img src="uac_logo.svg" alt="Utah Avalanche Center Logo" style="height: 60px;">
-  </div>
+title: '<span class="humans-learning-post">Snowfall at Alta, UT</span>'
 subtitle: "Visualizing snowfall data using Plotly"
 categories: [R, plotly]
 date: "2025-11-11"
@@ -84,7 +79,7 @@ glimpse(df)
 ```
 ## Shape and clean the data
 
-The data has `{r} paste0(nrow(df), "rows and ", ncol(df), " columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
+The data has `{r} paste0(nrow(df), " rows and ", ncol(df), " columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
 
 We'll use a basic subsetting approach. Within the brackets `[]`, the code before the "," `7:nrow(df)` are for rows, and after the comma come the columns. We want to take everything starting from row 7, and we select all the columns by leaving that part blank.
 
@@ -160,7 +155,7 @@ df3 <- df2 |>
 glimpse(df3)
 ```
 
-The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), "rows and ", ncol(df3), " columns")`.
+The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), " rows and ", ncol(df3), " columns")`.
 
 Before taking a first look at the data let's clean up a few more things -- change the "N" in the nino column to "Neutral" and make the months start with uppercase letters in the month column.
 
@@ -262,13 +257,13 @@ plot <- ggplot(df3_snow) +
               alpha = .8,
               width = .25,
               size = 4) +
-  geom_smooth(aes(x = month_num, y = amount)) +
+  geom_smooth(aes(x = month_num, y = amount), color = "red", se = FALSE) +
   scale_x_continuous(breaks = 1:8, 
                      labels = levels(df3_snow$month)) +
   labs(x = "Months",
        y = "Amount of \nSnowfall (in.)",
        title = "Monthly Snowfall at Alta",
-       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       subtitle = "Alta gets a lot of snow, particularly from November through March",
        caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
   theme_minimal()
 
@@ -305,7 +300,7 @@ plot <- ggplot(df3_snow) +
               alpha = .8,
               width = .25,
               size = 4) +
-  geom_smooth(aes(x = month_num, y = amount)) +
+  geom_smooth(aes(x = month_num, y = amount), color = "red", se = FALSE) +
   scale_x_continuous(breaks = 1:8, 
                      labels = levels(df3_snow$month)) +
   labs(x = "Months",
