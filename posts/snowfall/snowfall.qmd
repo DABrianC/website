@@ -79,7 +79,7 @@ glimpse(df)
 ```
 ## Shape and clean the data
 
-The data has `{r} cat(nrow(df), "rows and" ncol(df), "columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
+The data has `{r} paste0(nrow(df), "rows and", ncol(df), "columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
 
 We'll use a basic subsetting approach. Within the brackets `[]`, the code before the "," `7:nrow(df)` are for rows, and after the comma come the columns. We want to take everything starting from row 7, and we select all the columns by leaving that part blank.
 
@@ -151,7 +151,7 @@ df3 <- df2 |>
 
 ```
 
-The new dataframe, `df3` is much longer, indeed. We now have `{r} cat(nrow(df3), "rows and" ncol(df3), "columns")`.
+The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), "rows and", ncol(df3), "columns")`.
 
 Before taking a first look at the data let's clean up a few more things -- change the "N" in the nino column to "Neutral" and make the months start with uppercase letters in the month column.
 
