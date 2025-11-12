@@ -29,7 +29,7 @@ filters:
 
 :::: box
 ::: box-header
-I was talking with a friend recently about when I should visit Utah for skiing this year. He sent me a link to the [Utah Avalanche Center](https://utahavalanchecenter.org/alta-monthly-snowfall) to look at monthly precipitation from the [Alta Guard Station](https://utahavalanchecenter.org/alta-monthly-snowfall). This post will demonstrate downloading the data and then visualize it using Plotly to create an interactive plot.  Enjoy!
+I was talking with a friend recently about when I should visit Utah for skiing this year. He sent me a link to the [Utah Avalanche Center](https://utahavalanchecenter.org/alta-monthly-snowfall) to look at monthly precipitation data for the [Alta Guard Station](https://utahavalanchecenter.org/alta-monthly-snowfall). I'll use this data to guide my trip planning. For learning purposes, this post will demonstrate how to download, clean, and visualize data using Plotly to create an interactive plot.  Enjoy!
 :::
 ::::
 
@@ -39,22 +39,22 @@ For this session, the learning objective is to:
 
 -   download a file from a website
 
--   shape the data for visualization
+-   shape and clean the data for visualization
 
 -   visualize the data using [Plotly](https://plotly.com/r/)
 
-As is the case, let's make sure that our libraries are loaded and if any need to be installed that you do this first.
+As always, let's make sure that our libraries are loaded and if any need to be installed that you run `install.packages()` line first.
 
 ```{r}
 
-#install.packages(c("plotly", "tidyverse"))
+#install.packages(c("plotly", "tidyverse", "readxl"))
 
 library(plotly)
 library(tidyverse)
 library(readxl)
 ```
 
-# Download the data?
+## Download the data
 
 Monthly snowfall data for the Alta Guard Station is available at the bottom of the this page, https://utahavalanchecenter.org/alta-monthly-snowfall. 
 
@@ -77,102 +77,234 @@ df <- readxl::read_xlsx("alta_data.xlsx")
 glimpse(df)
 
 ```
+## Shape and clean the data
+
 The data has `{r} cat(nrow(df), "rows and" ncol(df), "columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
 
-We'll use a basic subsetting approach. Within the brackets, the codes before the , are for rows, and after the comma come the columns. We want to take everything starting from row 7, and we select all the columns by leaving that part blank.
+We'll use a basic subsetting approach. Within the brackets `[]`, the code before the "," `7:nrow(df)` are for rows, and after the comma come the columns. We want to take everything starting from row 7, and we select all the columns by leaving that part blank.
 
 ```{r}
 
 #assign it a new object name 
+# so we don't lose data
 
 df1 <- df[7:nrow(df),]
 ```
 
-
-
-
-## Read in files
-
-Previously our data was included in the gapminder package. You can find lots of training data sets in packages, and this is really useful, but it's not how you will get most of your data in the workplace. So, let's get to it.
-
-### CSV file
+Due in part to the summary data near the top of the file, the columns also need to be renamed, too. Each month has a column for snow and rain. To make for an easier pivot later, we'll add the prefix "month_" to each rain or snow column.
 
 ```{r}
-#| class-output: pre
 
-# read the data in and assign it to a variable
-df_csv <- read_csv(here::here("posts/read file/testdata2.csv"))
+names(df1) <- c("season",
+                "nino",
+                "oct_snow",
+                "oct_rain",
+                "nov_snow",
+                "nov_rain",
+                "dec_snow",
+                "dec_rain",
+                "jan_snow",
+                "jan_rain",
+                "feb_snow",
+                "feb_rain",
+                "march_snow",
+                "march_rain",
+                "april_snow",
+                "april_rain",
+                "may_snow",
+                "may_rain",
+                "blank",
+                "total_snow",
+                "total_rain",
+                "blank2",
+                "blank3")
 
-#check the data
 
-dplyr::glimpse(df_csv)
 ```
 
-Success!
-
-### Excel file
+Now it is beginning to take shape. There are two extra columns on the end where someone did some calculations, and a blank column before the total columns. Notice, we named those with the word "blank". Let's drop those and drop the columns that total the rain and snow fall.
 
 ```{r}
-#| class-output: pre
+#remove last two columns that have some
+# undefined numbers
+#also remove the total snow and rain columns
+df2 <- df1 |> 
+  select(-20:-23, -blank)
 
-# read the data in and assign it to a variable
-df_xlsx <- read_xlsx(here::here("posts/read file/testdata2.xlsx"))
-
-#check the data
-
-dplyr::glimpse(df_xlsx)
 ```
 
-Success!
+Now we have a wide dataset that we want to make longer. For visualizing with ggplot, we want all the snow or rain data in a single column and the months in a single column. This is easily done with tidyr's `pivot_longer()` function.
 
-## Mutate the dataset
+For the pivotting, we select columns 3 thru 18 with the `cols` argument. 
 
-We can see that both datasets are identical with 20 rows (observations) across 9 columns. So, pick either one and we'll add a variable called income using the `mutate()` function. This will add a column, and we will save it under as a new object that we will write back to an Excel file so we can email to our colleague.
+We will move the names of the columns to a column called "month" and a column called "type". Because we know that each name is separated by a "_" we can separate the columns into these two new columns using the "_" as a separator. The month prefix will go to the "month" column and the "rain" or "snow" suffix will go to the "type" column.
+
+The values will be placed in a new column called "amount". Now, run the code.
 
 ```{r}
-#| class-output: pre
+df3 <- df2 |> 
+  pivot_longer(cols = 3:18,
+               names_to = c("month", "type"),
+               names_sep = "_",
+               values_to = "amount")
 
-# add a new variable to the dataset
-df_add <- df_xlsx |> #pipe df to the mutate function
-  dplyr::mutate(income = sample(1000:7500, 20))
 
-#view first 6 rows
-
-head(df_add)
-
-#view last 6 rows
-tail(df_add)
 ```
 
-We're using the basic manipulation skills that we saw with the Gapminder dataset in the previous lessons.
+The new dataframe, `df3` is much longer, indeed. We now have `{r} cat(nrow(df3), "rows and" ncol(df3), "columns")`.
 
-## Write it to Excel or CSV
-
-Here all we need to do is specify the object and provide it a path where we want the file to be saved. You should write it to somewhere in your documents folder to avoid any issues with One Drive or Google Drive. N.B. with `write_csv()` path becomes file.
+Before taking a first look at the data let's clean up a few more things -- change the "N" in the nino column to "Neutral" and make the months start with uppercase letters in the month column.
 
 ```{r}
-#| class-output: pre
 
-write_xlsx(x = df_add, path = here::here("posts/read file/test_out.xlsx"))
+#recode the N response in nino column
+df3$nino <- df3$nino |> 
+  recode("N" = "Neutral")
 
-write_csv(x = df_add, file = here::here("posts/read file/test_out.csv"))
+#recode the months
+df3$month <- df3$month |> 
+  recode("oct" = "Oct",
+         "nov" = "Nov",
+         "dec" = "Dec",
+         "jan" = "Jan",
+         "feb" = "Feb",
+         "march" = "March",
+         "april" = "April",
+         "may" = "May")
+```
+
+Finally, we want to remove the rain data, make sure it is numeric, remove rows of missing data, and ensure that our factor data has an order. 
+
+To do this last part, we will use  `factor()` on the month and nino columns and then define the `levels` or order that we want to be recognized for the months and for the strength of el nino or la nina.
+
+
+
+```{r}
+#now we can look at just the snowfall
+df3_snow <- df3 |> 
+  filter(type == "snow") |> #remove rows with rain
+  mutate(amount = as.numeric(amount)) |> #convert amount to numeric
+  filter(!is.na(amount)) |> #remove missing amounts
+  #Set factor levels for months
+  mutate(month = factor(month, 
+                        levels = c("Oct", "Nov", "Dec", "Jan", "Feb", 
+                                   "March", "April", "May")),
+         month_num = as.numeric(month),
+         #Set factor levels for nino
+         nino = factor(nino,
+                       levels = c("La Nina Strong",
+                                  "La Nina Mod",
+                                  "La Nina Weak",
+                                  "Neutral",
+                                  "El Nino Weak",
+                                  "El Nino Mod",
+                                  "El Nino Strong",
+                                  "El Nino Very Strong"))) |> 
+  #provide a numeric value for nino as well in a new column
+  mutate(nino_numeric = case_when(
+    nino == "La Nina Strong" ~ -3,
+    nino == "La Nina Mod" ~ -2,
+    nino == "La Nina Weak" ~ -1,
+    nino == "Neutral" ~ 0,
+    nino == "El Nino Weak" ~ 1,
+    nino == "El Nino Mod" ~ 2,
+    nino == "El Nino Strong" ~ 3,
+    nino == "El Nino Very Strong" ~ 4,
+    TRUE ~ NA_real_
+  ))
+
 
 ```
 
-Now you can email this updated .xlsx/.csv file to your colleague. :)
+## Visualize the data
 
-## Have fun!
+Let's take a look at what we've got.
 
-Now it's your turn practice! Below is a fully functioning code editor with starting code in place. Feel free to experiment with different grouping variables in the `group_by()` call or to adjust the summary statistic in `summarize()`. Then, have fun with the plot!
-
-```{webr-r}
-
-library(tidyverse)
-library(readxl)
-library(writexl)
-library(here)
-
-df <- read_xlsx("https://github.com/DABrianC/website/blob/main/posts/read%20file/testdata2.xlsx"))
-
+```{r}
+ggplot(df3_snow) +
+  geom_point(aes(x = month,
+                 y = amount)) +
+  theme_minimal()
 
 ```
+We've got the usual months for snowfall,and we've got lots of points. It's a little hard to see where they all land, but we can start to make out that from November through March Alta generally has good snowfall. Let's add some jitter to see the points more clearly, improve labels, and give it some color.
+
+::: {.callout-tip}
+## Understanding `geom_smooth()`
+
+The `geom_smooth()` function in ggplot2 adds a smoothed conditional mean line to your plot, helping visualize trends in noisy data. By default, it uses LOESS smoothing for datasets with fewer than 1,000 observations and generalized additive models (GAM) for larger datasets. 
+
+Common parameters include:
+- `method` - specify the smoothing method (e.g., "lm" for linear, "loess", "gam")
+- `se` - whether to display confidence interval (default is TRUE)
+- `span` - controls LOESS smoothness (0-1, where smaller = wigglier)
+- `formula` - for custom model formulas like `y ~ poly(x, 2)` for polynomial fits
+
+Example: `geom_smooth(method = "lm", se = TRUE)` adds a linear regression line with 95% confidence bands.
+:::
+
+```{r}
+plot <- ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                 y = amount),
+              fill = "blue",
+              shape = 21,
+              color = "white",
+              alpha = .8,
+              width = .25,
+              size = 4) +
+  geom_smooth(aes(x = month_num, y = amount)) +
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) +
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+
+plot
+
+```
+
+Using Plotly from R is pretty easy with an existing ggplot object. We've already defined our ggplot object as `plot` above. We can simply pass this to plotly and we get an interactive data visualiztion. Pretty cool! 
+
+```{r}
+
+ggplotly(plot)
+```
+
+
+The tooltip that pops up is not the useful out of the box. So, let's provide an additional parameter `geom_jitter()` called `text`, and then tell plotly to use that for the tooltip.
+
+```{r}
+plot <- ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                 y = amount,
+                 text = paste0("Season: ", season,
+                                "\nMonth: ", month,
+                                "\nSnowfall: ", round(amount, 1), " in.",
+                                "\nENSO: ", nino)),
+              fill = "blue",
+              shape = 21,
+              color = "white",
+              alpha = .8,
+              width = .25,
+              size = 4) +
+  geom_smooth(aes(x = month_num, y = amount)) +
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) +
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+
+ggplotly(plot, tooltip = "text")
+
+```
+
+Now we have a basic interactive graphic that leverages plotly. If you can ggplot, then you can ggplotly.
+
+Additional posts using this same dataset will be added shortly.

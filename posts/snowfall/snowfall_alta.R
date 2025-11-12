@@ -4,6 +4,7 @@ library(readxl)
 library(brms)
 library(tidyverse)
 library(bayesplot)
+library(plotly)
 
 # Set options
 options(mc.cores = parallel::detectCores())
@@ -64,36 +65,63 @@ df3 <- df2 |>
                names_sep = "_",
                values_to = "amount")
 
+df3$nino <- df3$nino |> 
+  recode("N" = "Neutral")
+
+df3$month <- df3$month |> 
+  recode("oct" = "Oct",
+         "nov" = "Nov",
+         "dec" = "Dec",
+         "jan" = "Jan",
+         "feb" = "Feb",
+         "march" = "March",
+         "april" = "April",
+         "may" = "May")
 #now we can look at just the snowfall
 df3_snow <- df3 |> 
   filter(type == "snow") |> 
   mutate(amount = as.numeric(amount)) |> 
   filter(!is.na(amount)) |> 
   mutate(month = factor(month, 
-                        levels = c("oct", "nov", "dec", "jan", "feb", 
-                                   "march", "april", "may")),
-         month_num = as.numeric(month)) |> 
+                        levels = c("Oct", "Nov", "Dec", "Jan", "Feb", 
+                                   "March", "April", "May")),
+         month_num = as.numeric(month),
+         nino = factor(nino,
+                       levels = c("La Nina Strong",
+                                  "La Nina Mod",
+                                  "La Nina Weak",
+                                  "Neutral",
+                                  "El Nino Weak",
+                                  "El Nino Mod",
+                                  "El Nino Strong",
+                                  "El Nino Very Strong"))) |> 
   mutate(nino_numeric = case_when(
     nino == "La Nina Strong" ~ -3,
     nino == "La Nina Mod" ~ -2,
     nino == "La Nina Weak" ~ -1,
-    nino == "N" ~ 0,
+    nino == "Neutral" ~ 0,
     nino == "El Nino Weak" ~ 1,
     nino == "El Nino Mod" ~ 2,
     nino == "El Nino Strong" ~ 3,
     nino == "El Nino Very Strong" ~ 4,
     TRUE ~ NA_real_
   ))
-                        
+
 
 #look at the data over time
 
 ggplot(df3_snow) +
-  geom_point(aes(x = month_num,
-                 y = amount), alpha = .4) +
+  geom_jitter(aes(x = month_num,
+                 y = amount),
+              fill = "blue",
+              shape = 21,
+              color = "white",
+              alpha = .8,
+              width = .25,
+              size = 4) +
   geom_smooth(aes(x = month_num, y = amount)) +
   scale_x_continuous(breaks = 1:8, 
-                     labels = levels(df3_snow$month)) + 
+                     labels = levels(df3_snow$month)) +
   labs(x = "Months",
        y = "Amount of \nSnowfall (in.)",
        title = "Monthly Snowfall at Alta",
@@ -113,21 +141,96 @@ stats_tbl <- df3_snow %>%
   )
 
 knitr::kable(stats_tbl)
+
 #color by nino category
-ggplot(df3_snow) +
-  geom_point(aes(x = month_num,
-                 y = amount,
-                 color = nino_numeric), alpha = .4) +
+plot <- ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                  y = amount,
+                  fill = nino_numeric,
+                  text = paste0("Season: ", season,
+                                "\nMonth: ", month,
+                                "\nSnowfall: ", round(amount, 1), " in.",
+                                "\nENSO: ", nino)),
+              shape = 21,
+              color = "white",
+              alpha = .8,
+              width = .25,
+              size = 4)  +
   geom_smooth(aes(x = month_num, y = amount)) +
+  scale_color_viridis_c(option = "plasma",
+                        na.value = "grey50") +
+  scale_fill_gradient2(low = "#2166ac",    # La Niña blue
+                       mid = "#F5F5F5",       # Neutral
+                       high = "#b2182b",    # El Niño red
+                       midpoint = 0,
+                       na.value = "grey50",
+                       breaks = c(-3, 0, 4),
+                       labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"),
+                       guide = guide_colorbar(ticks = FALSE, 
+                                              frame.colour = "white",
+                                              barwidth = 1,
+                                              barheight = 5))+ 
   scale_x_continuous(breaks = 1:8, 
                      labels = levels(df3_snow$month)) + 
   labs(x = "Months",
        y = "Amount of \nSnowfall (in.)",
        title = "Monthly Snowfall at Alta",
        subtitle = "Alta gets a lot of snow, particularly from December to January",
-       color = "La Niña ← → El Niño") +
+       fill = "La Niña ← → El Niño",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
   theme_minimal()
+
+plot
+plotly::ggplotly(plot, tooltip = "text")
 
 ggplot(df3_snow) +
   geom_histogram(aes(amount),
                  binwidth = 5)
+
+
+plot <- ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                  y = amount,
+                  fill = nino_numeric),
+              shape = 21,
+              color = "white",
+              alpha = .2,
+              width = .25,
+              size = 4)  +
+  geom_smooth(aes(x = month_num,
+                  y = amount,
+                  group = nino_numeric,
+                  color = nino_numeric),
+              se = FALSE,
+              show.legend = FALSE) +
+  #scale_color_viridis_c(option = "plasma",
+   #                     na.value = "grey50") +
+  scale_color_gradient2(low = "#2166ac",    # La Niña blue
+                        mid = "#F5F5F5",       # Neutral
+                        high = "#b2182b",    # El Niño red
+                        midpoint = 0,
+                        na.value = "grey50",
+                        breaks = c(-3, 0, 4),
+                        labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"))+
+  scale_fill_gradient2(low = "#2166ac",    # La Niña blue
+                       mid = "#F5F5F5",       # Neutral
+                       high = "#b2182b",    # El Niño red
+                       midpoint = 0,
+                       na.value = "grey50",
+                       breaks = c(-3, 0, 4),
+                       labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"),
+                       guide = guide_colorbar(ticks = FALSE, 
+                                              frame.colour = "white",
+                                              barwidth = 1,
+                                              barheight = 5))+ 
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) + 
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       fill = "La Niña ← → El Niño",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+
+plot
