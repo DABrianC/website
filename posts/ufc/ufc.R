@@ -1,4 +1,4 @@
-#devtools::install_github("mtoto/ufc.stats")
+devtools::install_github("mtoto/ufc.stats")
 
 library(ufc.stats)
 library(tidyverse)
