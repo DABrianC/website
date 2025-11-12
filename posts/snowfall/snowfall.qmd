@@ -233,6 +233,8 @@ ggplot(df3_snow) +
 ```
 We've got the usual months for snowfall,and we've got lots of points. It's a little hard to see where they all land, but we can start to make out that from November through March Alta generally has good snowfall. Let's add some jitter to see the points more clearly, improve labels, and give it some color.
 
+Then, let's add a smoothing line using `geom_smooth()`. This line will help us more easily identify the middle of a noisy dataset.
+
 ::: {.callout-tip}
 ## Understanding `geom_smooth()`
 
@@ -280,9 +282,9 @@ ggplotly(plot)
 ```
 
 
-The tooltip that pops up is not the useful out of the box. So, let's provide an additional parameter `geom_jitter()` called `text`, and then tell plotly to use that for the tooltip.
+The tooltip that pops up is not that useful out of the box. So, let's provide an additional parameter to `geom_jitter()` called `text`, and then tell plotly to use that for the tooltip.
 
-The tooltip pulls data from the season, month, amount, and nino columns and combines it using `paste0()`.
+The new `text` parameter will pull data from the season, month, amount, and nino columns and combine it using `paste0()`.
 
 The main glitch with plotly is that it doesn't handle the subtitle and caption from ggplot. I'm not sure why, but I added that in separately. Another option is to just add these as text directly in the .qmd file that generates the final output.
 
