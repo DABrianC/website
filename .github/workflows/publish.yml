@@ -37,11 +37,6 @@ jobs:
           install.packages("remotes")
         shell: Rscript {0}
       
-      - name: Install GitHub packages
-        run: |
-          remotes::install_github("mtoto/ufc.stats")
-        shell: Rscript {0}
-      
       - name: Install R packages
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
