@@ -5,7 +5,7 @@ categories: [R, plotly]
 date: "2025-11-11"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: "snow_monthly.png"
+image: "snow_monthly.png" 
 format: 
   html:
     code-fold: false
@@ -323,7 +323,7 @@ plot_ly_cap <- plot_ly |>
     #caption
     list(
         x = 1,
-        y = -0.15,
+        y = -0.25,
         text = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall",
         xref = "paper",
         yref = "paper",
@@ -332,7 +332,7 @@ plot_ly_cap <- plot_ly |>
         font = list(size = 9, color = "gray50")
       )
     ),
-    margin = list(t = 80, b = 80)
+    margin = list(t = 80, b = 100)
   )
 
 plot_ly_cap
