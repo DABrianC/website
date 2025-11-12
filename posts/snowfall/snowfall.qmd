@@ -1,5 +1,9 @@
 ---
-title: '<span class="humans-learning-post">Snowfall at Alta, UT</span>'
+title: <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <img src="Alta_logo_dropshadow.jpg" alt="Alta Logo" style="height: 60px;">
+    <span class="humans-learning-post">Snowfall at Alta, UT</span>
+    <img src="uac_logo.svg" alt="Utah Avalanche Center Logo" style="height: 60px;">
+  </div>
 subtitle: "Visualizing snowfall data using Plotly"
 categories: [R, plotly]
 date: "2025-11-11"
@@ -79,7 +83,7 @@ glimpse(df)
 ```
 ## Shape and clean the data
 
-The data has `{r} paste0(nrow(df), "rows and", ncol(df), "columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
+The data has `{r} paste0(nrow(df), "rows and ", ncol(df), " columns")`. In looking at the data, it's clear that the first 6 rows provide a summary of the data rather than the data itself. So, let's drop those rows.
 
 We'll use a basic subsetting approach. Within the brackets `[]`, the code before the "," `7:nrow(df)` are for rows, and after the comma come the columns. We want to take everything starting from row 7, and we select all the columns by leaving that part blank.
 
@@ -94,6 +98,7 @@ df1 <- df[7:nrow(df),]
 Due in part to the summary data near the top of the file, the columns also need to be renamed, too. Each month has a column for snow and rain. To make for an easier pivot later, we'll add the prefix "month_" to each rain or snow column.
 
 ```{r}
+#| class-output: pre
 
 names(df1) <- c("season",
                 "nino",
@@ -119,7 +124,7 @@ names(df1) <- c("season",
                 "blank2",
                 "blank3")
 
-
+glimpse(df1)
 ```
 
 Now it is beginning to take shape. There are two extra columns on the end where someone did some calculations, and a blank column before the total columns. Notice, we named those with the word "blank". Let's drop those and drop the columns that total the rain and snow fall.
@@ -142,6 +147,8 @@ We will move the names of the columns to a column called "month" and a column ca
 The values will be placed in a new column called "amount". Now, run the code.
 
 ```{r}
+#| class-output: pre
+
 df3 <- df2 |> 
   pivot_longer(cols = 3:18,
                names_to = c("month", "type"),
@@ -149,9 +156,10 @@ df3 <- df2 |>
                values_to = "amount")
 
 
+glimpse(df3)
 ```
 
-The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), "rows and", ncol(df3), "columns")`.
+The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), "rows and ", ncol(df3), " columns")`.
 
 Before taking a first look at the data let's clean up a few more things -- change the "N" in the nino column to "Neutral" and make the months start with uppercase letters in the month column.
 
