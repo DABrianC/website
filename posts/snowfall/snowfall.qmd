@@ -245,7 +245,7 @@ Example: `geom_smooth(method = "lm", se = TRUE)` adds a linear regression line w
 
 ```{r}
 plot <- ggplot(df3_snow) +
-  geom_jitter(aes(x = month_num,
+  geom_jitter(aes(x = month,
                  y = amount),
               fill = "blue",
               shape = 21,
@@ -253,7 +253,7 @@ plot <- ggplot(df3_snow) +
               alpha = .8,
               width = .25,
               size = 4) +
-  geom_smooth(aes(x = month_num, y = amount)) +
+  geom_smooth(aes(x = month, y = amount)) +
   scale_x_continuous(breaks = 1:8, 
                      labels = levels(df3_snow$month)) +
   labs(x = "Months",
@@ -276,6 +276,10 @@ ggplotly(plot)
 
 
 The tooltip that pops up is not the useful out of the box. So, let's provide an additional parameter `geom_jitter()` called `text`, and then tell plotly to use that for the tooltip.
+
+The tooltip pulls data from the season, month, amount, and nino columns and combines it using `paste0()`.
+
+The main glitch with plotly is that it doesn't handle the subtitle and caption from ggplot. I'm not sure why, but I added that in separately. Another option is to just add these as text directly in the .qmd file that generates the final output.
 
 ```{r}
 plot <- ggplot(df3_snow) +
@@ -301,10 +305,40 @@ plot <- ggplot(df3_snow) +
        caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
   theme_minimal()
 
-ggplotly(plot, tooltip = "text")
+plot_ly <- ggplotly(plot, tooltip = "text")
 
+plot_ly_cap <- plot_ly |> 
+  layout(annotations = list(
+    #subtitle
+    list(x = 0,
+        y = 1.08,
+        text = "Alta gets a lot of snow, particularly from December to January",
+        xref = "paper",
+        yref = "paper",
+        xanchor = "left",
+        showarrow = FALSE,
+        font = list(size = 12, color = "gray30")
+      ),
+    #caption
+    list(
+        x = 1,
+        y = -0.15,
+        text = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall",
+        xref = "paper",
+        yref = "paper",
+        xanchor = "right",
+        showarrow = FALSE,
+        font = list(size = 9, color = "gray50")
+      )
+    ),
+    margin = list(t = 80, b = 80)
+  )
+
+plot_ly_cap
 ```
 
-Now we have a basic interactive graphic that leverages plotly. If you can ggplot, then you can ggplotly.
+## Conclusion
 
-Additional posts using this same dataset will be added shortly.
+Now we have a basic interactive graphic that leverages plotly. If you can ggplot, then you can ggplotly. 
+
+Additional posts using this same dataset will delve into the smoothing lines and then make predictions for future monthly snowfall.
