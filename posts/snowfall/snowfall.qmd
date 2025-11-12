@@ -271,7 +271,6 @@ plot <- ggplot(df3_snow) +
 
 plot
 
-
 ```
 
 Using Plotly from R is pretty easy with an existing ggplot object. We've already defined our ggplot object as `plot` above. We can simply pass this to plotly and we get an interactive data visualization. Pretty cool! 
