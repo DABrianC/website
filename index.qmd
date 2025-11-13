@@ -16,7 +16,7 @@ If you are new to code-based data analysis and looking for some short examples t
 
 ## Bio
 
-I'm a data scientist with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, and Ukraine. My work has focused on anti-corruption, capacity building, conflict, and generally helping others be more efficient. When I'm not working, I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts.
+I'm an analyst and business advisor with 15 years of experience implementing, monitoring, evaluating, and assessing international development projects. I have worked with the U.S. Agency for International Development, the U.S. Department of State, the U.S. Department of Defense, and private foundations. My experience includes working on projects in Haiti, Niger, Burkina Faso, Senegal, and Ukraine. My work has focused on anti-corruption, capacity building, conflict, and generally helping others be more efficient. When I'm not working, I also enjoy making sourdough bread and pizza, skiing, and mixed martial arts.
 
 ## Work with me
 
