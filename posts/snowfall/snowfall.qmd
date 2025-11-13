@@ -138,7 +138,7 @@ Now we have a wide dataset that we want to make longer. For visualizing with ggp
 
 For the pivotting, we select columns 3 thru 18 with the `cols` argument. 
 
-We will move the names of the columns to a column called "month" and a column called "type". Because we know that each name is separated by a "_" we can separate the columns into these two new columns using the "_" as a separator. The month prefix will go to the "month" column and the "rain" or "snow" suffix will go to the "type" column.
+We will move the names of the columns to a column called "month" and a column called "type". Because we know that each name is separated by a `_` we can separate the columns into these two new columns using the `_` as a separator. The month prefix will go to the "month" column and the "rain" or "snow" suffix will go to the "type" column.
 
 The values will be placed in a new column called "amount". Now, run the code.
 
@@ -155,9 +155,9 @@ df3 <- df2 |>
 glimpse(df3)
 ```
 
-The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), " rows and ", ncol(df3), " columns")`.
+The new dataframe, `df3` is much longer, indeed. We now have `{r} paste0(nrow(df3), " rows and ", ncol(df3), " columns")`. These 5 columns each contain a single data type that we can easily use for analysis after we clean up a few more things.
 
-Before taking a first look at the data let's clean up a few more things -- change the "N" in the nino column to "Neutral" and make the months start with uppercase letters in the month column.
+Change the "N" in the nino column to "Neutral" and make the months start with uppercase letters in the month column.
 
 ```{r}
 
@@ -177,13 +177,15 @@ df3$month <- df3$month |>
          "may" = "May")
 ```
 
-Finally, we want to remove the rain data, make sure it is numeric, remove rows of missing data, and ensure that our factor data has an order. 
+Finally, we want to remove the rain data, make sure the `type` column is numeric, remove rows of missing data, and ensure that our factor data has an order. Factor data is categorical data. We want it to be clear to R that these are not just words but categories.
 
 To do this last part, we will use  `factor()` on the month and nino columns and then define the `levels` or order that we want to be recognized for the months and for the strength of el nino or la nina.
 
 
 
 ```{r}
+#| class-output: pre
+
 #now we can look at just the snowfall
 df3_snow <- df3 |> 
   filter(type == "snow") |> #remove rows with rain
@@ -217,8 +219,12 @@ df3_snow <- df3 |>
     TRUE ~ NA_real_
   ))
 
-
+glimpse(df3_snow)
 ```
+
+Look at the data types in the nino, month, and amount columns. We also added a numeric column for nino. This is useful when visualizing for smoothing lines or using continuous color scales.
+
+
 
 ## Visualize the data
 
