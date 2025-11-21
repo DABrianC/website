@@ -1,0 +1,242 @@
+---
+title: '<span class="humans-learning-post">Snowfall at Alta, UT</span>'
+subtitle: "Cleaning up the snowfall with a geom_smooth()_plow"
+categories: [R, ggplot]
+date: "2025-11-21"
+author: "Brian Calhoon"
+title-block-banner: "#C9C9C9"
+image: "snow_monthly.png" 
+format: 
+  html:
+    code-fold: false
+    code-summary: "Show the code"
+    toc: true
+    css: styles.css
+editor: visual
+execute:
+  message: false
+  warning: false
+---
+
+```{r global_options, include=F, warning=F, message=F, error=F}
+
+
+```
+
+# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::: box
+::: box-header
+This is the 2nd installment of a small series on [snowfall data at Alta, Utah](https://utahavalanchecenter.org/alta-monthly-snowfall). The `geom_smooth()` function provides a convenient way to see a trend line, but I can't say I've thought too much about why it does what it does. So, let's dive into the drift with our snowfall data and ues the `geom_smooth()` plow to clear our path to understanding.
+:::
+::::
+
+# Learning objectives
+
+For this session, the learning objective is to:
+
+-   understand better ggplot's `geom_smooth()`
+
+As always, let's make sure that our libraries are loaded and if any need to be installed that you run `install.packages()` line first.
+
+```{r}
+
+#install.packages(c("plotly", "tidyverse", "readxl"))
+
+library(plotly)
+library(tidyverse)
+library(readxl)
+```
+
+## Download the data
+
+*This repeats the first step from last post so no need to redo it if you are working in the same project*
+
+Monthly snowfall data for the Alta Guard Station is available at the bottom of the this page, https://utahavalanchecenter.org/alta-monthly-snowfall.
+
+Copy the link to the .xlsx file and follow the script below.
+
+```{r}
+#| class-output: pre
+
+
+# Download and read the data
+data_url <- "https://utahavalanchecenter.org/sites/default/files/attached_files/2025.05.01%20Alta%20Guard%20Snow%3AWater.xlsx"
+
+# Download the file
+download.file(data_url, destfile = here::here("posts/snowfall2/alta_data.xlsx"), mode = "wb")
+
+#assign it to an object
+df <- readxl::read_xlsx("alta_data.xlsx")
+
+#view the data
+glimpse(df)
+
+```
+
+*The shaping and cleaning steps are all in the previous post as well. We'll pick up with the `df3_snow` object.*
+
+## Plowing through the blizzard
+
+We have a scatterplot (a bunch of *snowballs* thrown up on the wall) showing the snowfall each month over many years at a ski resort. There’s data everywhere—one month there's `{r} paste0(max(df3_snow$amount),'"')` another there's `{r} paste0(min(df3_snow$amount), '"')`, a an average month has `{r} mean(df3_snow$amount), '"'` of snow and the whole thing looks a little chaotic. Where's the trend? The jittering certainly helps, but it's not that easy to spot the trendline. 
+
+Enter ggplot2’s `geom_smooth()`: the function that gives your scatterplot a “best guess” line, letting your eyes see the *the snowflakes for the blizzard* (is that the expression???).
+
+```{r}
+plot <- ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                 y = amount),
+              fill = "blue",
+              shape = 21,
+              color = "white",
+              alpha = .8,
+              width = .25,
+              size = 4) +
+  geom_smooth(aes(x = month_num, y = amount), color = "red") +
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) +
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from November through March",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+
+plot
+
+```
+The red line answers the question, "If you averaged all the data points at each month, what's the smoothed pattern?"
+
+The shaded region around the red line basically tells you how confident we are that the line is where it should be with a wider shaded region meaning less confidence. For the months of Oct and May there's less confidence due to the lack of data points compared to the other months.
+
+Behind the scenes, `geom_smooth()` is using a loess regression as it's default method. Loess refers to *locally estimated scatterplot smoothing*. If the relationship in our snow data looked more linear we could use a linear method. To see what this looks like with a linear fit line, all we need to do is add the argument, `method = lm` to `geom_smooth()`
+
+```{r}
+
+ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                 y = amount),
+              fill = "blue",
+              shape = 21,
+              color = "white",
+              alpha = .8,
+              width = .25,
+              size = 4) +
+  geom_smooth(method = "lm", aes(x = month_num, y = amount), color = "red") +
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) +
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from November through March",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+
+
+```
+The loess method looks more appropriate given our data. 
+
+## What smoothing lines for different categories?
+
+Great question! `geom_smooth()` works across categories with little effort. Let's take a look at what happens if we search for trends in the nino_numeric variable.
+
+```{r}
+ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                  y = amount,
+                  fill = nino_numeric),
+              shape = 21,
+              color = "white",
+              alpha = .2,
+              width = .25,
+              size = 4)  +
+  geom_smooth(aes(x = month_num,
+                  y = amount,
+                  group = nino_numeric,
+                  color = nino_numeric),
+              se = FALSE,
+              show.legend = FALSE) +
+  #scale_color_viridis_c(option = "plasma",
+   #                     na.value = "grey50") +
+  scale_color_gradient2(low = "#2166ac",    # La Niña blue
+                        mid = "#F5F5F5",       # Neutral
+                        high = "#b2182b",    # El Niño red
+                        midpoint = 0,
+                        na.value = "grey50",
+                        breaks = c(-3, 0, 4),
+                        labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"))+
+  scale_fill_gradient2(low = "#2166ac",    # La Niña blue
+                       mid = "#F5F5F5",       # Neutral
+                       high = "#b2182b",    # El Niño red
+                       midpoint = 0,
+                       na.value = "grey50",
+                       breaks = c(-3, 0, 4),
+                       labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"),
+                       guide = guide_colorbar(ticks = FALSE, 
+                                              frame.colour = "white",
+                                              barwidth = 1,
+                                              barheight = 5))+ 
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) + 
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       fill = "La Niña ← → El Niño",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+
+```
+It looks like maybe when there's el Nino, there might be a slightly higher trend of snowfall. We can facet this to help see it better.
+
+```{r}
+ggplot(df3_snow) +
+  geom_jitter(aes(x = month_num,
+                  y = amount,
+                  fill = nino_numeric),
+              shape = 21,
+              color = "white",
+              alpha = .2,
+              width = .25,
+              size = 4)  +
+  geom_smooth(aes(x = month_num,
+                  y = amount,
+                  group = nino_numeric,
+                  color = nino_numeric),
+              se = FALSE,
+              show.legend = FALSE) +
+  #scale_color_viridis_c(option = "plasma",
+   #                     na.value = "grey50") +
+  scale_color_gradient2(low = "#2166ac",    # La Niña blue
+                        mid = "#F5F5F5",       # Neutral
+                        high = "#b2182b",    # El Niño red
+                        midpoint = 0,
+                        na.value = "grey50",
+                        breaks = c(-3, 0, 4),
+                        labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"))+
+  scale_fill_gradient2(low = "#2166ac",    # La Niña blue
+                       mid = "#F5F5F5",       # Neutral
+                       high = "#b2182b",    # El Niño red
+                       midpoint = 0,
+                       na.value = "grey50",
+                       breaks = c(-3, 0, 4),
+                       labels = c("La Niña\nStrong", "Neutral", "\nEl Niño\nVery Strong"),
+                       guide = guide_colorbar(ticks = FALSE, 
+                                              frame.colour = "white",
+                                              barwidth = 1,
+                                              barheight = 5))+ 
+  scale_x_continuous(breaks = 1:8, 
+                     labels = levels(df3_snow$month)) + 
+  facet_wrap(df3_snow$nino,
+             nrow = 3,
+             ncol = 3)+
+  labs(x = "Months",
+       y = "Amount of \nSnowfall (in.)",
+       title = "Monthly Snowfall at Alta",
+       subtitle = "Alta gets a lot of snow, particularly from December to January",
+       fill = "La Niña ← → El Niño",
+       caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
+  theme_minimal()
+```
+
+So next time your scatterplot looks like a blizzard, ask `geom_smooth()` to gently sweep a path through the snow--to highlight the trend(s)--so you can be the first to the lift!
