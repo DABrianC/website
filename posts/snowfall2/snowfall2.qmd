@@ -82,6 +82,93 @@ We have a scatterplot (a bunch of *snowballs* thrown up on the wall) showing the
 
 Enter ggplot2’s `geom_smooth()`: the function that gives your scatterplot a “best guess” line, letting your eyes see the *the snowflakes for the blizzard* (is that the expression???).
 
+```{r, include = FALSE, eval = T}
+df1 <- df[7:nrow(df),]
+
+names(df1) <- c("season",
+                "nino",
+                "oct_snow",
+                "oct_rain",
+                "nov_snow",
+                "nov_rain",
+                "dec_snow",
+                "dec_rain",
+                "jan_snow",
+                "jan_rain",
+                "feb_snow",
+                "feb_rain",
+                "march_snow",
+                "march_rain",
+                "april_snow",
+                "april_rain",
+                "may_snow",
+                "may_rain",
+                "blank",
+                "total_snow",
+                "total_rain",
+                "blank2",
+                "blank3")
+
+df2 <- df1 |> 
+  select(-20:-23, -blank)
+
+df3 <- df2 |> 
+  pivot_longer(cols = 3:18,
+               names_to = c("month", "type"),
+               names_sep = "_",
+               values_to = "amount")
+
+#recode the N response in nino column
+df3$nino <- df3$nino |> 
+  recode("N" = "Neutral")
+
+#recode the months
+df3$month <- df3$month |> 
+  recode("oct" = "Oct",
+         "nov" = "Nov",
+         "dec" = "Dec",
+         "jan" = "Jan",
+         "feb" = "Feb",
+         "march" = "March",
+         "april" = "April",
+         "may" = "May")
+
+#now we can look at just the snowfall
+df3_snow <- df3 |> 
+  filter(type == "snow") |> #remove rows with rain
+  mutate(amount = as.numeric(amount)) |> #convert amount to numeric
+  filter(!is.na(amount)) |> #remove missing amounts
+  #Set factor levels for months
+  mutate(month = factor(month, 
+                        levels = c("Oct", "Nov", "Dec", "Jan", "Feb", 
+                                   "March", "April", "May")),
+         month_num = as.numeric(month),
+         #Set factor levels for nino
+         nino = factor(nino,
+                       levels = c("La Nina Strong",
+                                  "La Nina Mod",
+                                  "La Nina Weak",
+                                  "Neutral",
+                                  "El Nino Weak",
+                                  "El Nino Mod",
+                                  "El Nino Strong",
+                                  "El Nino Very Strong"))) |> 
+  #provide a numeric value for nino as well in a new column
+  mutate(nino_numeric = case_when(
+    nino == "La Nina Strong" ~ -3,
+    nino == "La Nina Mod" ~ -2,
+    nino == "La Nina Weak" ~ -1,
+    nino == "Neutral" ~ 0,
+    nino == "El Nino Weak" ~ 1,
+    nino == "El Nino Mod" ~ 2,
+    nino == "El Nino Strong" ~ 3,
+    nino == "El Nino Very Strong" ~ 4,
+    TRUE ~ NA_real_
+  ))
+
+
+```
+
 ```{r}
 plot <- ggplot(df3_snow) +
   geom_jitter(aes(x = month_num,
