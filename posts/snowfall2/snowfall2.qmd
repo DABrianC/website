@@ -20,6 +20,7 @@ execute:
 
 ```{r global_options, include=F, warning=F, message=F, error=F}
 
+source(here::here("posts/snowfall_alta.R"))
 
 ```
 
@@ -82,7 +83,7 @@ We have a scatterplot (a bunch of *snowballs* thrown up on the wall) showing the
 
 Enter ggplot2’s `geom_smooth()`: the function that gives your scatterplot a “best guess” line, letting your eyes see the *the snowflakes for the blizzard* (is that the expression???).
 
-```{r, include = FALSE, eval = T}
+```{r, include = FALSE}
 df1 <- df[7:nrow(df),]
 
 names(df1) <- c("season",
