@@ -78,7 +78,7 @@ glimpse(df)
 
 ## Plowing through the blizzard
 
-We have a scatterplot (a bunch of *snowballs* thrown up on the wall) showing the snowfall each month over many years at a ski resort. There’s data everywhere—one month there's `{r} paste0(max(df3_snow$amount),'\\"')` another there's `{r} paste0(min(df3_snow$amount), '\\"')`, a an average month has `{r} mean(df3_snow$amount), '\\"'` of snow and the whole thing looks a little chaotic. Where's the trend? The jittering certainly helps, but it's not that easy to spot the trendline. 
+We have a scatterplot (a bunch of *snowballs* thrown up on the wall) showing the snowfall each month over many years at a ski resort. There’s data everywhere—one month there's `{r} paste0(max(df3_snow$amount),'"')` another there's `{r} paste0(min(df3_snow$amount), '"')`, a an average month has `{r} mean(df3_snow$amount), '"'` of snow and the whole thing looks a little chaotic. Where's the trend? The jittering certainly helps, but it's not that easy to spot the trendline. 
 
 Enter ggplot2’s `geom_smooth()`: the function that gives your scatterplot a “best guess” line, letting your eyes see the *the snowflakes for the blizzard* (is that the expression???).
 
