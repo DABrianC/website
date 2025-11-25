@@ -20,7 +20,7 @@ execute:
 
 ```{r global_options, include=F, warning=F, message=F, error=F}
 
-source(here::here("posts/snowfall_alta.R"))
+source(here::here("posts/snowfall/snowfall_alta.R"))
 
 ```
 
