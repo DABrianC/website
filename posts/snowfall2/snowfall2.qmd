@@ -5,7 +5,7 @@ categories: [R, ggplot]
 date: "2025-11-21"
 author: "Brian Calhoon"
 title-block-banner: "#C9C9C9"
-image: "snow_monthly.png" 
+image: "smoothed.png" 
 format: 
   html:
     code-fold: false
@@ -194,7 +194,7 @@ plot
 ```
 The red line answers the question, "If you averaged all the data points at each month, what's the smoothed pattern?"
 
-The shaded region around the red line basically tells you how confident we are that the line is where it should be with a wider shaded region meaning less confidence. For the months of Oct and May there's less confidence due to the lack of data points compared to the other months.
+The shaded region around the red line basically tells you how confident we are that the line is where it should be with a wider shaded region meaning less confidence. For the months of October and May there's less confidence due to the lack of data points compared to the other months.
 
 Behind the scenes, `geom_smooth()` is using a loess regression as it's default method. Loess refers to *locally estimated scatterplot smoothing*. If the relationship in our snow data looked more linear we could use a linear method. To see what this looks like with a linear fit line, all we need to do is add the argument, `method = lm` to `geom_smooth()`
 
@@ -223,7 +223,7 @@ ggplot(df3_snow) +
 ```
 The loess method looks more appropriate given our data. 
 
-## What smoothing lines for different categories?
+## Can I have smoothing lines for different categories?
 
 Great question! `geom_smooth()` works across categories with little effort. Let's take a look at what happens if we search for trends in the nino_numeric variable.
 
@@ -277,7 +277,7 @@ ggplot(df3_snow) +
 It looks like maybe when there's el Nino, there might be a slightly higher trend of snowfall. We can facet this to help see it better.
 
 ```{r}
-ggplot(df3_snow) +
+facet_plot <- ggplot(df3_snow) +
   geom_jitter(aes(x = month_num,
                   y = amount,
                   fill = nino_numeric),
@@ -324,6 +324,9 @@ ggplot(df3_snow) +
        fill = "La Niña ← → El Niño",
        caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
   theme_minimal()
+
+facet_plot
+
 ```
 
 So next time your scatterplot looks like a blizzard, ask `geom_smooth()` to gently sweep a path through the snow--to highlight the trend(s)--so you can be the first to the lift!
