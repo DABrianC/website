@@ -1,6 +1,6 @@
 ---
 title: '<span class="humans-learning-post">Snowfall at Alta, UT</span>'
-subtitle: "Visualizing snowfall data using Plotly"
+subtitle: "Part 1: Visualizing snowfall data using Plotly"
 categories: [R, plotly]
 date: "2025-11-11"
 author: "Brian Calhoon"
@@ -353,4 +353,4 @@ plot_ly_cap
 
 Now we have a basic interactive graphic that leverages plotly. If you can ggplot, then you can ggplotly. 
 
-Additional posts using this same dataset will delve into the smoothing lines and then make predictions for future monthly snowfall.
+[Part 2 of this series delves further into smoothing lines](https://dabrianc.github.io/website/posts/snowfall2/snowfall2.html), and part 3 will make predictions for future monthly snowfall.
