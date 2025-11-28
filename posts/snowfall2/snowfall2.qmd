@@ -322,7 +322,8 @@ facet_plot <- ggplot(df3_snow) +
        subtitle = "Alta gets a lot of snow, particularly from December to January",
        fill = "La Niña ← → El Niño",
        caption = "Source: Utah Avalanche Center, https://utahavalanchecenter.org/alta-monthly-snowfall") +
-  theme_minimal()
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 facet_plot
 
