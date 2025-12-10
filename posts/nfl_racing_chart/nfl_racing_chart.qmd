@@ -1,0 +1,332 @@
+---
+title: '<span class="humans-learning-post">NFL: Team Point Differentials </span>'
+subtitle: "2025: Which teams are outscoring their opponents week in and week out"
+categories: [R, ggplot, gganimate]
+date: "2025-12-09"
+author: "Brian Calhoon"
+title-block-banner: "#C9C9C9"
+image: "nfl_point_diff_current.png" 
+format: 
+  html:
+    code-fold: false
+    code-summary: "Show the code"
+    toc: true
+    css: styles.css
+editor: visual
+execute:
+  message: false
+  warning: false
+---
+
+```{r global_options, include=F, warning=F, message=F, error=F}
+
+
+```
+
+# Why am I here?        `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::: box
+::: box-header
+Welcome back! For a quick lesson on animating graphics we’re turning to NFL data and the gganimate package. It all started last week when I was wondering how many points the Bills had given up this year. This thought kicked around in my head for a while, and I landed on wondering what their cumulative point differential is through 13 weeks (now 14). Then, I said, why not do this for all the teams. A bar chart – or a series of them – would visualize this, but it’s a lot of charts to look through. Thankfully, gganimate exists to allow us to put these weekly charts into a single animation.
+:::
+::::
+
+# Learning objectives
+
+This post's learning objective is to:
+
+- make a static bar chart showing the cumulative point differential for all NFL teams through the current week, and
+
+- animate it to show every week of the season cumulatively
+
+## Libraries
+As always, let's make sure that our libraries are loaded and if any need to be installed that you run `install.packages()` line first.
+
+All the data is nicely packaged for us in the nflfastR and nflreadr packages. Combine these with the tidyverse, ggimage, magick, showtext, and gganimate packages and we’re all set to play ball.
+
+```{r}
+
+#install.packages(c("tidyverse", "readxl", "ggimage", "magick", "gganimate", "showtext", "nflfastR", "nflreadr"))
+
+library(nflfastR)
+library(nflreadr)
+library(tidyverse)
+library(gganimate)
+library(ggimage)
+library(magick)
+library(showtext)
+```
+
+## Data wrangling
+
+The first step is to load the data and filter for only the 2025 season. Then, to replace any missing scores with 0s.
+
+```{r load_data}
+#| class-output: pre
+
+nfl_data <- nflreadr::load_schedules(seasons = 2025) 
+
+#|> 
+ # mutate(home_score = replace_na(home_score, 0),
+  #       away_score = replace_na(away_score, 0))  
+
+#showing only the first five columns
+glimpse(nfl_data[,1:5])
+
+```
+
+Then, we'll wrangle a dataframe for the home score and one for the away score before combining them again.
+
+These are the steps that we walk through to create the `home_games` and `away_games` dataframes.
+
+- filter for only completed games
+- select only columns of interest
+- create a new team column
+- create a new point difference column that  subtracts away score from home score 
+- then select the columns needed 
+
+```{r home_away}
+home_games <- nfl_data  |> 
+  filter(!is.na(result)) |>   # Only completed games
+  select(week, home_team, home_score, away_score) |> 
+  mutate(
+    team = home_team,
+    point_diff = home_score - away_score
+  ) |> 
+  select(week, team, point_diff)
+
+away_games <- nfl_data  |> 
+  filter(!is.na(result)) |>   # Only completed games
+  select(week, away_team, home_score, away_score) |> 
+  mutate(
+    team = away_team,
+    point_diff = away_score - home_score
+  ) |> 
+  select(week, team, point_diff)
+
+
+```
+
+We now have half the teams with their weekly point differential in the `home_games` dataframe and half in the `away_games` dataframe. Now, join them by binding rows and naming the oupt `team_point_diff`.
+
+```{r join home_away}
+#| class-output: pre
+
+team_point_diff <- bind_rows(home_games, away_games)  |> 
+  arrange(team, week)
+
+glimpse(team_point_diff)
+```
+
+Since we are creating a chart that expects values to exist for all possible teams for all possible weeks we have to figure out what to do with bye weeks. Each week needs have 32 rows - one for each team - or there will be holes appearing in the animation. So, our total rows will equal 32 * highest week in data set.
+
+Vectors are really useful for this kind of manipulation. We create an `all_teams` vector that contains all possible unique values of teams. The `all_weeks` vector does the same for the number of weeks. 
+
+Then, it's easy to combine these vectors in `complete_weeks` and do a left join by the common "team" and "week" columns in `complete_weeks` and `team_point_diff`.
+
+```{r expand_grid}
+
+#create the vectors
+all_teams <- unique(team_point_diff$team)
+all_weeks <- 1:max(team_point_diff$week) 
+
+#Make a single data frame with all teams and all weeks
+complete_weeks <- expand.grid(team = all_teams,
+                              week = all_weeks)
+
+
+# merge the data with left_join
+merge_team_point_diff <- left_join(complete_weeks, 
+                                   team_point_diff, by = c("team", "week"))
+
+```
+
+Now we have `r nrow(merge_team_point_diff)` rows in our data. Since we know teams have bye weeks, there is likely some missing data. Here's a simple way to do that.
+
+`is.na()` will return true or false for missing data. If missing, then true. True = 1 so summing this vector will give us the count of missing values.
+
+```{r missing_scores}
+
+#| class-output: pre
+
+sum(is.na(merge_team_point_diff$point_diff))
+
+```
+
+Now let's plug those in with 0s since the point differential would not change on a week that a team did not play.
+
+```{r add_zeros}
+#| class-output: pre
+
+#replace NAs with 0s
+merge_team_point_diff <- merge_team_point_diff |> 
+  mutate(point_diff = replace_na(point_diff,0))
+
+#check for missing values
+sum(is.na(merge_team_point_diff$point_diff))
+```
+
+The last manipulation is to create three, related parts.
+
+- Create a column that stores the cumulative total using the `cumsum()` fuction
+- Create a rank variable that puts them in order from highest(1) to lowest(32)
+- Break the ties so that multiple teams aren't appearing on the same bar
+
+```{r calculations}
+team_cumulative <- merge_team_point_diff |> 
+  group_by(team) |> 
+  arrange(week) |> 
+  mutate(cum_pt_diff = cumsum(point_diff)) |>   ungroup() |> 
+  #rank the cumulative point differences for each week
+  group_by(week) |> 
+  mutate(rank = min_rank(desc(cum_pt_diff))) |> 
+  ungroup() |> 
+  #sort point diff each week by rank and break ties
+  group_by(week) |> 
+  arrange(rank) |> 
+  mutate(tie_break = seq(1,n())) |> 
+  ungroup()
+
+```
+
+## Static chart
+
+Now that we've manipulated our data we're ready to make the static chart that will provide the template for our animated chart.
+
+We'll create a vector for the latest week that we use for chart labels. This will update whenever we rerun our script after a weekend of football.
+
+```{r ggplot}
+
+latest_week <- max(team_cumulative$week)
+
+current_standings <- team_cumulative %>%
+  filter(week == latest_week)
+
+
+p <- ggplot(current_standings, aes(x = cum_pt_diff,
+                                   y = reorder(team, cum_pt_diff))) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%+d", cum_pt_diff),
+                hjust = ifelse(cum_pt_diff >= -20 & cum_pt_diff <0, 3.5,
+                               ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -2,
+                                      ifelse(cum_pt_diff > 20, -1,2.2))), 
+            ),
+            size = 10)+
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.15)),
+                     limits = c(-175, 175),
+                     breaks = c( -150, -100, -50, 0,
+                                50, 100, 150)) +
+  labs(
+    title = "NFL Cumulative Point Differential",
+    subtitle = paste0("2025 Season: Week ", current_standings$week),
+    x = "Point Differential",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    plot.title = element_text(size = 48, face = "bold", family = "Times"),
+    plot.subtitle = element_text(size = 40, family = "Times"),
+    axis.text.y = element_text(size = 30, family = "Times", face = "bold"),
+    axis.text.x = element_text(size = 30, family = "Times", face = "bold"),
+    axis.title.x = element_text(size = 36, family = "Times", face = "bold"),
+    panel.grid.major.y = element_blank(),
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#F0EAD6")
+  )
+
+```
+
+There we have our cumulative point leaders at week `r latest_week`. This is really plain though. Let's add team colors, logos, and shrink the size of the bar.
+
+## Logos and such
+
+The logos are already available in the nflreadr package so it's simply a matter of creating an storing them for our use. 
+
+We'll create a folder for them and use the `walk2()` from the purrr package in combination with some graphics handling from the magick package to write the variables for the logo and the team abbreviation to the folder.
+
+We'll also join the logos to the overall dataframe so we can access them directly in as an aesthetic.
+
+```{r colors_logos}
+
+# Create logos folder only if it doesn't exist
+if (!dir.exists(here::here("logos"))) {
+  dir.create(here::here("logos"))
+}
+
+#Use walk2 for 2 variables and write them to the correct path. 
+walk2(
+  teams_data$team_abbr,
+  teams_data$team_logo_espn,
+  ~ image_write(
+    image_read(.y),
+    path = here::here("posts/nfl_racing_chart/logos/", paste0(.x, ".png"))
+  )
+)
+
+#join the team logos to the dataframe
+team_cumulative <- team_cumulative %>%
+  left_join(teams_data %>% select(team_abbr, team_logo_espn), 
+            by = c("team" = "team_abbr"))
+
+```
+
+And we can create a vector for the team colors in a new plot fuction that incorporates the team logos and colors.
+
+```{r ggplot_team_colors}
+latest_week <- max(team_cumulative$week)
+current_standings <- team_cumulative %>%
+  filter(week == latest_week)
+
+#vector with team colors
+team_colors <- setNames(teams_data$team_color, teams_data$team_abbr)
+
+p <- ggplot(current_standings, aes(x = cum_pt_diff,
+                                   y = reorder(team, cum_pt_diff),
+                                   fill = team)) +
+  geom_col(show.legend = FALSE,
+           width = .1) +
+  geom_point(aes(x = cum_pt_diff,
+                 y = reorder(team, cum_pt_diff)),
+             color = "#F0EAD6",
+             size = 5.3)+
+  geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
+             hjust = .9,
+             size = 0.05) +
+  geom_text(aes(label = sprintf("%+d", cum_pt_diff),
+                hjust = ifelse(cum_pt_diff >= -20 & cum_pt_diff <0, 3.5,
+                               ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -2,
+                                      ifelse(cum_pt_diff > 20, -1,2.2))), 
+            ),
+            size = 10)+
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.15)),
+                     limits = c(-175, 175),
+                     breaks = c( -150, -100, -50, 0,
+                                50, 100, 150)) +
+  scale_fill_manual(values = team_colors) +
+  labs(
+    title = "NFL Cumulative Point Differential",
+    subtitle = paste0("2025-26 Season: Week ", current_standings$week),
+    x = "Point Differential",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    plot.title = element_text(size = 48, face = "bold", family = "Times"),
+    plot.subtitle = element_text(size = 40, family = "Times"),
+    axis.text.y = element_text(size = 30, family = "Times", face = "bold"),
+    axis.text.x = element_text(size = 30, family = "Times", face = "bold"),
+    axis.title.x = element_text(size = 36, family = "Times", face = "bold"),
+    panel.grid.major.y = element_blank(),
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#F0EAD6")
+  )
+
+p
+```
+
+```{r plot, include = F, eval = TRUE}
+
+knitr::include_graphics(here::here("posts/nfl_racing_chart/nfl_point_diff_current.png"))
+```
