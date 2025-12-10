@@ -254,6 +254,8 @@ if (!dir.exists(here::here("logos"))) {
   dir.create(here::here("logos"))
 }
 
+teams_data <- nflreadr::load_teams()
+
 #Use walk2 for 2 variables and write them to the correct path. 
 walk2(
   teams_data$team_abbr,
