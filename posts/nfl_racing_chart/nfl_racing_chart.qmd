@@ -46,7 +46,7 @@ All the data is nicely packaged for us in the nflfastR and nflreadr packages. Co
 
 ```{r}
 
-#install.packages(c("tidyverse", "readxl", "ggimage", "magick", "gganimate", "showtext", "nflfastR", "nflreadr"))
+#install.packages(c("tidyverse", "ggimage", "magick", "gganimate", "showtext", "nflfastR", "nflreadr"))
 
 library(nflfastR)
 library(nflreadr)
