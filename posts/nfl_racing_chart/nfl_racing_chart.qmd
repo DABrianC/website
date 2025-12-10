@@ -211,7 +211,7 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
                                ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -2,
                                       ifelse(cum_pt_diff > 20, -1,2.2))), 
             ),
-            size = 4)+
+            size = 2)+
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.15)),
                      limits = c(-175, 175),
                      breaks = c( -150, -100, -50, 0,
@@ -224,11 +224,11 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
   ) +
   theme_minimal(base_size = 18) +
   theme(
-    plot.title = element_text(size = 24, face = "bold", family = "Times"),
-    plot.subtitle = element_text(size = 18, family = "Times"),
-    axis.text.y = element_text(size = 12, family = "Times", face = "bold"),
-    axis.text.x = element_text(size = 12, family = "Times", face = "bold"),
-    axis.title.x = element_text(size = 14, family = "Times", face = "bold"),
+    plot.title = element_text(size = 18, face = "bold", family = "Times"),
+    plot.subtitle = element_text(size = 14, family = "Times"),
+    axis.text.y = element_text(size = 8, family = "Times", face = "bold"),
+    axis.text.x = element_text(size = 8, family = "Times", face = "bold"),
+    axis.title.x = element_text(size = 10, family = "Times", face = "bold"),
     panel.grid.major.y = element_blank(),
     legend.position = "none",
     panel.grid.minor = element_blank(),
