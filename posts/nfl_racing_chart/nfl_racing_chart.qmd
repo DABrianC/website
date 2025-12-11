@@ -340,9 +340,105 @@ ggsave(here::here("output/nfl_point_diff_current.png"),
 knitr::include_graphics(here::here("posts/nfl_racing_chart/nfl_point_diff_current.png"))
 ```
 
-## Animation time
+## From Static to Animated
 
-The animation is uses the same structure as the above ggplot.
+Now that we have a polished static chart, let's transform it into an animation that shows how teams' cumulative point differentials evolved week by week. The transition from `ggplot` to `gganimate` requires a few strategic changes, but the core structure remains the same.
+
+### The Big Picture
+
+The animated version uses the full `team_cumulative` dataset instead of filtering to just the latest week. This gives `gganimate` all the weekly data it needs to create the racing bar chart effect. Beyond that, there are four key changes we need to make:
+
+#### Swap the Y-Axis from Team Names to Tie-Breaker
+
+In the static chart, we used `reorder(team, cum_pt_diff)` on the y-axis to sort teams by their point differential. For animation, we need something more dynamic.
+
+`aes(x = cum_pt_diff, y = -tie_break, group = team`
+
+The `tie_break` variable we created during data wrangling assigns each team a unique position from 1 - 32 for every week based on their rank. Using `-tie_break` flips the order so the teams with the highest positive differential appear on top. The `group=team` aesthetic is crucial--it tells `gganimate` to track each team across weeks.
+
+
+#### Add Team Labels as Text
+
+We no longer have the team abbreviations along the y-axis. Instead, they are added as labels on the chart to the left side.
+
+```{r geom_text_example, eval=FALSE}
+
+geom_text(aes(label = team), x = -200,
+            hjust = 1.1,
+            size =6,
+            color = "black",
+            family = "Times")
+
+```
+
+#### Add a Week Counter
+
+This helps track the week as it changes. We add a large, semi-transparent week label so the eyes don't have to jump back and forth from a subtitle to the chart.
+
+```{r week_counter_example, eval = FALSE}
+
+geom_text(x = -100, y = -1,
+            family = "Times",
+            aes(label = sprintf("Week %d", week)),
+            size = 18,
+            color = "darkgrey")
+
+```
+
+#### Remove Text from the Y-axis
+
+What used to the be on the Y-axis is now in a `geom_text` so any y-axis text is meaningless. We simply remove them.
+
+```{r remove_y_text, eval = FALSE}
+
+theme(
+  axis.text.y = element_blank(),
+  # ... other theme elements
+)
+```
+
+### Bringing It to Life
+
+The magic happens at the end with just one additional function:
+
+```{r gganimate_example, eval = FALSE}
+
+gganimate::transition_states(week,
+                            transition_length = 20,
+                            state_length = 40)
+```
+
+This tells `gganimate` to:
+
+- Create a separate state for each week 
+- Spend 20 frames transitioning between weeks (smooth movement)
+- Hold each week's state for 40 frames (pause to view)
+
+Finally, the `animate()` function renders everything and saves it to the folder of your choice:
+
+```{r animate_example_frames, eval=FALSE}
+
+animate(anim, 
+        nframes = 300,   # total frames in the animation
+        fps = 10,        # frames per second
+        width = 1000, 
+        height = 1100, 
+        renderer = gifski_renderer(here::here("posts/nfl_racing_chart/nfl_point_diff_race.gif")))
+```
+
+With 14 weeks of data, `transition_length = 20` and `state_length = 40` means each week gets 60 frames total (20 for movement and 40 for pause). The 300 total frames gives us a smooth transition with 10 frames per second playback speed.
+
+#### Minor Adjustments
+
+You'll notice a few other small tweaks in the code for the animated version:
+
+- Adjusted the `hjust` values in `geom_text()` to account for the changing bar lengths and logos
+
+- Modified `scale_x_continuous()` to accommodate team labels on the left
+
+- Removed the y-axis text and adjusted theme elements accordingly
+
+The beauty of this approach is that once you have a solid static `ggplot`, converting it to an animation is mostly about swapping a few aesthetics and adding the transition layer. The rest of your carefully crafted styling—colors, logos, text positioning, etc.—carries over seamlessly.
 
 ```{r animation_code, eval=FALSE}
 
@@ -419,7 +515,7 @@ animate(anim,
         fps = 10, 
         width = 1000, 
         height = 1100, 
-        renderer = gifski_renderer(here::here("output/nfl_point_diff_race.gif")))
+        renderer = gifski_renderer(here::here("posts/nfl_racing_chart/nfl_point_diff_race.gif")))
 
 
 ```
