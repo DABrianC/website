@@ -276,7 +276,7 @@ team_cumulative <- team_cumulative %>%
 
 And we can create a vector for the team colors in a new plot fuction that incorporates the team logos and colors.
 
-```{r ggplot_team_colors}
+```{r ggplot_team_colors include=TRUE, eval=FALSE}
 latest_week <- max(team_cumulative$week)
 current_standings <- team_cumulative %>%
   filter(week == latest_week)
@@ -295,15 +295,15 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
              size = 5.3)+
   geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
              hjust = .9,
-             size = 0.06) +
+             size = 0.05) +
   geom_text(aes(label = sprintf("%+d", cum_pt_diff),
                 hjust = ifelse(cum_pt_diff >= -20 & cum_pt_diff <0, 3.5,
                                ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -2,
                                       ifelse(cum_pt_diff > 20, -1,2.2))), 
             ),
-            size = 2)+
-  scale_x_continuous(#expand = expansion(mult = c(0.1, 0.15)),
-                     limits = c(min(current_standings$cum_pt_diff-10), max(current_standings$cum_pt_diff + 10)),
+            size = 10)+
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.15)),
+                     limits = c(-175, 175),
                      breaks = c( -150, -100, -50, 0,
                                 50, 100, 150)) +
   scale_fill_manual(values = team_colors) +
@@ -313,20 +313,26 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
     x = "Point Differential",
     y = NULL
   ) +
-  theme_minimal() +
+  theme_minimal(base_size = 18) +
   theme(
-    plot.title = element_text(size = 18, face = "bold", family = "Times"),
-    plot.subtitle = element_text(size = 14, family = "Times"),
-    axis.text.y = element_text(size = 8, family = "Times", face = "bold"),
-    axis.text.x = element_text(size = 8, family = "Times", face = "bold"),
-    axis.title.x = element_text(size = 8, family = "Times", face = "bold"),
+    plot.title = element_text(size = 48, face = "bold", family = "Times"),
+    plot.subtitle = element_text(size = 40, family = "Times"),
+    axis.text.y = element_text(size = 30, family = "Times", face = "bold"),
+    axis.text.x = element_text(size = 30, family = "Times", face = "bold"),
+    axis.title.x = element_text(size = 36, family = "Times", face = "bold"),
     panel.grid.major.y = element_blank(),
     legend.position = "none",
     panel.grid.minor = element_blank(),
     plot.background = element_rect(fill = "#F0EAD6")
   )
 
-p
+ggsave(here::here("output/nfl_point_diff_current.png"), 
+       plot = p, 
+       width = 6, 
+       height = 8,
+       units = "in",
+       dpi = 300)
+
 ```
 
 ```{r plot, echo=FALSE, eval = TRUE}
