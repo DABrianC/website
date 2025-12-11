@@ -340,6 +340,89 @@ ggsave(here::here("output/nfl_point_diff_current.png"),
 knitr::include_graphics(here::here("posts/nfl_racing_chart/nfl_point_diff_current.png"))
 ```
 
+## Animation time
+
+The animation is uses the same structure as the above ggplot.
+
+```{r animation_code, eval=FALSE}
+
+anim <- team_cumulative  |> 
+  ggplot(aes(x = cum_pt_diff, y = -tie_break,
+             fill = team, group = team)) +
+  geom_col(show.legend = FALSE,
+           orientation = "y",
+           width = .1) +
+  geom_point(aes(x = cum_pt_diff,
+                 y = -tie_break,
+                 group = team,
+                 size = ifelse(team=="IND"| team=="NYJ",
+                               15, 8)),
+             color = "#F0EAD6")+
+  scale_size_identity()+
+  geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
+             hjust = .9,
+             size = 0.05) +
+  geom_text(aes(label = team), x = -200,
+            hjust = 1.1,
+            size =6,
+            color = "black",
+            family = "Times")+
+  geom_text(aes(label = sprintf("%+d", cum_pt_diff),
+                hjust = ifelse(cum_pt_diff >= -20 & cum_pt_diff <0, 2,
+                               ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -1,
+                                      ifelse(cum_pt_diff > 20, -0.7, #2,
+                                             ifelse(cum_pt_diff > 140, .7, 1.7))))),
+    size = 8,
+    family = "Times")+
+geom_text(x = -100, y = -1,
+            family = "Times",
+            aes(label = sprintf("Week %d", week)),
+            size = 18,
+            color = "darkgrey") +
+  scale_x_continuous(limits = c(-210, 200),
+                     breaks = c(-150, -100, -50, 0,
+                                50, 100, 150)) +
+  scale_fill_manual(values = team_colors)+
+  scale_color_identity()+
+  labs(
+    title = "NFL Cumulative Point Differential",
+    subtitle = "2025 Season",
+    x = "Cumulative Point Differential",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 32,
+                              face = "bold",
+                              color = "black",
+                              family = "Times"),
+    plot.subtitle = element_text(size = 26,
+                                 color = "black",
+                                 family = "Times"),
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(color = "black",
+                               family = "Times",
+                               size = 20),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#F0EAD6"),
+    legend.position = "none"
+  ) +
+  gganimate::transition_states(week,
+                             transition_length = 20,
+                             state_length = 40
+                             )
+
+
+animate(anim, 
+        nframes = 300, 
+        fps = 10, 
+        width = 1000, 
+        height = 1100, 
+        renderer = gifski_renderer(here::here("output/nfl_point_diff_race.gif")))
+
+
+```
 
 ```{r animation, echo=FALSE, eval=TRUE}
 
