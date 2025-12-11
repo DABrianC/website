@@ -352,7 +352,11 @@ The animated version uses the full `team_cumulative` dataset instead of filterin
 
 In the static chart, we used `reorder(team, cum_pt_diff)` on the y-axis to sort teams by their point differential. For animation, we need something more dynamic.
 
-`aes(x = cum_pt_diff, y = -tie_break, group = team`
+```{r aes_example, eval = FALSE}
+
+aes(x = cum_pt_diff, y = -tie_break, group = team)
+
+```
 
 The `tie_break` variable we created during data wrangling assigns each team a unique position from 1 - 32 for every week based on their rank. Using `-tie_break` flips the order so the teams with the highest positive differential appear on top. The `group=team` aesthetic is crucial--it tells `gganimate` to track each team across weeks.
 
