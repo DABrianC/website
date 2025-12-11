@@ -146,7 +146,6 @@ Now we have `r nrow(merge_team_point_diff)` rows in our data. Since we know team
 `is.na()` will return true or false for missing data. If missing, then true. True = 1 so summing this vector will give us the count of missing values.
 
 ```{r missing_scores}
-
 #| class-output: pre
 
 sum(is.na(merge_team_point_diff$point_diff))
@@ -296,7 +295,7 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
              size = 5.3)+
   geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
              hjust = .9,
-             size = 0.07) +
+             size = 0.06) +
   geom_text(aes(label = sprintf("%+d", cum_pt_diff),
                 hjust = ifelse(cum_pt_diff >= -20 & cum_pt_diff <0, 3.5,
                                ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -2,
