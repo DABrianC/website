@@ -276,7 +276,7 @@ team_cumulative <- team_cumulative %>%
 
 And we can create a vector for the team colors in a new plot fuction that incorporates the team logos and colors.
 
-```{r ggplot_team_colors include=TRUE, eval=FALSE}
+```{r ggplot_team_colors, include=TRUE, eval=FALSE}
 latest_week <- max(team_cumulative$week)
 current_standings <- team_cumulative %>%
   filter(week == latest_week)
@@ -338,4 +338,10 @@ ggsave(here::here("output/nfl_point_diff_current.png"),
 ```{r plot, echo=FALSE, eval = TRUE}
 
 knitr::include_graphics(here::here("posts/nfl_racing_chart/nfl_point_diff_current.png"))
+```
+
+
+```{r animation, echo=FALSE, eval=TRUE}
+
+knitr::include_graphics(here::here("posts/nfl_racing_chart/nfl_point_diff_race.gif"))
 ```
