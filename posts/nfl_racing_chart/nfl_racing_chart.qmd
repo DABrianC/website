@@ -303,7 +303,7 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
             ),
             size = 2)+
   scale_x_continuous(#expand = expansion(mult = c(0.1, 0.15)),
-                     limits = c(-175, 175),
+                     limits = c(min(current_standings$cum_pt_diff-15), max(current_standings$cum_pt_diff + 15)),
                      breaks = c( -150, -100, -50, 0,
                                 50, 100, 150)) +
   scale_fill_manual(values = team_colors) +
