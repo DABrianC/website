@@ -296,7 +296,7 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
              size = 5.3)+
   geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
              hjust = .9,
-             size = 0.15) +
+             size = 0.1) +
   geom_text(aes(label = sprintf("%+d", cum_pt_diff),
                 hjust = ifelse(cum_pt_diff >= -20 & cum_pt_diff <0, 3.5,
                                ifelse(cum_pt_diff > 0 & cum_pt_diff <= 20, -2,
