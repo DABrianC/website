@@ -438,6 +438,8 @@ You'll notice a few other small tweaks in the code for the animated version:
 
 - Removed the y-axis text and adjusted theme elements accordingly
 
+- *Pro-tip!* Start with a low number of frames so that you can iteratively test out different aesthetics without waiting 20 minutes for rendering. Start by setting `nframes = 50` (or 100) in side `animate()`.
+
 The beauty of this approach is that once you have a solid static `ggplot`, converting it to an animation is mostly about swapping a few aesthetics and adding the transition layer. The rest of your carefully crafted styling—colors, logos, text positioning, etc.—carries over seamlessly.
 
 ```{r animation_code, eval=FALSE}
