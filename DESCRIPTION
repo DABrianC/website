@@ -15,6 +15,7 @@ Imports:
     ggrepel,
     ggspatial,
     ggtext,
+    gifski,
     glue,
     here,
     htmltools,
