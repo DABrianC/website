@@ -20,6 +20,7 @@ Imports:
     here,
     htmltools,
     knitr,
+    magick,
     mall,
     nflfastR,
     nflreadr,
@@ -36,4 +37,5 @@ Imports:
     tidytext,
     tidyverse,
     tmap,
+    transformr,
     writexl
