@@ -7,11 +7,30 @@ library(gganimate)
 # Load package
 library(showtext)
 
+
+# Check if running in CI environment
+is_ci <- Sys.getenv("CI") != ""
+
+# Configure fonts based on environment
+if (require("showtext", quietly = TRUE)) {
+  library(showtext)
+  
+  if (is_ci) {
+    # In CI: use system fonts, don't try to load custom fonts
+    showtext_auto()
+    message("Running in CI - using system fonts")
+  } else {
+    # Local: load your custom fonts as usual
+    # Example:
+    font_add("Times", regular = "times.ttf")
+    showtext_auto()
+  }
+}
 # This automatically loads sysfonts as well
-font_add("Times", "times.ttf")        # Add system fonts
+#font_add("Times", "times.ttf")        # Add system fonts
 
 # Enable showtext for rendering
-showtext_auto()
+#showtext_auto()
 
 source(here::here("posts/nfl_racing_chart/logos.R"))
 
