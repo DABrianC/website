@@ -194,7 +194,7 @@ animate(anim,
         fps = 10, 
         width = 1000, 
         height = 1100, 
-        renderer = gifski_renderer(here::here("output/nfl_point_diff_race.gif")))
+        renderer = gifski_renderer(here::here("posts/nfl_racing_chart/nfl_point_diff_race.gif")))
 
 # Optional: Save static plot for current week
 latest_week <- max(team_cumulative$week)
