@@ -121,7 +121,7 @@ anim <- team_cumulative  |>
   geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
              hjust = .9,
              size = 0.05) +
-  geom_text(aes(label = team), x = -200,
+  geom_text(aes(label = team, x = min(cum_pt_diff)-10),# x = -200,
             hjust = 1.1,
             size =6,
             color = "black",
@@ -153,7 +153,7 @@ anim <- team_cumulative  |>
             aes(label = sprintf("Week %d", week)),
             size = 18,
             color = "darkgrey") +
-  scale_x_continuous(limits = c(-210, 200),
+  scale_x_continuous(limits = c(min(team_cumulative$cum_pt_diff)-20, max(team_cumulative$cum_pt_diff)+20),
                      breaks = c(-150, -100, -50, 0,
                                 50, 100, 150)) +
   scale_fill_manual(values = team_colors)+
@@ -221,7 +221,7 @@ p <- ggplot(current_standings, aes(x = cum_pt_diff,
             ),
             size = 10)+
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.15)),
-                     limits = c(-175, 175),
+                     limits = c(min(current_standings$cum_pt_diff) - 10, max(current_standings$cum_pt_diff)+ 10),
                      breaks = c( -150, -100, -50, 0,
                                 50, 100, 150)) +
   scale_fill_manual(values = team_colors) +
