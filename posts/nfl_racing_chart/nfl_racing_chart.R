@@ -121,7 +121,7 @@ anim <- team_cumulative  |>
   geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
              hjust = .9,
              size = 0.05) +
-  geom_text(aes(label = team, x = min(cum_pt_diff)-10),# x = -200,
+  geom_text(aes(label = team, x = min(cum_pt_diff)-15),# x = -200,
             hjust = 1.1,
             size =6,
             color = "black",

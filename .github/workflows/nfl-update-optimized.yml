@@ -38,22 +38,83 @@ jobs:
       - name: Run NFL racing chart script
         run: Rscript posts/nfl_racing_chart/nfl_racing_chart.R
       
+      - name: Verify files were created
+        run: |
+          echo "=== Checking for generated files ==="
+          echo ""
+          echo "Files in posts/nfl_racing_chart/:"
+          ls -lh posts/nfl_racing_chart/*.{gif,png} 2>/dev/null || echo "No .gif or .png files found"
+          echo ""
+          
+          echo "All files in posts/nfl_racing_chart/:"
+          ls -lah posts/nfl_racing_chart/
+          echo ""
+      
+      - name: Create timestamp file to ensure changes
+        run: |
+          # Create a timestamp file that always changes
+          # This guarantees git will have something to commit
+          cat > posts/nfl_racing_chart/.last_update << EOF
+          Last Updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Local Time: $(date +"%Y-%m-%d %H:%M:%S %Z")
+          Workflow Run: ${{ github.run_id }}
+          Trigger: ${{ github.event_name }}
+          EOF
+          
+          echo "✓ Created timestamp file"
+          echo ""
+          cat posts/nfl_racing_chart/.last_update
+
+      
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          echo "=== Adding files to git ==="
+          # Add the entire directory - this catches everything
           git add posts/nfl_racing_chart/
-          git add posts/nfl_racing_chart/*.gif
-          git add posts/nfl_racing_chart/*.png
           
+          # Force add the specific files in case they're in .gitignore
+          git add -f posts/nfl_racing_chart/*.gif 2>/dev/null || echo "No .gif files to force add"
+          git add -f posts/nfl_racing_chart/*.png 2>/dev/null || echo "No .png files to force add"
+          
+          echo ""
+          echo "=== Files staged for commit ==="
           git diff --staged --name-only
           
+          echo ""
+          echo "=== Detailed changes ==="
+          git diff --staged --stat
+          
+          echo ""
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "❌ ERROR: No changes detected!"
+            echo ""
+            echo "This shouldn't happen because .last_update always changes."
+            echo "Possible issues:"
+            echo "  1. The entire posts/nfl_racing_chart/ directory is in .gitignore"
+            echo "  2. There's a repository permission issue"
+            echo ""
+            echo "Checking .gitignore..."
+            git check-ignore posts/nfl_racing_chart/ || echo "Directory is not ignored"
+            git check-ignore posts/nfl_racing_chart/.last_update || echo ".last_update is not ignored"
+            echo ""
+            exit 1
           else
-            git commit -m "🏈 Auto-update NFL racing chart - $(date +'%Y-%m-%d %H:%M EST')"
+            echo "✓ Changes detected, committing..."
+            git commit -m "🏈 Auto-update NFL racing chart - $(date -u +'%Y-%m-%d %H:%M UTC')"
+            
+            echo ""
+            echo "✓ Pushing to GitHub..."
             git push
-            echo "Changes pushed - this will trigger publish.yml workflow"
+            
+            echo ""
+            echo "✅ SUCCESS! Changes pushed to repository"
+            echo ""
+            echo "Next steps:"
+            echo "  1. Check the Actions tab for the 'Publish Quarto Website' workflow"
+            echo "  2. It should trigger automatically within a few seconds"
+            echo "  3. Once it completes, your website will be updated"
           fi
