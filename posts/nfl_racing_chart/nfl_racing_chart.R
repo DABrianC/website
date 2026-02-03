@@ -34,12 +34,12 @@ if (require("showtext", quietly = TRUE)) {
 
 source(here::here("posts/nfl_racing_chart/logos.R"))
 
-# Step 1: Load and filter for 2025 season
+# Load and filter for 2025 season
 nfl_data <- nflreadr::load_schedules(seasons = 2025) |> 
   mutate(home_score = replace_na(home_score, 0),
          away_score = replace_na(away_score, 0))  
   
-# Step 2: Calculate point differential for each team and week
+# Calculate point differential for each team and week
 # We need to create rows for both home and away teams
 home_games <- nfl_data %>%
   filter(!is.na(result)) %>%  # Only completed games
@@ -81,7 +81,7 @@ merge_team_point_diff <- left_join(complete_weeks,
 merge_team_point_diff <- merge_team_point_diff |> 
   mutate(point_diff = replace_na(point_diff,0))
 
-# Step 3: Calculate cumulative point differential
+# Calculate cumulative point differential
 team_cumulative <- merge_team_point_diff %>%
   group_by(team) %>%
   arrange(week) %>%
@@ -104,21 +104,24 @@ team_cumulative <- team_cumulative %>%
 #vector with teams' colors
 team_colors <- setNames(teams_data$team_color, teams_data$team_abbr)
 
-# Step 4 & 5: Create animated racing bar chart
+#vector for bar lengths to shrink them a little
+bar_length <- team_cumulative$cum_pt_diff * .9
+
+# Create animated racing bar chart
 anim <- team_cumulative  |> 
-  ggplot(aes(x = cum_pt_diff, y = -tie_break,
+  ggplot(aes(x = bar_length, y = -tie_break,
              fill = team, group = team)) +
   geom_col(show.legend = FALSE,
            orientation = "y",
            width = .1) +
-  geom_point(aes(x = cum_pt_diff,
+  geom_point(aes(x = bar_length,
                  y = -tie_break,
                  group = team,
                  size = ifelse(team=="IND"| team=="NYJ",
                                15, 8)),
              color = "#F0EAD6")+
   scale_size_identity()+
-  geom_image(aes(image = team_logo_espn, x = cum_pt_diff),
+  geom_image(aes(image = team_logo_espn, x = bar_length),
              hjust = .9,
              size = 0.05) +
   geom_text(aes(label = team, x = min(cum_pt_diff)-15),# x = -200,
