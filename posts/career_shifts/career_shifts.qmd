@@ -1,0 +1,172 @@
+---
+title: '[Career Shifts]{.humans-learning-post}' 
+subtitle: "What are my former colleagues doing now?" categories: \[R, ggplot, gganimate\] 
+date: "2026-02-03" 
+author: "Brian Calhoon" 
+title-block-banner: "#C9C9C9" 
+image: "" 
+format: 
+  html: 
+    code-fold: false 
+    code-summary: "Show the code" 
+    toc: true 
+    css: styles.css 
+editor: source 
+execute: 
+    message: false 
+    warning: false 
+---
+
+
+# Why am I here? `r fontawesome::fa("earlybirds", fill = "#FFB947", height = '2em', width = '2em')`
+
+:::: box
+::: box-header
+Welcome back! A few weeks ago, I was having a conversation with a former colleague from international development about how our colleagues might have shifted their careers. This led to some discussion of how LinkedIn could help answer this question. It turns out that LinkedIn allows you to download your connections' data as .csv file, this data is limited to current job and a few other fields, but this was good enough seem interesting to me! I set out to generate a sankey chart of this data and ended up learning more than I expected about using Llama, kinda, sorta effectively in tandem with some basic data wrangling skills. 
+:::
+::::
+
+## The Data
+My LinkedIn connections were the source of my data. [Here's a link to LinkedIn's process for downloading connections data.](https://www.linkedin.com/help/linkedin/answer/a566336/export-connections-from-linkedin). This data is limited to only what you would see on at the top of a connections's profile page -- current job (employer and position), name, email (if provided), and date of connection. So, it's limited but still an interesting stash of quasi-public data. Oh, and you can also download a lot of data about how you have used LinkedIn.
+
+*I don't provide my connections data in this post, but you could download your own and run through this script.*  
+
+One important note here is that the data is all self-reported so there's a fair amount of out of date data. How often do we really update our LinkedIn accounts?
+
+## The Workflow
+Here's the step-by-step data analysis approach that combines use of natural and artificial intelligence in a script using the Positron IDE.
+
+1) Download the data using the process described by LinkedIn above
+2) Manually add a column for whether I know a person from either MSI or EnCompass. This took approximately 6 minutes, and I'm sure that I made some mistakes, but I identified 413 connections that met this criteria.
+3) Filter the data so only the MSI or EnCompass contacts remain
+4) Define separate vectors of sectors and companies that already know are international development firms. I will feed these to the AI tool so that it knows what sectors to code and so that it knows how to classify companies that I already know are international development company. 
+5) Run the data through a locally hosted (read free) AI tool via a script. This aligns with the funding model for my blog. 
+5.5) Provide a classification function so that the machine understands how to use the vectors I created in step 4.
+6) Fix a few obvious coding errors in the AI output.
+7) Make the sankey chart and a simple table showing the results.
+
+Let's begin....
+
+## Scripting the Analysis
+
+### Load the libraries
+
+```{R}
+#Run the install.packages() line first if you haven't previously used these packages.
+#install.packages(c("tidyverse", "here", "networkD3", "htmltools", "ellmer", "ollamar"))
+
+library(tidyverse)
+library(here)
+library(networkD3)
+library(htmltools)
+library(ellmer)
+library(ollamar)
+
+```
+
+### Import the data
+Make sure that you use the correct path to the CSV file on your machine. With the import, there are some quirks to how the CSV is set up so you have to skip the first two rows and then set the column names to be the first row. This is because there are some notes included above the data.
+```{r}
+
+df <- read_csv(here::here("posts/career_shifts/connections.csv"), skip = 2)
+
+colnames(df) <- df[1, ]
+```
+
+### Filter the data for only former colleagues from MSI and EnCompass
+
+As mentioned above, I manually coded former colleagues and now I filter so that only they remain in the dataset, and then I merged them into the `MSI_ENC` column using mutate.
+```{r}
+df2 <- df |>
+  filter(MSI == "x" | EnCompass == "x") |>
+  mutate(
+    MSI_ENC = case_when(
+      MSI == "x" | EnCompass == "x" ~ "International Development"
+    )
+  )
+
+```
+
+### Define vectors for sectors and international development companies
+There are `{r} length(unique(df2$Company))` unique companies listed. I definitely don't know which sector(s) they all work in. I'm sure many of the consulting firms work across sectors so classifying them is not easy. After a few attempts and consulting Claude Pro on the side I came up with the sectors vector below. It's not perfect, but it's reasonable.
+
+The `intl_dev_companies` vector below contains a list of companies that I consider international development companies. There's no need for the AI to "think" about where to classify these companies. That said, there are a number of companies in the overall list that do *some* international development work but that I do not consider international development companies. I probably did no better than AI.
+
+```{r}
+# Define sectors
+sectors <- c(
+  "Technology",
+  "International Development",
+  "Non-Profit & International Organizations",
+  "Research & Evaluation",
+  "Finance & Banking",
+  "Government & Public Sector",
+  "Healthcare & Pharmaceutical",
+  "Education",
+  "Legal Services",
+  "Media & Communications",
+  "Retail & Consumer Goods",
+  "Independent Consulting & Other Services"
+)
+
+# List of known International Development companies
+intl_dev_companies <- c(
+  "making cents international",
+  "management systems international",
+  "management sciences for health",
+  "msi",
+  "tetra tech",
+  "encompass llc",
+  "encompass",
+  "gates foundation",
+  "chemonics",
+  "chemonics international",
+  "creative associates international",
+  "counterpart international",
+  "abt associates",
+  "abt global",
+  "palladium",
+  "dai global",
+  "dai",
+  "fhi 360",
+  "social impact",
+  "socha",
+  "counterpart international",
+  "ibi - international business initiatives",
+  "ibtci",
+  "international business & technical consultants",
+  "international business & technical consultants, inc. (IBTCI)",
+  "corus international",
+  "idinsight",
+  "global communities",
+  "WICE"
+)
+
+```
+
+### Running the data through the AI model
+I'm using [Ollama](https://ollama.com/) via the [Ollamar package](https://hauselin.github.io/ollama-r/) to use a free model, and I'm also using [ellmer](https://ellmer.tidyverse.org/index.html) to make it easy to interact with the model. 
+
+Before starting, here are a few things I learned.
+
+- My first shot at using the Llama3.2 model took 37 minutes. This rivals the speed it would have taken me to do this task, and it didn't do particularly good either. 
+- Positron uses something called Ark to make http calls. The code below starts by telling Ollamar to use Ark. This is a good thing to do. Ark is built into Positron's architecture and does not work in RStudio. It has a lot of advantages that result in better performance (Rust-built, compiled language that is very efficient). This [Appsilon post](https://www.appsilon.com/post/introducing-positron) explains some of the benefits of Ark and why it improves performance.
+- Use a smaller model. I ended up using the 'llama3.2:1b' model. This is significantly smaller than the 'llama3.2' model which also allows it to run much faster. For classification this should be enough with a decent prompt.
+- The warm up step below also ensures that the machine is working on a very small test. This avoids getting stuck in the middle of the actual work. It takes a few seconds, but Claude assures me that it's worth it.
+
+Start by ensuring that Ark is being used. I was not aware of Ark prior 
+```{r}
+# Enable Ark
+options(ollamar.use_ark = TRUE)
+
+# Pull the faster model
+pull('llama3.2:1b')
+
+# Test/warm up (correct syntax)
+generate(
+  model = "llama3.2:1b",
+  prompt = "test",
+  num_predict = 1,
+  output = "text"
+)
+```
