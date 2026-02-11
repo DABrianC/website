@@ -27,10 +27,5 @@ format:
       - brand
     css: styles.css
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 editor: visual
 
