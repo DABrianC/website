@@ -24,7 +24,7 @@ Imports:
     knitr,
     magick,
     mall,
-    networkD3
+    networkD3,
     nflfastR,
     nflreadr,
     ollamar,
