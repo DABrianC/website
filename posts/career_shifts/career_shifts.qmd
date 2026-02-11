@@ -51,7 +51,7 @@ Let's begin....
 
 ### Load the libraries
 
-```{r packages}
+```{r packages, eval = F}
 
 #Run the install.packages() line first if you haven't previously used these packages.
 #install.packages(c("tidyverse", "here", "networkD3", "htmltools", "ellmer", "ollamar"))
@@ -68,7 +68,7 @@ library(ollamar)
 
 ### Import the data
 Make sure that you use the correct path to the CSV file on your machine. With the import, there are some quirks to how the CSV is set up so you have to skip the first two rows and then set the column names to be the first row. This is because there are some notes included above the data.
-```{r import_data}
+```{r import_data, eval = F}
 
 df <- read_csv(here::here("posts/career_shifts/connections.csv"), skip = 2)
 
@@ -78,7 +78,7 @@ colnames(df) <- df[1, ]
 ### Filter the data for only former colleagues from MSI and EnCompass
 
 As mentioned above, I manually coded former colleagues and now I filter so that only they remain in the dataset, and then I merged them into the `MSI_ENC` column using mutate.
-```{r filter}
+```{r filter, eval = F}
 df2 <- df |>
   filter(MSI == "x" | EnCompass == "x") |>
   mutate(
@@ -94,7 +94,7 @@ There are 277 unique companies listed. I definitely don't know which sector(s) t
 
 The `intl_dev_companies` vector below contains a list of companies that I consider international development companies. There's no need for the AI to "think" about where to classify these companies. That said, there are a number of companies in the overall list that do *some* international development work but that I do not consider international development companies. I probably did no better than AI.
 
-```{r create_vectors}
+```{r create_vectors, eval = F}
 # Define a vectors of sectors for coding
 sectors <- c(
   "Technology",
@@ -159,7 +159,7 @@ Before starting, here are a few things I learned about working with Ollama.
 
 Start by ensuring that Ark is being used. I was not aware of Ark prior to this, but after reading about it I'm sure that it's important. Then, pull the model that you want to use from Ollama and test it on a single iteration of it doing basically nothing.
 
-```{r enable_ark_test}
+```{r enable_ark_test, eval = F}
 # Enable Ark
 options(ollamar.use_ark = TRUE)
 
@@ -186,7 +186,7 @@ The function is annotated to explain each step along the way. The steps are roug
 
   The remaining lines in the function clean up the responses to ensure they do not stray from the sectors vector that I created up above.
 
-```{r function}
+```{r function, eval = F}
 # Your classification function
 classify_company_fast <- function(company) {
   #fill in any missing values
@@ -253,7 +253,7 @@ classify_company_fast <- function(company) {
 Now we apply this function to each row of the df2$`Current Sector` column using purrr::map_chr() to iteratively work through the dataset. I recommend including the .progress argument so that you can see if the function is running or if it's stuck. This took about 4 minutes on my exteremly average machine.
 
 
-```{r apply_function}
+```{r apply_function, eval = F}
 # Apply the function classify_company_fast() using purrr::map_chr()
 df2$`Current Sector` <- map_chr(
   df2$Company,
@@ -264,7 +264,7 @@ df2$`Current Sector` <- map_chr(
 
 Then, there's a little more data cleaning so that we get the plot output that we're looking for that includes a percent of former colleagues in their new sector and the total count.
 
-```{r clean_response}
+```{r clean_response, eval = F}
 df3 <- df2 |>
   count(MSI_ENC, `Current Sector`) |>
   rename(source = MSI_ENC, target = `Current Sector`, value = n) |>
@@ -278,7 +278,7 @@ df3 <- df2 |>
 
 We are using the networkD3 package to make an interactive sankey chart so it expects there to be nodes and links as in a network object. 
 
-```{r create_network_architecture}
+```{r create_network_architecture, eval = F}
 # create nodes dataframe (unique list of all nodes)
 nodes <- data.frame(
   name = c(unique(df3$source), unique(df3$target))
@@ -301,7 +301,7 @@ nodes <- as.data.frame(nodes)
 
 Pass the data to the `sankeyNetwork()` function and make the plot. Enfin!
 
-```{r sankey}
+```{r sankey, eval = F}
 sankey <- sankeyNetwork(
   Links = links,
   Nodes = nodes,
@@ -317,14 +317,19 @@ sankey <- sankeyNetwork(
   sinksRight = TRUE
 )
 
-sankey
+# Save the widget as an HTML file
+saveWidget(sankey, "sankey_plot.html", selfcontained = TRUE)
 ```
+
+````{=html}
+<iframe src="sankey_plot.html" width="100%" height="600px" style="border:none;"></iframe>
+````
 
 This is ok... only ok. It does produce an interactive graphic, but I don't think the R wrapper, NetworkD3, allows us to customize the look and feel the way we really want for a finished graphic. We'll need to use javascript to make this look better.
 
 I don't know D3.js very well, but I'm sure that Claude does! In about five shots with Claude, I'm able to get D3.js code that produces a nice, interactive graphic that highlights the flow on hover and provides a popup with the percent and actual number for colleagues who shifted into the sector clicked on. Here's the javascript code. This is well outside my field of knowledge so I won't try to explain it.
 
-```{r sankey_js}
+```{r sankey_js, eval = F}
 sankey_js <- sankey |> 
   htmlwidgets::onRender('
     function(el, x) {
@@ -428,16 +433,16 @@ sankey_js <- sankey |>
     }
   ')
 
-# save it to the folder. I hashtagged this out so that it doesn't 
-# resave every time I run the code
+# save it to the folder. 
 
-#saveWidget(sankey_js, "sankey_chart.html", selfcontained = TRUE)
+saveWidget(sankey_js, "sankey_chart.html", selfcontained = TRUE)
 ```
 
 Here's the final image.
 
 ## About two-thirds of my former colleagues shifted to other sectors in the past year
-```{r sankey_js_with_title, echo = FALSE}
-sankey_js
-```
+````{=html}
+<iframe src="sankey_chart.html" width="100%" height="600px" style="border:none;"></iframe>
+````
+
 
