@@ -51,7 +51,8 @@ Let's begin....
 
 ### Load the libraries
 
-```{R}
+```{r}
+
 #Run the install.packages() line first if you haven't previously used these packages.
 #install.packages(c("tidyverse", "here", "networkD3", "htmltools", "ellmer", "ollamar"))
 
@@ -59,6 +60,7 @@ library(tidyverse)
 library(here)
 library(networkD3)
 library(htmltools)
+library(htmlwidgets)
 library(ellmer)
 library(ollamar)
 
@@ -93,7 +95,7 @@ There are `{r} length(unique(df2$Company))` unique companies listed. I definitel
 The `intl_dev_companies` vector below contains a list of companies that I consider international development companies. There's no need for the AI to "think" about where to classify these companies. That said, there are a number of companies in the overall list that do *some* international development work but that I do not consider international development companies. I probably did no better than AI.
 
 ```{r}
-# Define sectors
+# Define a vectors of sectors for coding
 sectors <- c(
   "Technology",
   "International Development",
@@ -109,7 +111,7 @@ sectors <- c(
   "Independent Consulting & Other Services"
 )
 
-# List of known International Development companies
+# List of international development companies in the dataset
 intl_dev_companies <- c(
   "making cents international",
   "management systems international",
@@ -147,22 +149,23 @@ intl_dev_companies <- c(
 ### Running the data through the AI model
 I'm using [Ollama](https://ollama.com/) via the [Ollamar package](https://hauselin.github.io/ollama-r/) to use a free model, and I'm also using [ellmer](https://ellmer.tidyverse.org/index.html) to make it easy to interact with the model. 
 
-Before starting, here are a few things I learned.
+Before starting, here are a few things I learned about working with Ollama.
 
 - My first shot at using the Llama3.2 model took 37 minutes. This rivals the speed it would have taken me to do this task, and it didn't do particularly good either. 
 - Positron uses something called Ark to make http calls. The code below starts by telling Ollamar to use Ark. This is a good thing to do. Ark is built into Positron's architecture and does not work in RStudio. It has a lot of advantages that result in better performance (Rust-built, compiled language that is very efficient). This [Appsilon post](https://www.appsilon.com/post/introducing-positron) explains some of the benefits of Ark and why it improves performance.
-- Use a smaller model. I ended up using the 'llama3.2:1b' model. This is significantly smaller than the 'llama3.2' model which also allows it to run much faster. For classification this should be enough with a decent prompt.
+- Use a smaller model. I ended up using the 'llama3.2:1b' model. This is significantly smaller than the 'llama3.2' model. This allows the script to run much faster. For classification this should be enough with a decent prompt.
 - The warm up step below also ensures that the machine is working on a very small test. This avoids getting stuck in the middle of the actual work. It takes a few seconds, but Claude assures me that it's worth it.
 
-Start by ensuring that Ark is being used. I was not aware of Ark prior 
+Start by ensuring that Ark is being used. I was not aware of Ark prior to this, but after reading about it I'm sure that it's important. Then, pull the model that you want to use from Ollama and test it on a single iteration of it doing basically nothing.
+
 ```{r}
 # Enable Ark
 options(ollamar.use_ark = TRUE)
 
-# Pull the faster model
+# Pull the smaller, faster version of the llama model
 pull('llama3.2:1b')
 
-# Test/warm up (correct syntax)
+# Test/warm up 
 generate(
   model = "llama3.2:1b",
   prompt = "test",
@@ -170,3 +173,275 @@ generate(
   output = "text"
 )
 ```
+
+This next step is very important. We want our function to use the vectors set up above, and if the `company_lower` matches anything in the `intl_dev_companies` vector then it should return "International Development" as the sector.
+
+The function is annotated to explain each step along the way. The steps are roughly:
+  - handle missing values in the company column 
+  - convert strings to lowercase in the company column so that we do not miss any matches due to capital letters being used
+  - Run a check against companies that I think are international development companies
+  - build an LLM prompt and make use of the sectors vector from above to ensure consistency and avoid duplicating text
+  - Call the LLM prompt for classification. This part names the model, sets the seed for reproducible results, limits the response to 15 tokens (num_predict), sets a context window of 512 (also limited), uses a deterministic approach to avoid randomness (mess around with temperature values of 0 (deterministic) to 1 (completely random) to see how the results vary), and tell it to return text output.
+
+  The remaining lines in the function clean up the responses to ensure they do not stray from the sectors vector that I created up above.
+
+```{r}
+# Your classification function
+classify_company_fast <- function(company) {
+  #fill in any missing values
+  if (is.na(company) || company == "") {
+    return("Unknown") 
+  }
+
+#make everything lower case in the company column
+  company_lower <- tolower(company) 
+
+#if any values in company_lower match values in intl_dev_companies, then code it as "International Development"
+  if (any(str_detect(company_lower, fixed(intl_dev_companies)))) {
+    return("International Development") 
+  }
+
+# Build sectors list from the vector
+  sectors_list <- paste(sectors, collapse = ", ")
+
+#The prompt to tell the LLM what it is doing.
+# I could have included a system prompt as well, but it may be worth
+# doing so the LLM knows what/who it is supposed to think like.
+  prompt <- paste0(
+    "Classify into ONE sector. Respond with ONLY the sector name.\n",
+    "Sectors: ", sectors_list, "\n\n",
+    "Company: ", company, "\n",
+    "Sector:"
+  )
+
+#the response from the llm
+# change the arguments to see what effect that has on the output
+  response <- generate(
+    model = "llama3.2:1b",
+    prompt = prompt,
+    seed = 24,
+    num_predict = 15,
+    num_ctx = 512,
+    temperature = 0.0,
+    output = "text"
+  )
+
+#clean up the responses so that we only get the text of the sector 
+# in each row of the column with no extra white spaces
+  sector <- str_trim(response)
+  sector <- gsub(
+    "^(Sector:|Answer:|Classification:)\\s*",
+    "",
+    sector,
+    ignore.case = TRUE
+  )
+  sector <- str_trim(sector)
+
+# If any sector responses do not match the sectors vector than label them as 
+# "Independent Consulting & Other Services"
+  if (!(sector %in% sectors)) {
+    sector <- "Independent Consulting & Other Services"
+  }
+
+  return(sector)
+}
+
+
+```
+
+Now we apply this function to each row of the df2$`Current Sector` column using purrr::map_chr() to iteratively work through the dataset. I recommend including the .progress argument so that you can see if the function is running or if it's stuck. This took about 4 minutes on my exteremly average machine.
+
+```{r}
+# Apply the function classify_company_fast() using purrr::map_chr()
+df2$`Current Sector` <- map_chr(
+  df2$Company,
+  classify_company_fast,
+  .progress = "Classifying companies"
+)
+```
+
+Then, there's a little more data cleaning so that we get the plot output that we're looking for that includes a percent of former colleagues in their new sector and the total count.
+
+```{r}
+df3 <- df2 |>
+  count(MSI_ENC, `Current Sector`) |>
+  rename(source = MSI_ENC, target = `Current Sector`, value = n) |>
+  mutate(
+    source = "413 Former MSI and EnCompass colleagues",
+    percent = paste0(round(value / sum(value) * 100, 1), "%")
+  ) |>
+  arrange(desc(value))
+
+```
+
+We are using the networkD3 package to make an interactive sankey chart so it expects there to be nodes and links as in a network object. 
+
+```{r}
+# create nodes dataframe (unique list of all nodes)
+nodes <- data.frame(
+  name = c(unique(df3$source), unique(df3$target))
+) |>
+  distinct()
+
+#create a links data frame that clearly identifies the source (left side) and the target (right side) of the sankey chart and that includes the percent
+links <- df3 |>
+  mutate(
+    source_id = match(source, nodes$name) - 1,
+    target_id = match(target, nodes$name) - 1,
+    )
+    #percent = paste0(round(value / sum(value) * 100, 1), "%")
+  #)
+
+# Convert to plain data frame
+links <- as.data.frame(links)
+nodes <- as.data.frame(nodes)
+```
+
+Pass the data to the `sankeyNetwork()` function and make the plot. Enfin!
+
+```{r}
+sankey <- sankeyNetwork(
+  Links = links,
+  Nodes = nodes,
+  Source = "source_id",
+  Target = "target_id",
+  Value = "value",
+  NodeID = "name",
+  units = "connections",
+  fontSize = 14,
+  nodeWidth = 30,
+  fontFamily = "Arial",
+  colourScale = networkD3::JS("d3.scaleOrdinal(d3.schemeCategory20);"),
+  sinksRight = TRUE
+)
+
+sankey
+```
+
+This is ok... only ok. It does produce an interactive graphic, but I don't think the R wrapper, NetworkD3, allows us to customize the look and feel the way we really want for a finished graphic. We'll need to use javascript to make this look better.
+
+I don't know D3.js very well, but I'm sure that Claude does! In about five shots with Claude, I'm able to get D3.js code that produces a nice, interactive graphic that highlights the flow on hover and provides a popup with the percent and actual number for colleagues who shifted into the sector clicked on. Here's the javascript code. This is well outside my field of knowledge so I won't try to explain it.
+
+```{r}
+sankey_js <- sankey |> 
+  htmlwidgets::onRender(
+    "
+    function(el, x) {
+      setTimeout(function() {
+        // Create our own tooltip element with modern design
+        var tooltip = d3.select('body').append('div')
+          .attr('class', 'custom-sankey-tooltip')
+          .style('position', 'absolute')
+          .style('display', 'none')
+          .style('background', 'rgba(255, 255, 255, 0.98)')
+          .style('backdrop-filter', 'blur(10px)')
+          .style('border', 'none')
+          .style('border-radius', '16px')
+          .style('padding', '20px 24px')
+          .style('font-size', '14px')
+          .style('font-weight', '400')
+          .style('box-shadow', '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)')
+          .style('pointer-events', 'none')
+          .style('z-index', '9999')
+          .style('font-family', '-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif')
+          .style('min-width', '200px')
+          .style('transform', 'translateY(-8px)')
+          .style('transition', 'all 0.2s ease');
+        
+        var nodeColors = {};
+        d3.select(el).selectAll('.node').each(function(d) {
+          nodeColors[d.name] = d3.select(this).select('rect').style('fill');
+        });
+        
+        var linkNodes = d3.select(el).selectAll('.link');
+        
+        linkNodes
+          .style('stroke', function(d) {
+            return nodeColors[d.target.name];
+          })
+          .style('stroke-opacity', 0.2)
+          .style('cursor', 'pointer');
+        
+        linkNodes
+          .on('click', function(d) {
+            d3.event.stopPropagation();
+            
+            d3.select(this).style('stroke-opacity', 0.9);
+            
+            // Get the target color
+            var targetColor = nodeColors[d.target.name];
+            
+            // Calculate percent from the value
+            var totalValue = d3.sum(linkNodes.data(), function(link) { return link.value; });
+            var percent = (d.value / totalValue) * 100;
+            
+            // tooltip design
+            tooltip
+              .html(
+                '<div style=\"border-left: 4px solid ' + targetColor + '; padding-left: 12px;\">' +
+                '<div style=\"font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 600; margin-bottom: 8px;\">Careers Shifting</div>' +
+                '<div style=\"font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px; line-height: 1.4;\">' + 
+                d.source.name + '<br><span style=\"color: #999;\">→</span> ' + d.target.name + '</div>' +
+                '<div style=\"display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;\">' +
+                '<span style=\"font-size: 32px; font-weight: 700; color: ' + targetColor + ';\">' + percent.toFixed(1) + '%</span>' +
+                '</div>' +
+                '<div style=\"font-size: 12px; color: #666;\">' + d.value + ' professionals</div>' +
+                '</div>'
+              )
+              .style('display', 'block')
+              .style('left', (d3.event.pageX + 15) + 'px')
+              .style('top', (d3.event.pageY - 50) + 'px');
+            
+            setTimeout(function() {
+              linkNodes.style('stroke-opacity', 0.2);
+            }, 300);
+          })
+          .on('mouseover', function() {
+            d3.select(this).style('stroke-opacity', 0.5);
+          })
+          .on('mouseout', function() {
+            d3.select(this).style('stroke-opacity', 0.2);
+          });
+        
+        d3.select(el).selectAll('.node')
+          .style('cursor', 'pointer')
+          .on('click', function(d) {
+            d3.event.stopPropagation();
+            
+            // Get the node color
+            var nodeColor = nodeColors[d.name];
+            
+            tooltip
+              .html(
+                '<div style=\"border-left: 4px solid ' + nodeColor + '; padding-left: 12px;\">' +
+                '<div style=\"font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 600; margin-bottom: 8px;\">Sector</div>' +
+                '<div style=\"font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px;\">' + d.name + '</div>' +
+                '<div style=\"font-size: 12px; color: #666;\"><span style=\"font-weight: 600; color: #333;\">' + d.value + '</span> professionals</div>' +
+                '</div>'
+              )
+              .style('display', 'block')
+              .style('left', (d3.event.pageX + 15) + 'px')
+              .style('top', (d3.event.pageY - 50) + 'px');
+          });
+        
+        d3.select('body').on('click', function() {
+          tooltip.style('display', 'none');
+        });
+        
+      }, 200);
+    }
+  "
+  )
+# save it to the folder. I hashtagged this out so that it doesn't 
+# resave every time I run the code
+
+#saveWidget(sankey_js, "sankey_chart.html", selfcontained = TRUE)
+
+```
+
+Here's the final image.
+
+## About two-thirds of my former colleagues shifted to other sectors in the past year
+
+<iframe src="https://github.com/DABrianC/website/blob/main/posts/career_shifts/sankey_chart.html" width="100%" height="600px"></iframe>
+
