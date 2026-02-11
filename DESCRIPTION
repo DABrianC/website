@@ -29,6 +29,7 @@ Imports:
     nflreadr,
     ollamar,
     plotly,
+    quarto,
     readr,
     readxl,
     remotes,
