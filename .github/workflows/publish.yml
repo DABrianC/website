@@ -41,8 +41,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render Quarto Project
-        run: |
-          quarto render --verbose
+        uses: quarto-dev/quarto-actions/render@v2
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4
