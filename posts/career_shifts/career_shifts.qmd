@@ -479,7 +479,7 @@ sankey_js <- sankey |>
 saveWidget(sankey_js, "sankey_chart.html", selfcontained = TRUE)
 ```
 
-Here's the final image.
+Here's the final image. Click on the lightly colored flows for the popup to appear.
 
 ## About two-thirds of my former colleagues shifted to other sectors in the past year
 ````{=html}
