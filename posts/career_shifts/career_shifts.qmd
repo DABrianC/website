@@ -1,7 +1,7 @@
 ---
 title: '[Career Shifts]{.humans-learning-post}' 
 subtitle: "What are my former colleagues doing now?" 
-categories: [R, ggplot, gganimate] 
+categories: [R, ggplot, llama, networkD3] 
 date: "2026-02-03" 
 author: "Brian Calhoon" 
 title-block-banner: "#C9C9C9" 
@@ -22,28 +22,28 @@ execute:
 
 :::: box
 ::: box-header
-Welcome back! A few weeks ago, I was having a conversation with a former colleague from international development about how our colleagues might have shifted their careers. This led to some discussion of how LinkedIn could help answer this question. It turns out that LinkedIn allows you to download your connections' data as .csv file, this data is limited to current job and a few other fields, but this was good enough seem interesting to me! I set out to generate a sankey chart of this data and ended up learning more than I expected about using Llama, kinda, sorta effectively in tandem with some basic data wrangling skills. 
+Welcome back! A few weeks ago, I was having a conversation with a former colleague from international development about how our colleagues might have shifted their careers. This led to some discussion of how LinkedIn could help answer this question. It turns out that LinkedIn allows you to download your connections' data as CSV file, this data is limited to their current job and a few other fields, but this was good enough to seem interesting to me! I set out to generate a sankey chart of this data and ended up learning more than I expected about using Llama, kinda, sorta effectively in tandem with some basic data wrangling skills. 
 :::
 ::::
 
 ## The Data
-My LinkedIn connections were the source of my data. [Here's a link to LinkedIn's process for downloading connections data.](https://www.linkedin.com/help/linkedin/answer/a566336/export-connections-from-linkedin). This data is limited to only what you would see on at the top of a connections's profile page -- current job (employer and position), name, email (if provided), and date of connection. So, it's limited but still an interesting stash of quasi-public data. Oh, and you can also download a lot of data about how you have used LinkedIn.
-
-*I don't provide my connections data in this post, but you could download your own and run through this script.*  
+My LinkedIn connections were the source of my data. [Here's a link to LinkedIn's process for downloading connections data.](https://www.linkedin.com/help/linkedin/answer/a566336/export-connections-from-linkedin) This data is limited to only what you would see on at the top of a connections's profile page -- current job (employer and position), name, email (if provided), and date of connection. With that in mind, it's still an interesting stash of quasi-public data. Oh, and you can also download a lot of data about how you have used LinkedIn.
 
 One important note here is that the data is all self-reported so there's a fair amount of out of date data. How often do we really update our LinkedIn accounts?
+
+*I don't actually provide my connections data in this post, but you could download your own and run through this script.*
 
 ## The Workflow
 Here's the step-by-step data analysis approach that combines use of natural and artificial intelligence in a script using the Positron IDE.
 
 1) Download the data using the process described by LinkedIn above
 2) Manually add a column for whether I know a person from either MSI or EnCompass. This took approximately 6 minutes, and I'm sure that I made some mistakes, but I identified 413 connections that met this criteria.
-3) Filter the data so only the MSI or EnCompass contacts remain
-4) Define separate vectors of sectors and companies that already know are international development firms. I will feed these to the AI tool so that it knows what sectors to code and so that it knows how to classify companies that I already know are international development company. 
-5) Run the data through a locally hosted (read free) AI tool via a script. This aligns with the funding model for my blog. 
-5.5) Provide a classification function so that the machine understands how to use the vectors I created in step 4.
-6) Fix a few obvious coding errors in the AI output.
-7) Make the sankey chart and a simple table showing the results.
+3) Filter the data so only MSI or EnCompass contacts remain
+4) Define separate vectors of sectors and companies that I know are international development firms. I will use the sectors vector as a check on the AI tool and to fix any coding that does not fit within these sectors.  
+5) Provide a classification function so that the machine understands how to use the vectors I created in step 4.
+6) Use the classification function to run the data through a locally hosted (read free) AI tool via a script. This aligns with the funding model for my blog. 
+7) Fix a few obvious coding errors in the AI output.
+8) Make a flow chart (aka sankey chart).
 
 Let's begin....
 
@@ -61,8 +61,8 @@ library(here)
 library(networkD3)
 library(htmltools)
 library(htmlwidgets)
-library(ellmer)
 library(ollamar)
+library(gt)
 
 ```
 
@@ -70,14 +70,14 @@ library(ollamar)
 Make sure that you use the correct path to the CSV file on your machine. With the import, there are some quirks to how the CSV is set up so you have to skip the first two rows and then set the column names to be the first row. This is because there are some notes included above the data.
 ```{r import_data, eval = F}
 
-df <- read_csv(here::here("posts/career_shifts/connections.csv"), skip = 2)
+df <- read_csv(here::here("your_path_goes_here/your_file_name.csv"), skip = 2)
 
 colnames(df) <- df[1, ]
 ```
 
 ### Filter the data for only former colleagues from MSI and EnCompass
 
-As mentioned above, I manually coded former colleagues and now I filter so that only they remain in the dataset, and then I merged them into the `MSI_ENC` column using mutate.
+As mentioned above, I manually coded former colleagues and now I filter the dataset so that only these rows remained. Then I merged them into a single column `MSI_ENC` using mutate.
 ```{r filter, eval = F}
 df2 <- df |>
   filter(MSI == "x" | EnCompass == "x") |>
@@ -90,7 +90,7 @@ df2 <- df |>
 ```
 
 ### Define vectors for sectors and international development companies
-There are 277 unique companies listed. I definitely don't know which sector(s) they all work in. I'm sure many of the consulting firms work across sectors so classifying them is not easy. After a few attempts and consulting Claude Pro on the side I came up with the sectors vector below. It's not perfect, but it's reasonable.
+There are 277 unique companies listed. I definitely don't know which sector(s) they all work in. I'm sure many of the consulting firms work across sectors so classifying them is not easy. After a few attempts and consulting Claude on the side I came up with the `sectors` vector below. It's not perfect, but it's reasonable.
 
 The `intl_dev_companies` vector below contains a list of companies that I consider international development companies. There's no need for the AI to "think" about where to classify these companies. That said, there are a number of companies in the overall list that do *some* international development work but that I do not consider international development companies. I probably did no better than AI.
 
@@ -148,11 +148,11 @@ intl_dev_companies <- c(
 
 
 ### Running the data through the AI model
-I'm using [Ollama](https://ollama.com/) via the [Ollamar package](https://hauselin.github.io/ollama-r/) to use a free model, and I'm also using [ellmer](https://ellmer.tidyverse.org/index.html) to make it easy to interact with the model. 
+I'm using [Ollama](https://ollama.com/) via the [Ollamar package](https://hauselin.github.io/ollama-r/) to access a free model. 
 
 Before starting, here are a few things I learned about working with Ollama.
 
-- My first shot at using the Llama3.2 model took 37 minutes. This rivals the speed it would have taken me to do this task, and it didn't do particularly good either. 
+- My first shot at using the Llama3.2 model took 37 minutes. This rivals the speed it would have taken me to do this task manually, and it didn't do particularly good either. 
 - Positron uses something called Ark to make http calls. The code below starts by telling Ollamar to use Ark. This is a good thing to do. Ark is built into Positron's architecture and does not work in RStudio. It has a lot of advantages that result in better performance (Rust-built, compiled language that is very efficient). This [Appsilon post](https://www.appsilon.com/post/introducing-positron) explains some of the benefits of Ark and why it improves performance.
 - Use a smaller model. I ended up using the 'llama3.2:1b' model. This is significantly smaller than the 'llama3.2' model. This allows the script to run much faster. For classification this should be enough with a decent prompt.
 - The warm up step below also ensures that the machine is working on a very small test. This avoids getting stuck in the middle of the actual work. It takes a few seconds, but Claude assures me that it's worth it.
@@ -184,7 +184,7 @@ The function is annotated to explain each step along the way. The steps are roug
   - build an LLM prompt and make use of the sectors vector from above to ensure consistency and avoid duplicating text
   - Call the LLM prompt for classification. This part names the model, sets the seed for reproducible results, limits the response to 15 tokens (num_predict), sets a context window of 512 (also limited), uses a deterministic approach to avoid randomness (mess around with temperature values of 0 (deterministic) to 1 (completely random) to see how the results vary), and tell it to return text output.
 
-  The remaining lines in the function clean up the responses to ensure they do not stray from the sectors vector that I created up above.
+  The remaining lines in the function clean up the responses to ensure they do not stray from the `sectors` vector that I created up above.
 
 ```{r function, eval = F}
 # Your classification function
@@ -275,6 +275,47 @@ df3 <- df2 |>
   arrange(desc(value))
 
 ```
+
+## A table with the data
+Here's what we'll be plotting in the sankey chart. 
+
+```{r table, eval = F}
+
+df3_table <- df3 |>
+  select(target, value, percent) |>
+  gt() |>
+  tab_header(
+    title = "Career Transitions from my MSI and EnCompass Colleagues",
+    subtitle = "Distribution of professionals across sectors"
+  ) |>
+  cols_label(
+    target = "Current Sector",
+    value = "Count",
+    percent = "Percentage"
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  tab_style(
+    style = cell_fill(color = "#f8f9fa"),
+    locations = cells_body(rows = seq(1, nrow(df3), 2))
+  ) |>
+  cols_align(
+    align = "left",
+    columns =  target
+  ) |>
+  cols_align(
+    align = "center",
+    columns = c(value, percent)
+  )
+  
+gtsave(df3_table, "df3_table.html")
+```
+
+<iframe src="df3_table.html" width="100%" height="600px" style="border:none;"></iframe>
+
+## Convert this into a graphic
 
 We are using the networkD3 package to make an interactive sankey chart so it expects there to be nodes and links as in a network object. 
 

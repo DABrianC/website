@@ -18,6 +18,7 @@ Imports:
     ggtext,
     gifski,
     glue,
+    gt,
     here,
     htmltools,
     htmlwidgets,
