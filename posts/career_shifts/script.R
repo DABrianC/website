@@ -1,18 +1,17 @@
 library(tidyverse)
-library(viridis)
 library(patchwork)
-library(circlize)
 library(here)
 library(networkD3)
 library(htmltools)
+library(htmlwidgets)
 library(ellmer)
 library(ollamar)
 
 
- Technology, International Development, Non-Profit & International Organizations, ",
-    "Research & Evaluation, Finance & Banking, Government & Public Sector, ",
-    "Healthcare & Pharmaceutical, Education, Legal Services, Media & Communications, ",
-    "Retail & Consumer Goods, Independent Consulting & Other Services
+# Technology, International Development, Non-Profit & International Organizations, ",
+#    "Research & Evaluation, Finance & Banking, Government & Public Sector, ",
+#    "Healthcare & Pharmaceutical, Education, Legal Services, Media & Communications, ",
+#    "Retail & Consumer Goods, Independent Consulting & Other Services
 
 df <- read_csv(here::here("posts/career_shifts/connections.csv"), skip = 2)
 
@@ -314,3 +313,153 @@ sankey
 
 #save it to the folder
 saveWidget(sankey, "sankey_chart.html", selfcontained = TRUE)
+
+#pasted over from the .qmd during rendering tests
+sankey_js <- sankey |>
+  htmlwidgets::onRender(
+    "
+    function(el, x) {
+      setTimeout(function() {
+        // Create our own tooltip element with modern design
+        var tooltip = d3.select('body').append('div')
+          .attr('class', 'custom-sankey-tooltip')
+          .style('position', 'absolute')
+          .style('display', 'none')
+          .style('background', 'rgba(255, 255, 255, 0.98)')
+          .style('backdrop-filter', 'blur(10px)')
+          .style('border', 'none')
+          .style('border-radius', '16px')
+          .style('padding', '20px 24px')
+          .style('font-size', '14px')
+          .style('font-weight', '400')
+          .style('box-shadow', '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)')
+          .style('pointer-events', 'none')
+          .style('z-index', '9999')
+          .style('font-family', '-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif')
+          .style('min-width', '200px')
+          .style('transform', 'translateY(-8px)')
+          .style('transition', 'all 0.2s ease');
+        
+        var nodeColors = {};
+        d3.select(el).selectAll('.node').each(function(d) {
+          nodeColors[d.name] = d3.select(this).select('rect').style('fill');
+        });
+        
+        var linkNodes = d3.select(el).selectAll('.link');
+        
+        linkNodes
+          .style('stroke', function(d) {
+            return nodeColors[d.target.name];
+          })
+          .style('stroke-opacity', 0.2)
+          .style('cursor', 'pointer');
+        
+        linkNodes
+          .on('click', function(d) {
+            d3.event.stopPropagation();
+            
+            d3.select(this).style('stroke-opacity', 0.9);
+            
+            // Get the target color
+            var targetColor = nodeColors[d.target.name];
+            
+            // Calculate percent from the value
+            var totalValue = d3.sum(linkNodes.data(), function(link) { return link.value; });
+            var percent = (d.value / totalValue) * 100;
+            
+            // tooltip design
+            tooltip
+              .html(
+                '<div style=\"border-left: 4px solid ' + targetColor + '; padding-left: 12px;\">' +
+                '<div style=\"font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 600; margin-bottom: 8px;\">Careers Shifting</div>' +
+                '<div style=\"font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px; line-height: 1.4;\">' + 
+                d.source.name + '<br><span style=\"color: #999;\">→</span> ' + d.target.name + '</div>' +
+                '<div style=\"display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;\">' +
+                '<span style=\"font-size: 32px; font-weight: 700; color: ' + targetColor + ';\">' + percent.toFixed(1) + '%</span>' +
+                '</div>' +
+                '<div style=\"font-size: 12px; color: #666;\">' + d.value + ' professionals</div>' +
+                '</div>'
+              )
+              .style('display', 'block')
+              .style('left', (d3.event.pageX + 15) + 'px')
+              .style('top', (d3.event.pageY - 50) + 'px');
+            
+            setTimeout(function() {
+              linkNodes.style('stroke-opacity', 0.2);
+            }, 300);
+          })
+          .on('mouseover', function() {
+            d3.select(this).style('stroke-opacity', 0.5);
+          })
+          .on('mouseout', function() {
+            d3.select(this).style('stroke-opacity', 0.2);
+          });
+        
+        d3.select(el).selectAll('.node')
+          .style('cursor', 'pointer')
+          .on('click', function(d) {
+            d3.event.stopPropagation();
+            
+            // Get the node color
+            var nodeColor = nodeColors[d.name];
+            
+            tooltip
+              .html(
+                '<div style=\"border-left: 4px solid ' + nodeColor + '; padding-left: 12px;\">' +
+                '<div style=\"font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 600; margin-bottom: 8px;\">Sector</div>' +
+                '<div style=\"font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px;\">' + d.name + '</div>' +
+                '<div style=\"font-size: 12px; color: #666;\"><span style=\"font-weight: 600; color: #333;\">' + d.value + '</span> professionals</div>' +
+                '</div>'
+              )
+              .style('display', 'block')
+              .style('left', (d3.event.pageX + 15) + 'px')
+              .style('top', (d3.event.pageY - 50) + 'px');
+          });
+        
+        d3.select('body').on('click', function() {
+          tooltip.style('display', 'none');
+        });
+        
+      }, 200);
+    }
+  "
+  )
+
+library(gt)
+
+library(tidyverse)
+library(gt)
+
+
+df3_table <- df3 |>
+  select(target, value, percent) |>
+  gt() |>
+  tab_header(
+    title = "Career Transitions from my MSI and EnCompass Colleagues",
+    subtitle = "Distribution of professionals across sectors"
+  ) |>
+  cols_label(
+    target = "Current Sector",
+    value = "Count",
+    percent = "Percentage"
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  tab_style(
+    style = cell_fill(color = "#f8f9fa"),
+    locations = cells_body(rows = seq(1, nrow(df3), 2))
+  ) |>
+  cols_align(
+    align = "left",
+    columns = target
+  ) |>
+  cols_align(
+    align = "center",
+    columns = c(value, percent)
+  )
+
+df3_table
+
+gtsave(df3_table, "df3_table.html")
