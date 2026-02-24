@@ -13,31 +13,49 @@ execute:
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-# Finding the right ski resort for my trip
+# Your Complete Guide to DC Area Skiing
 
-If you're like me, you enjoy skiing and want a simple resource to figure out where to go if you live in the greater Washington, DC are. There are websites that describe the resorts, but I had a hard time finding one that put info about each one into a single table that I could search and filter to find the information that I want. So, I decided to solve my own problem and made this site. 
+::: {.callout-note icon="false" appearance="simple"}
+## 📊 Quick Stats
 
-One of the more useful features that may be less obvious to new skiers is that this site provides information on the type of ski pass -- Epic or Ikon -- each resort uses. This saves me from having to check individual websites.
+**16 Resorts** \| **5 States** \| **\< 5 Hours Drive** \| **Epic, Ikon & Independent Passes**
+:::
 
-# Map of Ski Resorts within 5 Hours of DC
+## Why This Guide Exists
 
-This interactive map shows ski resorts within a 5-hour drive of Washington, DC. **Hover over markers to see resort names**, click for detailed information, and add circle layers to show approximate driving distances for 2, 3, 4, and 5 hours from Washington, DC.
+If you're like me, you love skiing and want a **simple, searchable resource** to find the perfect resort near Washington, DC. Sure, there are websites that describe individual resorts, but finding one comprehensive table where you can search, filter, and compare? That's harder to come by.
 
-Each popup provides basic information about the ski resorts that you clicked on and a link to the resort's website. 
+**So I built it myself.**
 
-::: {.callout-note}
-## About the Map
+### What Makes This Different
 
-- **Map Style**: OpenFreeMap Liberty (OpenStreetMap-based)
-- **Layer Control**: Click the layers icon (📋 top-left) to toggle drive time zones on/off
-- **Drive Time Zones** (optional layers):
-  - 🔵 2hr/100mi (blue) | 🟢 3hr/150mi (green) | 🟡 4hr/200mi (yellow) | 🔴 5hr/250mi (red)
-  - Based on ~50mph average for mountainous/winding roads
-  - Straight-line distances - actual routes follow roads
-- **Hover over markers** to see resort names
-- **Click markers** to see detailed information
-- **Zoom in/out** - distance zones scale properly with geography
-- **Marker colors**: Red (Epic) | Blue (Ikon) | Grey (Independent)
+✅ **All-in-One Table** – Search and filter 16 resorts by location, pass type, difficulty, and drive time\
+✅ **Pass Type Info** – Quickly see which resorts accept Epic, Ikon, or Independent passes (no more checking individual websites!)\
+✅ **Interactive Map** – Visual drive time zones show you what's reachable in 2, 3, 4, or 5 hours\
+✅ **Detailed Stats** – Trail counts, vertical drop, snowfall averages, and terrain breakdowns
+
+::: {.callout-tip icon="false"}
+## 🎯 Pro Tip
+
+New to the area? Start with resorts under 2 hours away (use the Drive Time filter in the table below). Seven Springs, Whitetail, and Liberty are all great beginner-friendly options within easy reach.
+:::
+
+------------------------------------------------------------------------
+
+# 🗺️ Interactive Map: Where Can You Ski?
+
+Explore all 16 ski resorts within a 5-hour drive of Washington, DC. **Hover over markers** to see resort names, **click for details**, and **toggle drive time zones** to see what's reachable in your time budget.
+
+::: {.callout-note icon="false"}
+## 🧭 How to Use the Map
+
+-   **Hover** over any marker to see the resort name
+-   **Click** a marker to open a popup with resort details and a website link
+-   **Toggle layers** (📋 icon, top-left) to show/hide 2, 3, 4, and 5-hour drive zones
+-   **Zoom & pan** to explore the region
+-   **Marker colors**: [**Red** = Epic Pass]{style="color:#DC2626"} \| [**Blue** = Ikon Pass]{style="color:#0EA5E9"} \| [**Grey** = Independent]{style="color:#808080"}
+
+*Note: Drive time zones show straight-line distances (\~50mph average for mountainous roads). Actual drive times vary by traffic and road conditions.*
 :::
 
 ```{r load-libraries}
@@ -67,7 +85,7 @@ ski_resorts <- readxl::read_xlsx("ski_resort_data.xlsx") |>
     image_url = ifelse(
       !grepl("^https?://", image_url),  # If not already a full URL
       paste0("./", image_url),            # Add ./ prefix for relative path
-      image_url               
+      image_url)               
   )
 
 # Determine pass type color for each resort
@@ -270,24 +288,27 @@ map <- map %>%
 map
 ```
 
+------------------------------------------------------------------------
 
+# 📋 Complete Resort Data Table
 
-## The data in one place
+Stop juggling multiple tabs! This searchable, filterable table puts all the essential resort information in one place. **Compare vertical drops, filter by pass type, check drive times** – all without leaving this page.
 
-This may seem pretty small, but having these basic facts about the different resorts in a single location where they are searchable, sortable, and filterable is really convenient. I can quickly filter for all resorts within a 2 or 3 hour drive of DC and then see which kind of passes they take or compare their vertical drops or base/peak elevations, for example. Then, if I need more information I can click on the name of the resort in the table to view its website. I can also download the data if I want.
+### Why This Table is Useful
 
-::: {.callout-tip}
-## Table Features
+-   **Quick Comparisons** – See at a glance which resorts have the most trails, best snowfall, or biggest vertical drops
+-   **Smart Filtering** – Filter by state, pass type, terrain park availability, or drive time with easy dropdown menus
+-   **Pass Planning** – Instantly identify which resorts work with your Epic or Ikon pass
+-   **One-Click Details** – Click any resort name to visit their official website
+-   **Download Option** – Export the data for your own analysis
 
-- **Column Filters**: Click the filter icon in each column header to filter by specific criteria
-- **Global Search**: Search across all columns using the search box at the top
-- **Sort**: Click column headers to sort ascending/descending (default sorted by Drive Time)
-- **Trail Difficulty Ratings**: Expand each row in the trails column to see the percentage of Beginner, Intermediate, and Advanced ski trails.
-- **Color Coding**: 
-  - Pass Type: Colored badges for Epic (Red), Ikon (Blue), Independent (Grey)
-  - Data bars show relative number of trails (purple) and snowfall (blue)
-  - Drive time color: Green (< 2hrs) | Yellow (2-3.5hrs) | Red (> 3.5hrs)
-- **Pagination**: Choose how many resorts to view per page (5, 10, 16, 25, or 50)
+::: {.callout-tip icon="false"}
+## 💡 Quick Filtering Tips
+
+**Looking for a weekend trip?** Filter Drive Time to "\< 2 hours" → See which are closest\
+**Have an Epic Pass?** Filter Pass Type to "Epic" → See all your options\
+**Want big terrain?** Click the "Vertical (ft)" column header to sort by biggest drops\
+**Beginner-friendly?** Expand the Trails column to see difficulty breakdowns
 :::
 
 ```{r create-table}
@@ -636,9 +657,8 @@ htmltools::div(
 
 ```
 
+------------------------------------------------------------------------
 
----
-
-**Data Sources:** Official resort websites, OnTheSnow.com, DCSki.com, SkiCentral.com  
-**Last Updated:** February 2026  
+**Data Sources:** Official resort websites, OnTheSnow.com, DCSki.com, SkiCentral.com\
+**Last Updated:** February 2026\
 **Map Engine:** MapLibre GL with OpenFreeMap Liberty style

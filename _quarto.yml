@@ -7,7 +7,7 @@ website:
   description: "Data analysis with R programming language and more"
   navbar:
     right:
-      - dc_ski_resorts_state_filter.qmd
+      - ski_dmv.qmd
       - blog.qmd
       - icon: github
         href: https://github.com/DABrianC
