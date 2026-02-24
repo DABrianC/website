@@ -63,7 +63,11 @@ ski_resorts <- readxl::read_xlsx("ski_resort_data.xlsx") |>
     base_elevation = as.integer(base_elevation),
     peak_elevation = as.integer(peak_elevation),
     avg_snowfall = as.integer(avg_snowfall),
-    vertical_drop = as.integer(vertical_drop)
+    vertical_drop = as.integer(vertical_drop),
+    image_url = ifelse(
+      !grepl("^https?://", image_url),  # If not already a full URL
+      paste0("./", image_url),            # Add ./ prefix for relative path
+      image_url               
   )
 
 # Determine pass type color for each resort
