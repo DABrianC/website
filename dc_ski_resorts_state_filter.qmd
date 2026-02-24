@@ -1,6 +1,5 @@
 ---
-title: "Ski Resorts Near Washington, DC"
-subtitle: "Interactive Map with MapLibre"
+title: "Ski the DMV"
 format: 
   html:
     page-layout: article
