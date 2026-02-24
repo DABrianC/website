@@ -1,0 +1,641 @@
+---
+title: "Ski Resorts Near Washington, DC"
+subtitle: "Interactive Map with MapLibre"
+format: 
+  html:
+    page-layout: article
+    toc: true
+    toc-location: left
+execute:
+    echo: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Finding the right ski resort for my trip
+
+If you're like me, you enjoy skiing and want a simple resource to figure out where to go if you live in the greater Washington, DC are. There are websites that describe the resorts, but I had a hard time finding one that put info about each one into a single table that I could search and filter to find the information that I want. So, I decided to solve my own problem and made this site. 
+
+One of the more useful features that may be less obvious to new skiers is that this site provides information on the type of ski pass -- Epic or Ikon -- each resort uses. This saves me from having to check individual websites.
+
+# Map of Ski Resorts within 5 Hours of DC
+
+This interactive map shows ski resorts within a 5-hour drive of Washington, DC. **Hover over markers to see resort names**, click for detailed information, and add circle layers to show approximate driving distances for 2, 3, 4, and 5 hours from Washington, DC.
+
+Each popup provides basic information about the ski resorts that you clicked on and a link to the resort's website. 
+
+::: {.callout-note}
+## About the Map
+
+- **Map Style**: OpenFreeMap Liberty (OpenStreetMap-based)
+- **Layer Control**: Click the layers icon (📋 top-left) to toggle drive time zones on/off
+- **Drive Time Zones** (optional layers):
+  - 🔵 2hr/100mi (blue) | 🟢 3hr/150mi (green) | 🟡 4hr/200mi (yellow) | 🔴 5hr/250mi (red)
+  - Based on ~50mph average for mountainous/winding roads
+  - Straight-line distances - actual routes follow roads
+- **Hover over markers** to see resort names
+- **Click markers** to see detailed information
+- **Zoom in/out** - distance zones scale properly with geography
+- **Marker colors**: Red (Epic) | Blue (Ikon) | Grey (Independent)
+:::
+
+```{r load-libraries}
+library(tidyverse)
+library(mapgl)
+library(reactable)
+library(reactablefmtr)
+library(htmltools)
+library(htmlwidgets)
+library(sf)
+```
+
+```{r create-data}
+#Compiled data on mid-Atlantic ski resorts within a 5 hour drive of Washington, DC
+ski_resorts <- readxl::read_xlsx("ski_resort_data.xlsx") |> 
+  mutate(
+     # Convert float columns to integers
+    beginner_pct = as.integer(beginner_pct),
+    intermediate_pct = as.integer(intermediate_pct),
+    advanced_pct = as.integer(advanced_pct),
+    num_trails = as.integer(num_trails),
+    terrain_acres = as.integer(terrain_acres),
+    base_elevation = as.integer(base_elevation),
+    peak_elevation = as.integer(peak_elevation),
+    avg_snowfall = as.integer(avg_snowfall),
+    vertical_drop = as.integer(vertical_drop)
+  )
+
+# Determine pass type color for each resort
+ski_resorts <- ski_resorts %>%
+  mutate(
+    pass_color = case_when(
+      pass_type == "Epic" ~ "#DC2626",
+      pass_type == "Ikon" ~ "#0EA5E9",
+      TRUE ~ "#808080"  # Grey for Independent
+    ),
+    # Create popup HTML for each resort
+    popup_content = sprintf('
+<div style="font-family: Arial, sans-serif; min-width: 220px; max-width: 260px;">
+  <div style="display: flex; align-items: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid #3b82f6;">
+    <img src="%s" alt="%s" style="height: 24px; width: auto; margin-right: 8px; object-fit: contain;">
+    <h3 style="margin: 0; color: #1e40af; font-size: 14px; font-weight: bold;">%s</h3>
+  </div>
+  <table style="width: 100%%; border-collapse: collapse; font-size: 11px;">
+    <tr style="background-color: #f3f4f6;">
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb; width: 38%%;">Location</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">%s, %s</td>
+    </tr>
+    <tr>
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Pass</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;"><strong style="color: %s;">%s</strong></td>
+    </tr>
+    <tr style="background-color: #f3f4f6;">
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Trails</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">%d on %d acres</td>
+    </tr>
+    <tr>
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Terrain Park</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">%s</td>
+    </tr>
+    <tr style="background-color: #f3f4f6;">
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Difficulty</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">
+        <span style="color: #22c55e;">●</span>%d%% <span style="color: #3b82f6;">■</span>%d%% <span style="color: #000;">◆</span>%d%%
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Elevations</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">
+        Base: %s ft. | Peak: %s ft. | Drop: %s ft.
+      </td>
+    </tr>
+    <tr style="background-color: #f3f4f6;">
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Snow</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">%d in/yr</td>
+    </tr>
+    <tr>
+      <td style="padding: 4px; font-weight: bold; border: 1px solid #e5e7eb;">Drive</td>
+      <td style="padding: 4px; border: 1px solid #e5e7eb;">%.1f hrs</td>
+    </tr>
+    <tr style="background-color: #f3f4f6;">
+      <td colspan="2" style="padding: 5px; text-align: center; border: 1px solid #e5e7eb;">
+        <a href="%s" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: bold; font-size: 10px;">
+          🌐 Website
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>',
+      image_url, name, name,
+      city, state,
+      pass_color, pass_type,
+      num_trails, terrain_acres,
+      terrain_park,
+      beginner_pct, intermediate_pct, advanced_pct, 
+      format(base_elevation, big.mark = ","),
+      format(peak_elevation, big.mark = ","),
+      format(vertical_drop, big.mark = ","),
+      avg_snowfall,
+      drive_time_hours,
+      website
+    )
+  )
+
+# Convert to sf object for mapgl
+ski_resorts_sf <- ski_resorts %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+# Create display table data - keep numeric values as numeric for filtering
+ski_resorts_display <- ski_resorts %>%
+  mutate(
+    `Resort Name` = paste0('<a href="', website, '" target="_blank" style="color: #2563eb; text-decoration: none;">', name, '</a>'),
+    #Location = paste0(city, ", ", state),
+    State = case_when(
+      state == "Pennsylvania" ~ "PA",
+      state == "West Virginia" ~ "WV",
+      state == "Virginia" ~ "VA",
+      state == "Maryland" ~ "MD",
+      TRUE ~ state
+    ),
+    `Drive Time` = drive_time_hours,
+    `Pass Type` = pass_type,
+    Trails = num_trails,
+    Beginner = beginner_pct,
+    Intermediate = intermediate_pct,
+    Advanced = advanced_pct,
+    `Terrain Park` = terrain_park,
+    `Base Elev` = base_elevation,
+    `Peak Elev` = peak_elevation,
+    `Vertical Drop` = vertical_drop,
+    Snowfall = avg_snowfall
+  ) %>%
+  select(
+    `Resort Name`, State, `Drive Time`, `Pass Type`, Trails, 
+    Beginner, Intermediate, Advanced, `Terrain Park`,
+    `Base Elev`, `Peak Elev`, `Vertical Drop`, Snowfall
+  )
+```
+
+```{r create-map}
+#| column: page
+
+# Create the base map with OpenFreeMap Liberty style
+map <- mapgl::maplibre(
+  center = c(-77.0369, 38.9072),
+  zoom = 6.5,
+  style = "https://tiles.openfreemap.org/styles/liberty"
+)
+
+# Create DC center point
+dc_center <- st_point(c(-77.0369, 38.9072)) %>%
+  st_sfc(crs = 4326) %>%
+  st_sf()
+
+# Transform to Web Mercator for accurate buffering at this latitude
+# Using EPSG:3857 (Web Mercator) which works well for mid-latitudes
+dc_projected <- st_transform(dc_center, crs = 3857)
+
+# Create buffers - using more conservative estimates
+# Accounting for mountainous terrain and winding roads: ~50mph average
+# 2hr=100mi, 3hr=150mi, 4hr=200mi, 5hr=250mi
+buffer_5hr <- st_buffer(dc_projected, dist = 250 * 1609.34) %>% st_transform(4326)
+buffer_4hr <- st_buffer(dc_projected, dist = 200 * 1609.34) %>% st_transform(4326)
+buffer_3hr <- st_buffer(dc_projected, dist = 150 * 1609.34) %>% st_transform(4326)
+buffer_2hr <- st_buffer(dc_projected, dist = 100 * 1609.34) %>% st_transform(4326)
+
+# Add drive time zones as fill layers (hidden by default - toggle via layer control)
+map <- map %>%
+  add_fill_layer(
+    id = "drive_time_5hr",
+    source = buffer_5hr,
+    fill_color = "#FCA5A5",
+    fill_opacity = 0.3,
+    fill_outline_color = "#EF4444",
+    visibility = "none"
+  ) %>%
+  add_fill_layer(
+    id = "drive_time_4hr",
+    source = buffer_4hr,
+    fill_color = "#FDE047",
+    fill_opacity = 0.3,
+    fill_outline_color = "#EAB308",
+    visibility = "none"
+  ) %>%
+  add_fill_layer(
+    id = "drive_time_3hr",
+    source = buffer_3hr,
+    fill_color = "#A7F3D0",
+    fill_opacity = 0.3,
+    fill_outline_color = "#10B981",
+    visibility = "none"
+  ) %>%
+  add_fill_layer(
+    id = "drive_time_2hr",
+    source = buffer_2hr,
+    fill_color = "#93C5FD",
+    fill_opacity = 0.3,
+    fill_outline_color = "#3B82F6",
+    visibility = "none"
+  )
+
+# Add resort markers on top
+map <- map %>%
+  add_circle_layer(
+    id = "ski_resorts",
+    source = ski_resorts_sf,
+    circle_color = get_column("pass_color"),
+    circle_radius = 8,
+    circle_stroke_color = "white",
+    circle_stroke_width = 2,
+    popup = "popup_content",  # Column name as string
+    tooltip = "name"           # Column name as string - this shows on hover!
+  ) %>%
+  add_navigation_control(position = "top-right") %>%
+  add_layers_control(
+    layers = c("drive_time_2hr", "drive_time_3hr", "drive_time_4hr", "drive_time_5hr"),
+    position = "top-left"
+  ) %>%
+  add_categorical_legend(
+    legend_title = "Pass Type",
+    values = c("Epic Pass", "Ikon Pass", "Independent"),
+    colors = c("#DC2626", "#0EA5E9", "#808080"),
+    position = "bottom-left"
+  )
+
+map
+```
+
+
+
+## The data in one place
+
+This may seem pretty small, but having these basic facts about the different resorts in a single location where they are searchable, sortable, and filterable is really convenient. I can quickly filter for all resorts within a 2 or 3 hour drive of DC and then see which kind of passes they take or compare their vertical drops or base/peak elevations, for example. Then, if I need more information I can click on the name of the resort in the table to view its website. I can also download the data if I want.
+
+::: {.callout-tip}
+## Table Features
+
+- **Column Filters**: Click the filter icon in each column header to filter by specific criteria
+- **Global Search**: Search across all columns using the search box at the top
+- **Sort**: Click column headers to sort ascending/descending (default sorted by Drive Time)
+- **Trail Difficulty Ratings**: Expand each row in the trails column to see the percentage of Beginner, Intermediate, and Advanced ski trails.
+- **Color Coding**: 
+  - Pass Type: Colored badges for Epic (Red), Ikon (Blue), Independent (Grey)
+  - Data bars show relative number of trails (purple) and snowfall (blue)
+  - Drive time color: Green (< 2hrs) | Yellow (2-3.5hrs) | Red (> 3.5hrs)
+- **Pagination**: Choose how many resorts to view per page (5, 10, 16, 25, or 50)
+:::
+
+```{r create-table}
+#| column: page
+
+htmltools::tagList(
+  reactable(
+    ski_resorts_display,
+    elementId = "ski-resorts-table",
+    searchable = TRUE,
+    filterable = TRUE,
+    defaultPageSize = 5,
+    showPageSizeOptions = TRUE,
+    pageSizeOptions = c(5, 10, 16, 25, 50),
+    defaultSorted = "Drive Time",
+    compact = TRUE,
+    theme = reactableTheme(
+      borderColor = "#e5e7eb",
+      stripedColor = "#f9fafb",
+      highlightColor = "#eff6ff",
+      cellPadding = "10px 12px",
+      style = list(
+        fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        fontSize = "14px"
+      ),
+      searchInputStyle = list(
+        border = "1px solid #d1d5db",
+        borderRadius = "6px",
+        padding = "8px 12px",
+        fontSize = "14px",
+        width = "100%",
+        maxWidth = "350px"
+      ),
+      headerStyle = list(
+        background = "#f9fafb",
+        color = "#374151",
+        fontWeight = "600",
+        fontSize = "12px",
+        textTransform = "uppercase",
+        letterSpacing = "0.5px",
+        borderBottom = "2px solid #e5e7eb"
+      )
+    ),
+    columns = list(
+      `Resort Name` = colDef(
+        html = TRUE,
+        minWidth = 160,
+        style = list(fontWeight = "500"),
+        filterable = FALSE
+      ),
+      #Location = colDef(minWidth = 140),
+      State = colDef(
+        minWidth = 50,
+        align = "center",
+        style = list(color = "#6b7280", fontWeight = "600"),
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          if (filterValue === 'all') return rows;
+          return rows.filter(function(row) {
+            return row.values[columnId] === filterValue;
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$select(
+            onchange = sprintf("Reactable.setFilter('ski-resorts-table', '%s', event.target.value)", name),
+            style = "width: 100%; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;",
+            htmltools::tags$option(value = "all", "All"),
+            htmltools::tags$option(value = "MD", "MD"),
+            htmltools::tags$option(value = "PA", "PA"),
+            htmltools::tags$option(value = "VA", "VA"),
+            htmltools::tags$option(value = "WV", "WV")
+          )
+        }
+      ),
+      `Drive Time` = colDef(
+        name = "Drive (hrs)",
+        minWidth = 50,
+        align = "right",
+        format = colFormat(digits = 1),
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          return rows.filter(function(row) {
+            var value = row.values[columnId];
+            if (filterValue === 'all') return true;
+            if (filterValue === 'under2') return value < 2;
+            if (filterValue === '2to3') return value >= 2 && value <= 3;
+            if (filterValue === '3to4') return value > 3 && value <= 4;
+            if (filterValue === 'over4') return value > 4;
+            return true;
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$select(
+            onchange = sprintf("Reactable.setFilter('ski-resorts-table', '%s', event.target.value)", name),
+            style = "width: 100%; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;",
+            htmltools::tags$option(value = "all", "All"),
+            htmltools::tags$option(value = "under2", "< 2 hours"),
+            htmltools::tags$option(value = "2to3", "2 - 3 hours"),
+            htmltools::tags$option(value = "3to4", "3 - 4 hours"),
+            htmltools::tags$option(value = "over4", "> 4 hours")
+          )
+        },
+        style = function(value) {
+          color <- if (value < 2) {
+            "#dcfce7"
+          } else if (value < 3.5) {
+            "#fef9c3"
+          } else {
+            "#fee2e2"
+          }
+          list(
+            background = color,
+            fontWeight = "500",
+            fontVariantNumeric = "tabular-nums"
+          )
+        }
+      ),
+      `Pass Type` = colDef(
+        minWidth = 60,
+        align = "center",
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          if (filterValue === 'all') return rows;
+          return rows.filter(function(row) {
+            return row.values[columnId] === filterValue;
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$select(
+            onchange = sprintf("Reactable.setFilter('ski-resorts-table', '%s', event.target.value)", name),
+            style = "width: 100%; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;",
+            htmltools::tags$option(value = "all", "All"),
+            htmltools::tags$option(value = "Epic", "Epic"),
+            htmltools::tags$option(value = "Ikon", "Ikon"),
+            htmltools::tags$option(value = "IND", "IND")
+          )
+        },
+        cell = function(value) {
+          color <- case_when(
+            value == "Epic" ~ "#dc2626",
+            value == "Ikon" ~ "#0284c7",
+            TRUE ~ "#6b7280"
+          )
+          htmltools::span(
+            style = list(
+              fontWeight = "500",
+              color = color
+            ),
+            value
+          )
+        }
+      ),
+      Trails = colDef(
+        minWidth = 60,
+        align = "center",
+        format = colFormat(separators = TRUE),
+        style = list(fontWeight = "500"),
+        filterable = FALSE,
+        details = function(index) {
+          beginner <- ski_resorts_display[index, "Beginner"]
+          intermediate <- ski_resorts_display[index, "Intermediate"]
+          advanced <- ski_resorts_display[index, "Advanced"]
+          htmltools::div(
+            style = "padding: 12px; background: #f9fafb; border-top: 1px solid #e5e7eb;",
+            htmltools::div(
+              style = "display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;",
+              htmltools::div(
+                style = "text-align: center;",
+                htmltools::div(style = "color: #16a34a; font-weight: 600; font-size: 18px;", paste0(beginner, "%")),
+                htmltools::div(style = "color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 4px;", "Beginner")
+              ),
+              htmltools::div(
+                style = "text-align: center;",
+                htmltools::div(style = "color: #2563eb; font-weight: 600; font-size: 18px;", paste0(intermediate, "%")),
+                htmltools::div(style = "color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 4px;", "Intermediate")
+              ),
+              htmltools::div(
+                style = "text-align: center;",
+                htmltools::div(style = "color: #000000; font-weight: 600; font-size: 18px;", paste0(advanced, "%")),
+                htmltools::div(style = "color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 4px;", "Advanced")
+              )
+            )
+          )
+        }
+      ),
+      Beginner = colDef(show = FALSE),
+      Intermediate = colDef(show = FALSE),
+      Advanced = colDef(show = FALSE),
+      `Terrain Park` = colDef(
+        minWidth = 70,
+        align = "center",
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          if (filterValue === 'all') return rows;
+          return rows.filter(function(row) {
+            return row.values[columnId] === filterValue;
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$select(
+            onchange = sprintf("Reactable.setFilter('ski-resorts-table', '%s', event.target.value)", name),
+            style = "width: 100%; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;",
+            htmltools::tags$option(value = "all", "All"),
+            htmltools::tags$option(value = "Yes", "Yes"),
+            htmltools::tags$option(value = "No", "No")
+          )
+        }
+      ),
+      `Base Elev` = colDef(
+        name = "Base Elev (ft)",
+        minWidth = 110,
+        align = "right",
+        format = colFormat(separators = TRUE),
+        style = list(fontVariantNumeric = "tabular-nums"),
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          return rows.filter(function(row) {
+            return row.values[columnId] >= filterValue[0] && row.values[columnId] <= filterValue[1]
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$div(
+            style = "display: flex; gap: 4px; align-items: center;",
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Min",
+              style = "width: 60px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.value || %s, this.parentElement.children[2].value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            ),
+            htmltools::tags$span("–", style = "font-size: 11px;"),
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Max",
+              style = "width: 60px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.parentElement.children[0].value || %s, this.value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            )
+          )
+        }
+      ),
+      `Peak Elev` = colDef(
+        name = "Peak Elev (ft)",
+        minWidth = 110,
+        align = "right",
+        format = colFormat(separators = TRUE),
+        style = list(fontVariantNumeric = "tabular-nums"),
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          return rows.filter(function(row) {
+            return row.values[columnId] >= filterValue[0] && row.values[columnId] <= filterValue[1]
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$div(
+            style = "display: flex; gap: 4px; align-items: center;",
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Min",
+              style = "width: 60px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.value || %s, this.parentElement.children[2].value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            ),
+            htmltools::tags$span("–", style = "font-size: 11px;"),
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Max",
+              style = "width: 60px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.parentElement.children[0].value || %s, this.value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            )
+          )
+        }
+      ),
+      `Vertical Drop` = colDef(
+        name = "Vertical (ft)",
+        minWidth = 100,
+        align = "right",
+        format = colFormat(separators = TRUE),
+        style = list(fontVariantNumeric = "tabular-nums", fontWeight = "500"),
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          return rows.filter(function(row) {
+            return row.values[columnId] >= filterValue[0] && row.values[columnId] <= filterValue[1]
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$div(
+            style = "display: flex; gap: 4px; align-items: center;",
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Min",
+              style = "width: 60px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.value || %s, this.parentElement.children[2].value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            ),
+            htmltools::tags$span("–", style = "font-size: 11px;"),
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Max",
+              style = "width: 60px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.parentElement.children[0].value || %s, this.value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            )
+          )
+        }
+      ),
+      Snowfall = colDef(
+        name = "Snow (in/yr)",
+        minWidth = 100,
+        align = "right",
+        format = colFormat(suffix = '"'),
+        style = list(fontVariantNumeric = "tabular-nums"),
+        filterMethod = JS("function(rows, columnId, filterValue) {
+          return rows.filter(function(row) {
+            return row.values[columnId] >= filterValue[0] && row.values[columnId] <= filterValue[1]
+          })
+        }"),
+        filterInput = function(values, name) {
+          htmltools::tags$div(
+            style = "display: flex; gap: 4px; align-items: center;",
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Min",
+              style = "width: 50px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.value || %s, this.parentElement.children[2].value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            ),
+            htmltools::tags$span("–", style = "font-size: 11px;"),
+            htmltools::tags$input(
+              type = "number",
+              placeholder = "Max",
+              style = "width: 50px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;",
+              oninput = sprintf("Reactable.setFilter('ski-resorts-table', '%s', [this.parentElement.children[0].value || %s, this.value || %s])", 
+                               name, min(values, na.rm = TRUE), max(values, na.rm = TRUE))
+            )
+          )
+        }
+      )
+    )
+  ),
+htmltools::div(
+  style = "margin-top: 15px; text-align: right;",
+  htmltools::tags$button(
+    onclick = "Reactable.downloadDataCSV('ski-resorts-table', 'dc_ski_resorts.csv')",
+    style = "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; padding: 10px 20px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s ease;",
+    onmouseover = "this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';",
+    onmouseout = "this.style.transform='translateY(0)'; this.style.boxShadow='none';",
+    "📥 Download Data (CSV)"
+  )
+)
+)
+
+```
+
+
+---
+
+**Data Sources:** Official resort websites, OnTheSnow.com, DCSki.com, SkiCentral.com  
+**Last Updated:** February 2026  
+**Map Engine:** MapLibre GL with OpenFreeMap Liberty style
