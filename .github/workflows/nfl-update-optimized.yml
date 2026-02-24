@@ -2,8 +2,8 @@ name: Update NFL Racing Chart
 
 on:
   # Run every Tuesday at 9 AM EST (2 PM UTC, or 1 PM UTC during DST)
-  schedule:
-    - cron: '0 14 * * 2'
+  #schedule:
+   # - cron: '0 14 * * 2'
   
   # Allow manual trigger
   workflow_dispatch:
