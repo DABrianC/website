@@ -657,6 +657,6 @@ htmltools::div(
 
 ------------------------------------------------------------------------
 
-**Data Sources:** Official resort websites, OnTheSnow.com, DCSki.com, SkiCentral.com\
+**Data Sources:** Official resort websites, [OnTheSnow.com](https://www.onthesnow.com/), [DCSki.com](https://dcski.com/), [SkiCentral.com](https://www.skicentral.com/)\
 **Last Updated:** February 2026\
 **Map Engine:** MapLibre GL with OpenFreeMap Liberty style
