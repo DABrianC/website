@@ -665,4 +665,5 @@ Send me your answers [\@Brian](mailto:briancalhoon.consulting@gmail.com).
 
 **Data Sources:** Official resort websites, [OnTheSnow.com](https://www.onthesnow.com/), [DCSki.com](https://dcski.com/), [SkiCentral.com](https://www.skicentral.com/)\
 **Last Updated:** February 2026\
-**Map Engine:** MapLibre GL with OpenFreeMap Liberty style
+**Map Engine:** MapLibre GL with OpenFreeMap Liberty style\
+**Code** **Assist:** Claude Pro
