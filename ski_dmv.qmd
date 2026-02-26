@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ::: {.callout-note icon="false" appearance="simple"}
 ## 📊 Quick Stats
 
-**16 Resorts** \| **5 States** \| **\< 5 Hours Drive** \| **Epic, Ikon & Independent Passes**
+**18 Resorts** \| **5 States** \| **\< 5 Hours Drive** \| **Epic, Ikon & Independent Passes**
 :::
 
 ## Why This Guide Exists
@@ -42,7 +42,7 @@ New to skiing? Start with resorts under 2 hours away (use the Drive Time filter 
 
 # 🗺️ Interactive Map: Where Can You Ski?
 
-Explore all 16 ski resorts within a 5-hour drive of Washington, DC. **Hover over markers** to see resort names, **click for details**, and **toggle drive time zones** to see what's reachable in your time budget.
+Explore all 18 ski resorts within a 5-hour drive of Washington, DC. **Hover over markers** to see resort names, **click for details**, and **toggle drive time zones** to see what's reachable in your time budget.
 
 ::: {.callout-note icon="false"}
 ## 🧭 How to Use the Map
@@ -318,7 +318,7 @@ htmltools::tagList(
     elementId = "ski-resorts-table",
     searchable = TRUE,
     filterable = TRUE,
-    defaultPageSize = 16,
+    defaultPageSize = 18,
     showPageSizeOptions = TRUE,
     pageSizeOptions = c(5, 10, 16, 25, 50),
     defaultSorted = "Drive Time",
@@ -654,6 +654,12 @@ htmltools::div(
 )
 
 ```
+
+What additional data would you find helpful on this page?
+
+What was most useful to you?
+
+Send me your answers [\@Brian](mailto:briancalhoon.consulting@gmail.com).
 
 ------------------------------------------------------------------------
 
